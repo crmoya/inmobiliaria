@@ -1,0 +1,7 @@
+#page {
+    padding-top: 60px;
+}
+.tabla_campos td{
+    border-bottom: silver 1px solid;
+    padding-right: 20px;
+}
