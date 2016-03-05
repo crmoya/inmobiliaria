@@ -223,6 +223,15 @@ class Departamento extends CActiveRecord
             'order'=>'propiedad_id'));
 	    return $departamentos;
 	 }
+         
+        public function getListWithContractProp($propiedad_id)
+        {
+            $departamentos = Departamento::model()->findAll(array(
+                'join'=>'LEFT JOIN contrato c ON t.id = c.departamento_id',
+                'condition'=>"c.id IS NOT NULL and propiedad_id = '$propiedad_id'",
+                'order'=>'propiedad_id'));
+	    return $departamentos;
+        }
      public function estaAsociadoCliente($user_id, $departamento_id) {
         $cliente_id = Cliente::model()->getId($user_id);
         $response = Departamento::model()->exists(array(

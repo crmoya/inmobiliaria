@@ -42,16 +42,8 @@ class ContratoController extends Controller {
     public function accessRules() {       // @todo: Revisar los permisos
         return array(
             array('allow',
-                'actions' => array('crearCarta', 'view','update','download','getNombreCliente','descargarCarta','create', 'exportarXLS','update','download','adminReajustes','admin','adminAviso',),
-                'roles' => array('superusuario', 'administrativo'),
-            ),
-            array('allow',
-                'actions' => array('delete'),
-                'roles' => array('superusuario'),
-            ),
-            array('allow',
-                'actions' => array('admin','adminAviso','descargarCarta','crearCarta','getNombreCliente','download','view'),
-                'roles' => array('propietario'),
+                'actions' => array('reajusta', 'delete','verMontos','crearCarta','finiquitar', 'view','viewCliente','update','download','getNombreCliente','descargarCarta','create', 'exportarXLS','update','download','adminReajustes','adminAReajustar','adminAvisos','admin','adminAviso','adminAbonos','adminCargos','adminFiniquitados'),
+                'roles' => array('superusuario','propietario'),
             ),
             array('allow',
                 'actions' => array('admin','download','view'),
@@ -67,6 +59,30 @@ class ContratoController extends Controller {
         );
     }
     
+    public function actionReajusta($id){
+        $contrato = Contrato::model()->findByPk($id);
+        $contrato->reajusta = $contrato->reajusta==1?0:1;
+        $contrato->propiedad_id = $contrato->departamento->propiedad_id;
+        $contrato->save();
+        $this->redirect(CController::createUrl('//contrato/admin'));
+    }
+    
+    public function actionFiniquitar($id){
+        $modelo = Contrato::model()->findByPk($id);
+        //fix bug que había por propiedad dependiente
+        $modelo->propiedad_id = $modelo->departamento->propiedad_id;
+        //end fix
+        $modelo->vigente = 0;
+        $modelo->fecha_finiquito = date('Y-m-d');
+        if($modelo->save()){
+            Yii::app()->user->setFlash('success','Contrato finiquitado correctamente.');
+            $this->redirect(CController::createUrl('//contrato/admin'));
+        }
+        else{
+            Yii::app()->user->setFlash('error','ERROR: No se pudo finiquitar el contrato: '.CHtml::errorSummary($modelo));
+            $this->redirect(CController::createUrl('//contrato/admin'));
+        }
+    }
     public function actionCartasAutomaticas(){
         if($_GET['code'] == 'c87680eabb5d1e6283dea432b5a567f3'){
             $contratos = Contrato::model()->getCercanosAlPago(Tools::DIAS_FECHA_PAGO_CERCANA);
@@ -77,6 +93,30 @@ class ContratoController extends Controller {
                 $this->crearCarta($formato);
                 CartaAviso::enviarCarta($formato);
             }
+        }
+    }
+    
+    public function actionViewCliente($id)
+    {
+        $this->render('view',array(
+                'model'=>$this->loadModel($id),
+        ));
+    }
+    
+    public function actionVerMontos($id)
+    {
+        $this->render('viewMontos',array(
+                'model'=>$this->loadModel($id),
+        ));
+    }
+    
+    public function actionCrearDeudas(){
+        if($_GET['code'] == 'c87680eabb5d1e6283dea432b5a567f3'){
+            //si es 1ro del mes se deben revisar reajustes antes de crear deudas
+            if((int)date('d') == 1){
+                Contrato::revisarReajustes();
+            }
+            Contrato::crearDeudas();
         }
     }
     
@@ -93,9 +133,8 @@ class ContratoController extends Controller {
     public function actionView($id) {
         $model = $this->loadModel($id);
         // Determino si ese usuario debe ver esta cuenta corriente o no
-        if (Contrato::model()->estaAsociadoCliente(Yii::app()->user->id, $id) ||
-                Contrato::model()->estaAsociadoPropietario(Yii::app()->user->id, $id) ||
-                Yii::app()->user->rol == 'administrativo' ||
+        if (    $model->estaAsociadoACliente(Yii::app()->user->id) ||
+                $model->estaAsociadoAPropietario(Yii::app()->user->id) ||
                 Yii::app()->user->rol == 'superusuario') {
                     $file = Yii::app()->basePath.'/documentos/contratos/Contrato_'.$model->folio.'.jpg';
                     if (file_exists($file)) {
@@ -117,23 +156,7 @@ class ContratoController extends Controller {
                     }
         } else {
             throw new CHttpException(403, 'Usted no se encuentra autorizado para realizar esta acción.');
-        }
-        /*
-         // Determino si ese usuario debe ver esta cuenta corriente o no
-        if (Contrato::model()->estaAsociadoCliente(Yii::app()->user->id, $id) ||
-                Contrato::model()->estaAsociadoPropietario(Yii::app()->user->id, $id) ||
-                Yii::app()->user->rol == 'administrativo' ||
-                Yii::app()->user->rol == 'superusuario') {
-            $this->render('view', array(
-                'model' => $this->loadModel($id),
-            ));
-        } else {
-            throw new CHttpException(403, 'Usted no se encuentra autorizado para realizar esta acción.');
-        }
-         */
-        
-        
-        
+        }        
     }
 
     /**
@@ -142,6 +165,7 @@ class ContratoController extends Controller {
      */
     public function actionCreate() {
         
+        $this->layout = "column1";
         $ultimoContrato = Contrato::model()->findAll(array('order'=>'folio DESC'));
         $ultimoFolio = 0;
         if($ultimoContrato!=null){
@@ -171,6 +195,8 @@ class ContratoController extends Controller {
             $model->reajusta_meses = $_POST['Contrato']['reajusta_meses'];
             $model->dia_pago = $_POST['Contrato']['dia_pago'];
             $model->fecha_inicio = Tools::fixFecha($model->fecha_inicio);
+            $model->vigente = 1;
+            $model->reajusta = 1;
             $valid = $model->validate();
             if ($valid) {
                 $cuentaModel->attributes = $_POST['CuentaCorriente'];
@@ -285,8 +311,8 @@ class ContratoController extends Controller {
     public function actionDownload($id) {
         $model = $this->loadModel($id);
         // Determino si ese usuario debe ver esta cuenta corriente o no
-        if (Contrato::model()->estaAsociadoCliente(Yii::app()->user->id, $id) ||
-                Contrato::model()->estaAsociadoPropietario(Yii::app()->user->id, $id) ||
+        if ($model->estaAsociadoACliente(Yii::app()->user->id) ||
+                $model->estaAsociadoAPropietario(Yii::app()->user->id) ||
                 Yii::app()->user->rol == 'administrativo' ||
                 Yii::app()->user->rol == 'superusuario') {
                     $file = Yii::app()->basePath.'/documentos/contratos/Contrato_'.$model->folio.'.docx';
@@ -406,6 +432,300 @@ class ContratoController extends Controller {
             'model' => $model,
         ));
     }
+    public function actionAdminFiniquitados() {
+        $model = new Contrato('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Contrato']))
+            $model->attributes = $_GET['Contrato'];
+
+        $this->render('adminFiniquitados', array(
+            'model' => $model,
+        ));
+    }
+    
+    public function actionAdminAbonos() {
+        
+        
+        $model = new Contrato('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Contrato']))
+            $model->attributes = $_GET['Contrato'];
+
+        
+        $meses = array();
+        for($i=1;$i<=12;$i++){
+            $meses[] = array('id'=>  str_pad($i, 2,"0",STR_PAD_LEFT),'nombre'=>Tools::fixMes($i));
+        }
+        $agnos = array();
+        $agnoInicio = 2000;
+        $agnoFin = (int)date('Y')+10;
+        for($i=$agnoInicio;$i<$agnoFin;$i++){
+            $agnos[] = array('id'=>$i,'nombre'=>$i);
+        }
+        
+        $filtroModel = new EstadoCuentaForm();
+        $filtroModel->agnoH = date('Y');
+        $filtroModel->mesH = date('m');
+        
+        if($filtroModel->mesH == '01'){
+            $filtroModel->mesD = '12';
+            $filtroModel->agnoD = (int)$filtroModel->agnoH - 1;
+        }
+        else{
+            $mes = (int)$filtroModel->mesH;
+            $filtroModel->mesD = str_pad($mes-1,2,"0",STR_PAD_LEFT);
+            $filtroModel->agnoD = $filtroModel->agnoH;
+        }
+        
+        if(isset($_POST['EstadoCuentaForm'])){
+            $filtroModel->attributes = $_POST['EstadoCuentaForm'];
+            Yii::import('ext.phpexcel.XPHPExcel');    
+            
+            $objPHPExcel= XPHPExcel::createPHPExcel();
+            $sheet = $objPHPExcel->getActiveSheet();
+            $contrato = Contrato::model()->findByPk($filtroModel->contratoId);
+            if($contrato == null){
+                die;
+            }
+            if(!$contrato->estaAsociadoAPropietario(Yii::app()->user->id)){
+                die;
+            }
+            $sheet->setCellValue('A1', 'Movimientos de Cliente');
+            $sheet->mergeCells("A1:L1");
+            $sheet->getStyle("A1")->getFont()->setSize(15);
+            $sheet->setCellValue('A3', 'Nombre: ');
+            $sheet->setCellValue('B3', $contrato->cliente->usuario->nombre." ".$contrato->cliente->usuario->apellido);
+            $sheet->setCellValue('F3', 'Fecha Consulta: '.date('d/m/Y'));
+            $sheet->setCellValue('A4', 'Propiedad: ');
+            $sheet->setCellValue('B4', $contrato->departamento->propiedad->nombre);
+            $sheet->setCellValue('C4', "Departamento: ");
+            $sheet->setCellValue('D4', $contrato->departamento->numero);
+            $sheet->getStyle("A3")->getFont()->setSize(13);
+            $sheet->getStyle("B3")->getFont()->setSize(13);
+            $sheet->getStyle("F3")->getFont()->setSize(13);
+            $sheet->getStyle("A4")->getFont()->setSize(13);
+            $sheet->getStyle("B4")->getFont()->setSize(13);
+            $sheet->getStyle("C4")->getFont()->setSize(13);
+            $sheet->getStyle("D4")->getFont()->setSize(13);
+            
+            $sheet->setCellValue('A5', "Rango de fechas consultado");
+            $sheet->getStyle("A5")->getFont()->setSize(13);    
+            
+            $sheet->setCellValue('A6', "Desde:");
+            $sheet->getStyle("A6")->getFont()->setSize(13);
+            $sheet->setCellValue('B6',Tools::fixMes($filtroModel->mesD)." ".$filtroModel->agnoD);
+            $sheet->getStyle("B6")->getFont()->setSize(13);
+            
+            $fechaDesde = $filtroModel->agnoD."-".$filtroModel->mesD."-"."01";
+            
+            if($filtroModel->desdeInicio == '1'){
+                $sheet->setCellValue('A6', "Desde inicio del Contrato:");
+                $sheet->setCellValue('B6',Tools::backFecha($contrato->fecha_inicio));
+                $fechaDesde = $contrato->fecha_inicio;
+            }
+            if($filtroModel->desdeSaldo0 == '1'){
+                $movimiento = Movimiento::model()->findByPk($contrato->cuentaCorriente->idMovUltimoSaldo0());
+                if($movimiento != null){
+                    $sheet->setCellValue('A6', "Desde último saldo 0:");
+                    $sheet->setCellValue('B6',Tools::backFecha($movimiento->fecha));
+                    $fechaDesde = $movimiento->fecha;
+                }
+                else{
+                    $sheet->setCellValue('A6', "Desde último saldo 0:");
+                    $sheet->setCellValue('B6',"No hay saldo 0 ");
+                    $fechaDesde = $contrato->fecha_inicio;
+                }
+            }
+            
+            $fechaArr = explode("-",$fechaDesde);
+            $filtroModel->mesD = $fechaArr[1];
+            $filtroModel->agnoD = $fechaArr[0];
+            
+            $sheet->setCellValue('A7', "Hasta:");
+            $sheet->getStyle("A7")->getFont()->setSize(13);
+            $sheet->setCellValue('B7',Tools::fixMes($filtroModel->mesH)." ".$filtroModel->agnoH);
+            $sheet->getStyle("B7")->getFont()->setSize(13);
+            
+            $sheet->setCellValue('A9', "Saldo Anterior:");
+            $sheet->getStyle("A9")->getFont()->setSize(13);
+            $sheet->setCellValue('B9',$contrato->cuentaCorriente->saldoAFecha($fechaDesde));
+            $sheet->getStyle("B9")->getFont()->setSize(13);
+            
+            if($filtroModel->conDetalle == "1"){
+                $sheet->setCellValue('A11', "Mes/Año");
+                $sheet->setCellValue('B11', "Concepto");
+                $sheet->setCellValue('C11', "Cargos");
+                $sheet->mergeCells('C11:D11');
+                $sheet->setCellValue('E1', "Abonos");
+                $sheet->mergeCells('E11:F11');
+                $sheet->setCellValue('C12', "Fecha");
+                $sheet->setCellValue('D12', "Monto");
+                $sheet->setCellValue('E12', "Fecha");
+                $sheet->setCellValue('F12', "Monto");
+                $sheet->getStyle("A11:F12")->getFont()->setBold(true);
+                $j = 13;
+            }
+            else{
+                $sheet->setCellValue('A11', "Mes/Año");
+                $sheet->setCellValue('B11', "Cargos");
+                $sheet->setCellValue('C11', "Abonos");
+                $sheet->getStyle("A11:C11")->getFont()->setBold(true);
+                $j = 12;
+            }
+            
+            $meses = Tools::arregloMeses($filtroModel->mesD, $filtroModel->agnoD, $filtroModel->mesH, $filtroModel->agnoH);
+            
+            $abonos = 0;
+            $cargos = 0;
+            foreach($meses as $mesArr){
+                $mes = $mesArr['mes'];
+                $agno = $mesArr['agno'];
+                $mesNombre = $mesArr['mesNombre'];
+                if($filtroModel->conDetalle == "1"){
+                    $sheet->setCellValue('A'.$j, $mesNombre." ".$agno);
+                    $j++;
+                    $movimientosMes = $contrato->cuentaCorriente->movimientosDeMes($mes, $agno);
+                    foreach($movimientosMes as $movimiento){
+                        $sheet->setCellValue('B'.$j, $movimiento->detalle);
+                        if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_CARGO){
+                            $sheet->setCellValue('C'.$j, Tools::backFecha($movimiento->fecha));
+                            $sheet->setCellValue('D'.$j, $movimiento->monto);
+                            $cargos+=$movimiento->monto;
+                        }
+                        else{
+                            $sheet->setCellValue('E'.$j, Tools::backFecha($movimiento->fecha));
+                            $sheet->setCellValue('F'.$j, $movimiento->monto);
+                            $abonos+=$movimiento->monto;
+                        }
+                        $j++;
+                    }
+                }
+                else{
+                    $saldoMes = $contrato->cuentaCorriente->saldoMes($mes, $agno);
+                    $sheet->setCellValue('A'.$j, $mesNombre." ".$agno);
+                    $sheet->setCellValue('B'.$j, $saldoMes['cargos']);
+                    $sheet->setCellValue('C'.$j, $saldoMes['abonos']);
+                    $j++;
+                }
+            }
+            if($filtroModel->conDetalle == "1"){
+                $sheet->setCellValue('A'.$j, "SUB TOTAL");
+                $sheet->setCellValue('D'.$j, $cargos);
+                $sheet->setCellValue('F'.$j, $abonos);
+                $j++;
+            }
+            
+            $saldo = $contrato->cuentaCorriente->saldoAFecha(date('Y-m-d'));
+            $sheet->setCellValue('A'.($j+1), "Saldo fecha consulta: ");
+            $sheet->getStyle('A'.($j+1))->getFont()->setSize(13);
+            $sheet->setCellValue('B'.($j+1), $saldo);
+            $sheet->getStyle('B'.($j+1))->getFont()->setSize(13);
+            $color = '00FF00';
+            if($saldo < 0){
+                $color = 'FF0000';
+            }
+            $sheet->getStyle("B".($j+1))->applyFromArray(
+                array(
+                    'fill' => array(
+                        'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                        'color' => array('rgb' => $color)
+                    )
+                )
+            );
+            
+            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="Movimientos Cliente '.$contrato->cliente->usuario->nombre.' '.$contrato->cliente->usuario->apellido.'.xls"');
+            header('Cache-Control: max-age=0');
+            // If you're serving to IE 9, then the following may be needed
+            header('Cache-Control: max-age=1');
+
+            // If you're serving to IE over SSL, then the following may be needed
+            header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+            header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+            header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+            header ('Pragma: public'); // HTTP/1.0
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+            $objWriter->save('php://output');
+            Yii::app()->end();
+        }
+               
+        Yii::app()->user->returnUrl=array('//contrato/adminAbonos');
+        $this->render('adminAbonos', array(
+            'model' => $model,
+            'filtroModel'=>$filtroModel,
+            'meses'=> $meses,
+            'agnos'=>$agnos,
+        ));
+    }
+    
+    public function actionAdminCargos() {
+        
+        $model = new Contrato('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Contrato']))
+            $model->attributes = $_GET['Contrato'];
+
+        Yii::app()->user->returnUrl=array('//contrato/adminCargos');
+        $this->render('adminCargos', array(
+            'model' => $model,
+        ));
+    }
+    
+    public function actionAdminAvisos() {
+        
+        $model = new Contrato('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Contrato']))
+            $model->attributes = $_GET['Contrato'];
+
+        
+        
+        $formato = new FormatoCartaForm();
+        if(isset($_POST['FormatoCartaForm'])){
+            $formato->attributes = $_POST['FormatoCartaForm'];
+            if(Yii::app()->user->rol == 'propietario'){
+                $contrato = Contrato::model()->findByPk($formato->contrato_id);
+                if(!$contrato->estaAsociadoAPropietario(Yii::app()->user->id)){
+                    throw new CHttpException(403, 'Usted no se encuentra autorizado para realizar esta acción.');
+                }
+            }
+            
+            $formato->attributes = $_POST['FormatoCartaForm'];
+            if($formato->validate()){
+                $this->crearCarta($formato);
+                if(CartaAviso::enviarCarta($formato)){
+                    Yii::app()->user->setFlash('success',"Carta de aviso enviada correctamente al cliente.");
+                }
+                else{
+                    Yii::app()->user->setFlash('error',"ERROR: Carta de aviso no pudo ser enviada, reintente.");
+                }
+                
+            }
+            else{
+                Yii::app()->user->setFlash('error',"ERROR: debe seleccionar un formato de carta para enviar.");
+            }
+        }
+        $this->render('adminAvisos', array(
+            'model' => $model,
+            'formato'=>$formato,
+        ));
+    }
+    
+    public function actionAdminAReajustar() {
+        
+        $model = new Contrato('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Contrato']))
+            $model->attributes = $_GET['Contrato'];
+
+        $this->render('adminAReajustar', array(
+            'model' => $model,
+        ));
+    }
+    
     public function crearCarta($formato){
         
         $contrato = Contrato::model()->findByPk($formato->contrato_id);
@@ -452,31 +772,26 @@ class ContratoController extends Controller {
         $contrato = Contrato::model()->findByPk($id);
         $cliente = $contrato->cliente;
         $departamento = $contrato->departamento;
-        $propietario_id = Propietario::model()->getId(Yii::app()->user->id);
         
-        if ($contrato->estaAsociadoACliente($cliente->id) ||
-                $contrato->estaAsociadoAPropietario($propietario_id) ||
-                Yii::app()->user->rol == 'administrativo' ||
-                Yii::app()->user->rol == 'superusuario') {
-        
-                    $file = Yii::app()->basePath.'/documentos/contratos/CartaAviso_'.$contrato->folio.'.docx';
-                    if (file_exists($file)) {
-                        header('Content-Description: File Transfer');
-                        header('Content-Type: application/octet-stream');
-                        header('Content-Disposition: attachment; filename='.basename($file));
-                        header('Expires: 0');
-                        header('Cache-Control: must-revalidate');
-                        header('Pragma: public');
-                        header('Content-Length: ' . filesize($file));
-                        ob_clean();
-                        flush();
-                        readfile($file);
-                        exit;
-                    }
-                    else{
-                        Yii::app()->user->setFlash('error',"Error: no se pudo descargar esta carta de aviso. Para descargarla, debe haberla enviado al menos a un cliente.");
-                        $this->actionAdminAviso();
-                    }
+        if ((Yii::app()->user->rol == 'propietario' && $contrato->estaAsociadoAPropietario(Yii::app()->user->id)) || Yii::app()->user->rol == 'superusuario') {
+            $file = Yii::app()->basePath.'/documentos/contratos/CartaAviso_'.$contrato->folio.'.docx';
+            if (file_exists($file)) {
+                header('Content-Description: File Transfer');
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename='.basename($file));
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
+                header('Content-Length: ' . filesize($file));
+                ob_clean();
+                flush();
+                readfile($file);
+                exit;
+            }
+            else{
+                Yii::app()->user->setFlash('error',"Error: no se pudo descargar esta carta de aviso. Para descargarla, debe haberla enviado al menos a un cliente.");
+                $this->redirect(CController::createUrl("//contrato/adminAvisos"));
+            }
         } else {
             throw new CHttpException(403, 'Usted no se encuentra autorizado para realizar esta acción.');
         }

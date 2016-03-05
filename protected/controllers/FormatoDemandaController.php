@@ -37,11 +37,7 @@ class FormatoDemandaController extends Controller
 	{
 		return array(
 			array('allow',
-                'actions' => array( 'view','create', 'exportarXLS', 'admin'),
-                'roles' => array('administrativo', 'superusuario'),
-            ),
-            array('allow',
-                'actions' => array('delete'),
+                'actions' => array( 'view','create', 'exportarXLS', 'admin','delete'),
                 'roles' => array('superusuario'),
             ),
 			array('deny',  // deny all users

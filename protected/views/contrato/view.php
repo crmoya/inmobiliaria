@@ -3,47 +3,55 @@
 /* @var $model Contrato */
 
 $this->breadcrumbs = array(
-    'Contratos' => array('index'),
-    $model->id,
+    'Contratos vigentes'=>array('admin'),
+    'Datos del Arrendatario Contrato #'.$model->folio,
 );
-if (Yii::app()->user->rol == 'superusuario' ||
-        Yii::app()->user->rol == 'administrativo') {
-    $this->menu = array(
-        array('label' => 'Crear Contrato', 'url' => array('create')),
-        array('label' => 'Borrar Contrato', 'url' => '#', 'linkOptions' => array('submit' => array('delete', 'id' => $model->id), 'confirm' => '¿Está seguro de borrar este item?')),
-        array('label' => 'Administrar Contratos', 'url' => array('admin')),
-    );
-}
 ?>
 
-<h1>Contrato #<?php echo $model->id; ?></h1>
+<h4>Datos del Arrendatario en <?php echo $model->departamento->propiedad->nombre." depto. ".$model->departamento->numero;?></h4>
 
 <?php
 $this->widget('zii.widgets.CDetailView', array(
-    'data' => $model,
+    'data' => $model->cliente,
     'attributes' => array(
-        'id',
-        'folio',
-        'fecha_inicio',
-        'monto_renta',
-        'monto_gastocomun',
-        'plazo',
+        'rut',
         array(
-            'label' => 'Nombre Propiedad',
-            'value' => $model->departamento->propiedad->nombre
+            'label' => 'Nombre',
+            'value' => $model->cliente->usuario->nombre." ".$model->cliente->usuario->apellido
         ),
         array(
-            'label' => 'Numero Departamento',
-            'value' => $model->departamento->numero
+            'label' => 'Email',
+            'value' => $model->cliente->usuario->email
         ),
-        array(
-            'label' => 'Rut Cliente',
-            'value' => $model->cliente->rut
-        ),
-        array(
-            'label' => 'Tipo de Contrato',
-            'value' => $model->tipoContrato->nombre
-        ),
+        'direccion_alternativa',
+        'telefono',
+        'ocupacion',
+        'renta',
     ),
 ));
+
 ?>
+<br/>
+<?php
+
+if(count($model->cliente->clienteFiadors) > 0){
+    echo "<h4>Datos del Fiador</h4>";
+    $fiador = $model->cliente->clienteFiadors->fiador;
+    $this->widget('zii.widgets.CDetailView', array(
+        'data' => $fiador,
+        'attributes' => array(
+            'rut',
+            array(
+                'label' => 'Nombre',
+                'value' => $fiador->nombre." ".$fiador->apellido
+            ),
+            'email',
+            'telefono',
+            'direccion',
+        ),
+    ));
+}
+
+
+?>
+<br/>

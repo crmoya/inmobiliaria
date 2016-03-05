@@ -38,18 +38,132 @@ class PrestacionController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('view','admin','update','delete','create','exportarXLS'),
+				'actions'=>array('view','admin','update','delete','create','exportarXLS','listado'),
 				'roles'=>array('superusuario','propietario'),
-			),
-                        array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('admin','exportarXLS'),
-				'roles'=>array('superusuario'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
 		);
 	}
+        
+        public function actionListado(){
+            $model = new ListadoPrestacionesForm();
+            $propiedades = Propiedad::model()->getDeUsuario(Yii::app()->user->id);
+            $meses = array();
+            for($i=1;$i<=12;$i++){
+                $meses[] = array('id'=>  str_pad($i, 2,"0",STR_PAD_LEFT),'nombre'=>Tools::fixMes($i));
+            }
+            $agnos = array();
+            $agnoInicio = 2000;
+            $agnoFin = (int)date('Y')+10;
+            for($i=$agnoInicio;$i<$agnoFin;$i++){
+                $agnos[] = array('id'=>$i,'nombre'=>$i);
+            }
+
+            $model->agnoH = date('Y');
+            $model->mesH = date('m');
+
+            if($model->mesH == '01'){
+                $model->mesD = '12';
+                $model->agnoD = (int)$model->agnoH - 1;
+            }
+            else{
+                $mes = (int)$model->mesH;
+                $model->mesD = str_pad($mes-1,2,"0",STR_PAD_LEFT);
+                $model->agnoD = $model->agnoH;
+            }
+
+            if (isset($_POST['ListadoPrestacionesForm'])){
+
+                $model->attributes = $_POST['ListadoPrestacionesForm'];
+                $propiedad = Propiedad::model()->findByPk($model->propiedad_id);
+                $departamento = Departamento::model()->findByPk($model->departamento_id);
+                
+                Yii::import('ext.phpexcel.XPHPExcel');    
+                $objPHPExcel= XPHPExcel::createPHPExcel();
+                $sheet = $objPHPExcel->getActiveSheet();
+                $sheet->setCellValue('A1', 'Listado de Prestaciones por Propiedad');
+                $sheet->mergeCells("A1:K1");
+                $sheet->getStyle("A1")->getFont()->setSize(20);
+                $sheet->setCellValue('A2', 'Rango de Fechas: Desde '.Tools::fixMes($model->mesD)." de ".$model->agnoD." hasta ".Tools::fixMes($model->mesH)." de ".$model->agnoH);
+                $sheet->mergeCells("A2:K2");
+                $sheet->getStyle("A2")->getFont()->setSize(15);
+                
+                $i=3;
+                if($propiedad != null){
+                    $sheet->setCellValueByColumnAndRow(0,$i, 'Propiedad: '.$propiedad->nombre);
+                    $sheet->mergeCellsByColumnAndRow(0,$i,5,$i);
+                    $sheet->getStyleByColumnAndRow(0,$i)->getFont()->setSize(15);
+                    $i++;
+                }        
+                if($departamento != null && $propiedad != null){
+                    $sheet->setCellValueByColumnAndRow(0,$i, 'Departamento: '.$departamento->numero);
+                    $sheet->mergeCellsByColumnAndRow(0,$i,5,$i);
+                    $sheet->getStyleByColumnAndRow(0,$i)->getFont()->setSize(15);
+                    $i++;
+                } 
+
+                $i++;
+                $sheet->setCellValueByColumnAndRow(0,$i, 'Fecha');
+                $sheet->setCellValueByColumnAndRow(1,$i, 'Propiedad');
+                $sheet->setCellValueByColumnAndRow(2,$i, 'Departamento');
+                $sheet->setCellValueByColumnAndRow(3,$i, 'General Prop');
+                $sheet->setCellValueByColumnAndRow(4,$i, 'Nro Cheque');
+                $sheet->setCellValueByColumnAndRow(5,$i, 'Monto');
+                $sheet->setCellValueByColumnAndRow(6,$i, 'C/S Cargo');
+                $sheet->setCellValueByColumnAndRow(7,$i, 'Concepto');
+                $sheet->setCellValueByColumnAndRow(8,$i, 'Maestro');
+                $sheet->setCellValueByColumnAndRow(9,$i, 'Tipo Prestación');
+                $sheet->getStyleByColumnAndRow(0,$i,10,$i)->getFont()->setSize(15);
+                $sheet->getStyleByColumnAndRow(0,$i,10,$i)->getFont()->setBold(true);
+                
+                
+                $i++;
+                
+                $prestaciones = Prestacion::model()->getDePropiedadYDepartamento($propiedad,$departamento);
+                foreach($prestaciones as $prestacion){
+                    foreach($prestacion->prestacionADepartamentos as $prestacionDepto){
+                        $sheet->setCellValueByColumnAndRow(0,$i, Tools::backFecha($prestacion->fecha));
+                        $sheet->setCellValueByColumnAndRow(1,$i, $prestacionDepto->departamento->propiedad->nombre);
+                        $sheet->setCellValueByColumnAndRow(2,$i, $prestacionDepto->departamento->numero);
+                        $sheet->setCellValueByColumnAndRow(3,$i, $prestacion->general_prop==1?"SÍ":"NO");
+                        $sheet->setCellValueByColumnAndRow(4,$i, $prestacion->documento);
+                        $sheet->setCellValueByColumnAndRow(5,$i, $prestacion->monto);
+                        $sheet->setCellValueByColumnAndRow(6,$i, $prestacion->genera_cargos==1?"SÍ":"NO");
+                        $sheet->setCellValueByColumnAndRow(7,$i, $prestacion->descripcion);
+                        $sheet->setCellValueByColumnAndRow(8,$i, $prestacion->ejecutor->nombre." (".$prestacion->ejecutor->especialidad->nombre.")");
+                        $sheet->setCellValueByColumnAndRow(9,$i, $prestacion->tipoPrestacion->nombre);
+                        $i++;
+                    }
+                }
+                $objPHPExcel->setActiveSheetIndex(0);
+
+                header('Content-Type: application/vnd.ms-excel');
+                header('Content-Disposition: attachment;filename="Movimientos Propietario.xls"');
+                header('Cache-Control: max-age=0');
+                // If you're serving to IE 9, then the following may be needed
+                header('Cache-Control: max-age=1');
+
+                // If you're serving to IE over SSL, then the following may be needed
+                header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+                header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+                header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+                header ('Pragma: public'); // HTTP/1.0
+
+                $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+                $objWriter->save('php://output');
+
+                Yii::app()->end();
+            }
+            $this->render('listado', array(
+                'model' => $model,
+                'meses'=>$meses,
+                'agnos'=>$agnos,
+                'propiedades'=>$propiedades,
+            ));
+        }
+
 
 	/**
 	 * Displays a particular model.
@@ -78,7 +192,6 @@ class PrestacionController extends Controller
                 $deptos->attributes=$_GET['Departamento'];
             
             $model=new Prestacion;
-            $model->genera_cargos = 1;
             // Uncomment the following line if AJAX validation is needed
             // $this->performAjaxValidation($model);
 
@@ -88,19 +201,43 @@ class PrestacionController extends Controller
                 $model->fecha = Tools::fixFecha($model->fecha);
                 
                 if($model->save()){
-                    
                     if(isset($_POST['chbDepartamentoId'])){
-                        foreach($_POST['chbDepartamentoId'] as $i=>$departamento){
-                            $prest_depto = new PrestacionADepartamento();
-                            $prest_depto->departamento_id = $departamento;
-                            $prest_depto->prestacion_id = $model->id;
-                            if($prest_depto->validate()){
+                        $cant_deptos = count($_POST['chbDepartamentoId']);
+                        if($cant_deptos > 0){
+                            $monto = (int)$model->monto/$cant_deptos;
+                            foreach($_POST['chbDepartamentoId'] as $i=>$departamento){
+                                $prest_depto = new PrestacionADepartamento();
+                                $prest_depto->departamento_id = $departamento;
+                                $prest_depto->prestacion_id = $model->id;
+                                if($prest_depto->validate()){
                                     $prest_depto->save();
-                            }				
+                                }
+                                //se crean los cargos para cada depto
+                                $cargo = new Movimiento();
+                                $depto = Departamento::model()->findByPk($departamento);
+                                if($depto->contrato != null){
+                                    $cargo->cuenta_corriente_id = $depto->contrato->cuentaCorriente->id;
+                                }
+                                else{
+                                    continue;
+                                }
+                                $cargo->fecha = $model->fecha;
+                                $cargo->tipo = Tools::MOVIMIENTO_TIPO_CARGO;
+                                $cargo->monto = $monto;
+                                $cargo->detalle = "PRESTACIÓN REALIZADA: ".$model->descripcion;
+                                $cargo->validado = 1;
+                                $cargo->save();                                
+                            }
+                        }
+                        else{
+                            
                         }
                     }
-                    
-                    $this->redirect(array('view','id'=>$model->id));
+                    Yii::app()->user->setFlash('success','Prestación creada correctamente.');
+                    $model = new Prestacion;
+                }
+                else{
+                    Yii::app()->user->setFlash('error','Error: No se pudo crear la Prestación. Reintente.');
                 }
             }
 

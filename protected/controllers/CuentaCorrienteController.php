@@ -8,14 +8,6 @@ class CuentaCorrienteController extends Controller {
      */
     public $layout = '//layouts/column2';
 
-    public function behaviors() {
-        return array(
-            'eexcelview' => array(
-                'class' => 'ext.eexcelview.EExcelBehavior',
-            ),
-        );
-    }
-
     /**
      * @return array action filters
      */
@@ -34,12 +26,12 @@ class CuentaCorrienteController extends Controller {
     public function accessRules() {
         return array(
             array('allow',
-                'actions' => array( 'view'),
-                'roles' => array('propietario', 'superusuario', 'cliente', 'administrativo'),
+                'actions' => array( 'view','send'),
+                'roles' => array('propietario', 'superusuario'),
             ),
             array('allow',
-                'actions' => array('admin','view','update', 'exportarXLS'),
-                'roles' => array('propietario', 'administrativo', 'superusuario'),
+                'actions' => array('admin','view','update', 'exportarXLS','adminMorosos','planillaIngresos','ingresosCliente'),
+                'roles' => array('propietario', 'superusuario'),
             ),
             array('allow',
                 'actions' => array('delete', 'admin'),
@@ -50,7 +42,328 @@ class CuentaCorrienteController extends Controller {
             ),
         );
     }
+    
+    
+    public function actionPlanillaIngresos(){
+        $model = new IngresosForm();
+        $propiedades = Propiedad::model()->getDeUsuario(Yii::app()->user->id);
+        $meses = array();
+        for($i=1;$i<=12;$i++){
+            $meses[] = array('id'=>  str_pad($i, 2,"0",STR_PAD_LEFT),'nombre'=>Tools::fixMes($i));
+        }
+        $agnos = array();
+        $agnoInicio = 2000;
+        $agnoFin = (int)date('Y')+10;
+        for($i=$agnoInicio;$i<$agnoFin;$i++){
+            $agnos[] = array('id'=>$i,'nombre'=>$i);
+        }
+        
+        $model->agnoH = date('Y');
+        $model->mesH = date('m');
+        
+        if($model->mesH == '01'){
+            $model->mesD = '12';
+            $model->agnoD = (int)$model->agnoH - 1;
+        }
+        else{
+            $mes = (int)$model->mesH;
+            $model->mesD = str_pad($mes-1,2,"0",STR_PAD_LEFT);
+            $model->agnoD = $model->agnoH;
+        }
+        
+        if (isset($_POST['IngresosForm'])){
+            
+            $model->attributes = $_POST['IngresosForm'];
+            $propiedad = Propiedad::model()->findByPk($model->propiedad_id);
+            if($propiedad!=null){
+                Yii::import('ext.phpexcel.XPHPExcel');    
+                $objPHPExcel= XPHPExcel::createPHPExcel();
+                $sheet = $objPHPExcel->getActiveSheet();
+                $sheet->setCellValue('A1', 'Planilla de Ingresos por Propiedad');
+                $sheet->mergeCells("A1:K1");
+                $sheet->getStyle("A1")->getFont()->setSize(20);
+                $sheet->setCellValue('A2', 'Propiedad: '.$propiedad->nombre);
+                $sheet->mergeCells("A2:K2");
+                $sheet->setCellValue('A3', 'Rango de Fechas: Desde '.Tools::fixMes($model->mesD)." de ".$model->agnoD." hasta ".Tools::fixMes($model->mesH)." de ".$model->agnoH);
+                $sheet->mergeCells("A3:K3");
+                $sheet->getStyle("A2")->getFont()->setSize(15);
+                $sheet->getStyle("A3")->getFont()->setSize(15);
 
+                $i = 5;
+
+                $sheet->setCellValue('A'.$i, 'Departamento');
+                $meses = Tools::arregloMeses($model->mesD, $model->agnoD, $model->mesH, $model->agnoH);
+                
+                $sheet->getStyleByColumnAndRow(0,$i)->getFont()->setBold(true);
+                $j = 2;
+                if($model->abonosYCargos == "1"){
+                    $j = 1;
+                }
+                foreach($meses as $mesArr){
+                    $sheet->setCellValueByColumnAndRow($j, $i, $mesArr['mesNombre']." de ".$mesArr['agno']);
+                    $sheet->getStyleByColumnAndRow($j,$i)->getFont()->setBold(true);
+                    $j++;
+                }
+                $i++;
+
+                $departamentos = Departamento::model()->findAllByAttributes(array('propiedad_id'=>$propiedad->id));
+                foreach($departamentos as $departamento){
+                    $j=0;
+                    $sheet->setCellValueByColumnAndRow($j,$i, $departamento->numero);
+                    $sheet->getStyleByColumnAndRow($j,$i)->getFont()->setBold(true);
+                    if($model->abonosYCargos){
+                        $j++;
+                        $sheet->setCellValueByColumnAndRow($j, $i, "Cargos");
+                        $sheet->setCellValueByColumnAndRow($j, $i+1, "Abonos");
+                        $sheet->getStyleByColumnAndRow($j,$i,$j,$i+1)->getFont()->setBold(true);
+                        $j++;
+                    }
+                    else{
+                        $j = 1;
+                    }
+                    if($departamento->contrato != null){
+                        if($departamento->contrato->cuentaCorriente != null){
+                            foreach($meses as $mesArr){
+                                $saldoMes = $departamento->contrato->cuentaCorriente->saldoMes($mesArr['mes'],$mesArr['agno']);
+                                if($model->abonosYCargos){
+                                    $sheet->setCellValueByColumnAndRow($j, $i, $saldoMes['cargos']);
+                                    $sheet->setCellValueByColumnAndRow($j, $i+1, $saldoMes['abonos']);
+                                }
+                                else{
+                                    $sheet->setCellValueByColumnAndRow($j, $i, $saldoMes['abonos']);
+                                }
+                                $j++;
+                            }
+                        }
+                    }
+                    if($model->abonosYCargos){
+                        $i+=2;
+                    }
+                    else{
+                        $i++;
+                    }
+                }
+                $objPHPExcel->setActiveSheetIndex(0);
+
+                header('Content-Type: application/vnd.ms-excel');
+                header('Content-Disposition: attachment;filename="Movimientos Propietario.xls"');
+                header('Cache-Control: max-age=0');
+                // If you're serving to IE 9, then the following may be needed
+                header('Cache-Control: max-age=1');
+
+                // If you're serving to IE over SSL, then the following may be needed
+                header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+                header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+                header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+                header ('Pragma: public'); // HTTP/1.0
+
+                $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+                $objWriter->save('php://output');
+
+                Yii::app()->end();
+            }
+            else{
+                $model->addError("propiedad_id", "ERROR: Por favor seleccione propiedad válida.");
+            }
+        }
+        $this->render('planillaIngresos', array(
+            'model' => $model,
+            'meses'=>$meses,
+            'agnos'=>$agnos,
+            'propiedades'=>$propiedades,
+        ));
+    }
+    
+    public function actionIngresosCliente(){
+        $model = new IngresosClienteForm();
+        $propiedades = Propiedad::model()->getDeUsuario(Yii::app()->user->id);
+        $meses = array();
+        for($i=1;$i<=12;$i++){
+            $meses[] = array('id'=>  str_pad($i, 2,"0",STR_PAD_LEFT),'nombre'=>Tools::fixMes($i));
+        }
+        $agnos = array();
+        $agnoInicio = 2000;
+        $agnoFin = (int)date('Y')+10;
+        for($i=$agnoInicio;$i<$agnoFin;$i++){
+            $agnos[] = array('id'=>$i,'nombre'=>$i);
+        }
+        
+        $model->agnoH = date('Y');
+        $model->mesH = date('m');
+        
+        if($model->mesH == '01'){
+            $model->mesD = '12';
+            $model->agnoD = (int)$model->agnoH - 1;
+        }
+        else{
+            $mes = (int)$model->mesH;
+            $model->mesD = str_pad($mes-1,2,"0",STR_PAD_LEFT);
+            $model->agnoD = $model->agnoH;
+        }
+        
+        if (isset($_POST['IngresosClienteForm'])){
+            
+            $model->attributes = $_POST['IngresosClienteForm'];
+
+            Yii::import('ext.phpexcel.XPHPExcel');    
+            $objPHPExcel= XPHPExcel::createPHPExcel();
+            $sheet = $objPHPExcel->getActiveSheet();
+            $sheet->setCellValue('A1', 'Planilla de Ingresos de Cliente');
+            $sheet->mergeCells("A1:K1");
+            $sheet->getStyle("A1")->getFont()->setSize(20);
+            $sheet->setCellValue('A2', 'Rango de Fechas: Desde '.Tools::fixMes($model->mesD)." de ".$model->agnoD." hasta ".Tools::fixMes($model->mesH)." de ".$model->agnoH);
+            $sheet->mergeCells("A2:K2");
+            $sheet->getStyle("A2")->getFont()->setSize(15);
+
+            $i = 4;
+
+            $sheet->setCellValue('A'.$i, 'Fecha');
+            $sheet->setCellValue('B'.$i, 'Propiedad');
+            $sheet->setCellValue('C'.$i, 'Departamento');
+            $sheet->setCellValue('D'.$i, 'Nombre');
+            $sheet->setCellValue('E'.$i, 'Monto');
+
+            $sheet->getStyleByColumnAndRow(0,$i,4,$i)->getFont()->setBold(true);
+            
+            $fDesde = $model->agnoD."-".str_pad($model->mesD,2,"0",STR_PAD_LEFT)."-01";
+            $fHasta = $model->agnoH."-".str_pad($model->mesH,2,"0",STR_PAD_LEFT)."-01";
+            $i++;
+            $movimientos = Movimiento::model()->getIngresosDePropietarioEntreFechas(Yii::app()->user->id,$fDesde,$fHasta);
+            foreach($movimientos as $movimiento){
+                $sheet->setCellValue('A'.$i, Tools::backFecha($movimiento->fecha));
+                $sheet->setCellValue('B'.$i, $movimiento->cuentaCorriente->contrato->departamento->propiedad->nombre);
+                $sheet->setCellValue('C'.$i, $movimiento->cuentaCorriente->contrato->departamento->numero);
+                $sheet->setCellValue('D'.$i, $movimiento->cuentaCorriente->contrato->cliente->usuario->nombre." ".$movimiento->cuentaCorriente->contrato->cliente->usuario->apellido." (".$movimiento->cuentaCorriente->contrato->cliente->rut.")");
+                $sheet->setCellValue('E'.$i, $movimiento->monto);
+                $i++;
+            }
+            
+
+/*                $meses = Tools::arregloMeses($model->mesD, $model->agnoD, $model->mesH, $model->agnoH);
+
+            $sheet->getStyleByColumnAndRow(0,$i)->getFont()->setBold(true);
+            $j = 2;
+            if($model->abonosYCargos){
+                $j = 1;
+            }
+            foreach($meses as $mesArr){
+                $sheet->setCellValueByColumnAndRow($j, $i, $mesArr['mesNombre']." de ".$mesArr['agno']);
+                $sheet->getStyleByColumnAndRow($j,$i)->getFont()->setBold(true);
+                $j++;
+            }
+            $i++;
+
+            $departamentos = Departamento::model()->findAllByAttributes(array('propiedad_id'=>$propiedad->id));
+            foreach($departamentos as $departamento){
+                $j=0;
+                $sheet->setCellValueByColumnAndRow($j,$i, $departamento->numero);
+                $sheet->getStyleByColumnAndRow($j,$i)->getFont()->setBold(true);
+                if($model->abonosYCargos){
+                    $j++;
+                    $sheet->setCellValueByColumnAndRow($j, $i, "Cargos");
+                    $sheet->setCellValueByColumnAndRow($j, $i+1, "Abonos");
+                    $sheet->getStyleByColumnAndRow($j,$i,$j,$i+1)->getFont()->setBold(true);
+                    $j++;
+                }
+                else{
+                    $j = 1;
+                }
+                if($departamento->contrato != null){
+                    if($departamento->contrato->cuentaCorriente != null){
+                        foreach($meses as $mesArr){
+                            $saldoMes = $departamento->contrato->cuentaCorriente->saldoMes($mesArr['mes'],$mesArr['agno']);
+                            if($model->abonosYCargos){
+                                $sheet->setCellValueByColumnAndRow($j, $i, $saldoMes['cargos']);
+                                $sheet->setCellValueByColumnAndRow($j, $i+1, $saldoMes['abonos']);
+                            }
+                            else{
+                                $sheet->setCellValueByColumnAndRow($j, $i, $saldoMes['abonos']);
+                            }
+                            $j++;
+                        }
+                    }
+                }
+                if($model->abonosYCargos){
+                    $i+=2;
+                }
+                else{
+                    $i++;
+                }
+            }
+* 
+* 
+*/
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="Movimientos Propietario.xls"');
+            header('Cache-Control: max-age=0');
+            // If you're serving to IE 9, then the following may be needed
+            header('Cache-Control: max-age=1');
+
+            // If you're serving to IE over SSL, then the following may be needed
+            header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+            header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+            header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+            header ('Pragma: public'); // HTTP/1.0
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+            $objWriter->save('php://output');
+
+            Yii::app()->end();
+
+
+        }
+        $this->render('ingresosCliente', array(
+            'model' => $model,
+            'meses'=>$meses,
+            'agnos'=>$agnos,
+            'propiedades'=>$propiedades,
+        ));
+    }
+    
+    public function actionAdminMorosos() {
+        $model = new TempMorosos('search');
+        $model->refrescar();
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['TempMorosos'])){
+            $model->attributes = $_GET['TempMorosos'];
+        }
+        $this->render('adminMorosos', array(
+            'model' => $model,
+        ));
+    }
+    
+    
+
+    public function actionSend(){
+        $body = $_POST['body'];
+        $cuenta = CuentaCorriente::model()->findByPk($_POST['cuenta']);
+        if($cuenta != null){
+            if($cuenta->estaAsociadoPropietario(Yii::app()->user->id)){
+                $message = $body;
+                $headers = "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                $headers .= 'From: <'.Tools::FROM_CARTA_AVISO.'>' . "\r\n";
+                $headers .= 'Cc: '.Tools::FROM_CARTA_AVISO. "\r\n";
+                if(mail($cuenta->contrato->cliente->usuario->email,"AVISO: ABONO A LA CUENTA CORRIENTE.",$message,$headers)){
+                    echo "E-MAIL enviado correctamente.";
+                }
+                else{
+                    echo "ERROR, por favor reintente.";
+                }
+            }
+            else{
+                echo "ERROR: No tiene permisos para enviar esta información.";
+                die;
+            }
+        }
+        else{
+            echo "ERROR: No existe la cuenta corriente.";
+            die;
+        }
+        
+    }
     /**
      * Displays a particular model.
      * @param integer $id the ID of the model to be displayed
@@ -269,9 +582,123 @@ class CuentaCorrienteController extends Controller {
 
     public function actionExportarXLS() {
         // generate a resultset
-        $data = Contrato::model()->findAll();
-        $this->toExcel($data, array('id', 'saldo_inicial'), 'Cuenta Corriente', array()
-        );
+        $morosos = Yii::app()->user->getState('morososFiltrados');
+        Yii::import('ext.phpexcel.XPHPExcel');    
+        $objPHPExcel= XPHPExcel::createPHPExcel();
+        $sheet = $objPHPExcel->getActiveSheet();
+        $sheet->setCellValue('A1', 'Clientes Morosos');
+        $sheet->mergeCells("A1:K1");
+        $sheet->getStyle("A1")->getFont()->setSize(20);
+            
+        $filtros = "";
+        if($morosos->propiedad != ""){
+            $filtros .= " Propiedad: ".$morosos->propiedad.".";
+        }
+        if($morosos->departamento != ""){
+            $filtros .= " Departamento: ".$morosos->departamento.".";
+        }
+        if($morosos->nombre_ap != ""){
+            $filtros .= " Nombre Cliente: ".$morosos->nombre_ap.".";
+        }
+        if($morosos->fecha != ""){
+            $filtros .= " Fecha: ".$morosos->fecha.".";
+        }
+        if($morosos->dias != ""){
+            $filtros .= " Días de mora: ".$morosos->dias.".";
+        }
+        $i = 3;
+        if($filtros != ""){
+            $sheet->setCellValue('A2', 'Criterios de búsqueda aplicados: '.$filtros);
+            $sheet->mergeCells("A2:K2");
+            $i++;
+            $criteria = new CDbCriteria();
+            $criteria->compare('id',$morosos->id);
+            if($morosos->nombre_ap != ""){
+                $arreglo = explode(" ",$morosos->nombre_ap);
+                $nombreApellido = array();
+                foreach($arreglo as $palabra){
+                    if(trim($palabra)!= ''){
+                        $nombreApellido[]=$palabra;
+                    }
+                }
+                $criteriaNombre = new CDbCriteria();
+                $palabras = count($nombreApellido);
+                if($palabras == 1){
+                    $busqueda = $nombreApellido[0];
+                    if(trim($busqueda) != ''){
+                        $criteriaNombre->compare('nombre',$busqueda,true);
+                        $criteriaNombre->compare('apellido',$busqueda,true,'OR');
+                    }
+                }
+
+                if($palabras == 2){
+                    $nombre = $nombreApellido[0];
+                    $apellido = $nombreApellido[1];
+                    $criteriaNombre->compare('nombre',$nombre,true);
+                    $criteriaNombre->compare('apellido',$apellido,true);
+                }
+                $criteria->mergeWith($criteriaNombre,'AND');
+            }
+            
+            if($morosos->propiedad != ""){
+                $criteria->compare('propiedad',$morosos->propiedad,true);
+            }
+            if($morosos->departamento !=""){
+                $criteria->compare('departamento',$morosos->departamento,true);
+            }
+            if($morosos->monto != ""){
+                $criteria->compare('monto',$morosos->monto);
+            }
+            if($morosos->fecha != ""){
+                $criteria->compare('fecha',Tools::fixFecha($morosos->fecha));
+            }
+            if($morosos->dias != ""){
+                $criteria->compare('dias',$morosos->dias);
+            }
+            $tempMorosos = TempMorosos::model()->findAll($criteria);            
+        }
+        else{
+            $tempMorosos = TempMorosos::model()->findAll();
+        }
+        
+        $sheet->setCellValue('A'.$i, 'Propiedad');
+        $sheet->setCellValue('B'.$i, 'Departamento');
+        $sheet->setCellValue('C'.$i, 'Nombre');
+        $sheet->setCellValue('D'.$i, 'Monto');
+        $sheet->setCellValue('E'.$i, 'Fecha');
+        $sheet->setCellValue('F'.$i, 'Dias');
+        
+        $sheet->getStyle("A$i:F$i")->getFont()->setBold(true);
+        $i++;
+        foreach($tempMorosos as $moroso){
+            $sheet->setCellValue('A'.$i, $moroso->propiedad);
+            $sheet->setCellValue('B'.$i, $moroso->departamento);
+            $sheet->setCellValue('C'.$i, $moroso->nombre." ".$moroso->apellido);
+            $sheet->setCellValue('D'.$i, $moroso->monto);
+            $sheet->setCellValue('E'.$i, Tools::backFecha($moroso->fecha));
+            $sheet->setCellValue('F'.$i, $moroso->dias);
+            $i++;
+        }
+            
+        $objPHPExcel->setActiveSheetIndex(0);
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="Movimientos Propietario.xls"');
+        header('Cache-Control: max-age=0');
+        // If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+
+        // If you're serving to IE over SSL, then the following may be needed
+        header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+        header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header ('Pragma: public'); // HTTP/1.0
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+        
+        
+        Yii::app()->end();
     }
 
 }

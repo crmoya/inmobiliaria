@@ -3,16 +3,13 @@
 /* @var $model Contrato */
 
 $this->breadcrumbs = array(
-    'Contratos' => array('index'),
-    'Crear',
+    'Nuevo Contrato',
 );
 
 $this->menu = array(
     array('label' => 'Administrar Contratos', 'url' => array('admin')),
 );
 ?>
-
-<h1>Crear Contrato</h1>
 
 <?php
 echo $this->renderPartial('_form', array('model' => $model,

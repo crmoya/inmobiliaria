@@ -6,9 +6,9 @@
         <meta name="language" content="en" />
 
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/styles.css" />
-
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
-
+        <script src="<?php echo Yii::app()->baseUrl."/js/swal/sweetalert.min.js"?>"></script>
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->baseUrl; ?>/js/swal/sweetalert.css" />
         <?php Yii::app()->bootstrap->register(); ?>
     </head>
 
@@ -72,39 +72,41 @@
                         ),
                     ),
                 ));
-            }
-            if (Yii::app()->user->rol == 'administrativo') {
+            }else if (Yii::app()->user->rol == 'propietario') {
                 $this->widget('bootstrap.widgets.TbNavbar', array(
                     'items' => array(
                         array(
                             'class' => 'bootstrap.widgets.TbMenu',
                             'items' => array(
-                                array('label' => 'Inicio', 'url' => array('/site/index'),),
-                                array('label' => 'Archivo', 'url' => array('index'),
+                                array('label' => 'Deptos.', 'url' => array('/departamento/admin'),
+                                ),
+                                array('label' => 'Contratos', 'url' => array('index'),
                                     'items' => array(
-                                        array('label' => 'Propietario', 'url' => array('/propietario/admin')),
-                                        array('label' => 'Propiedades', 'url' => array('/propiedad/admin')),
-                                        array('label' => 'Departamentos', 'url' => array('/departamento/admin')),
-                                        array('label' => 'Formato de Contratos', 'url' => array('tipoContrato/admin')),
-                                        array('label' => 'Formato de Cartas', 'url' => array('/formatoCarta/admin')),
-                                        array('label' => 'Formato de Demandas Judiciales', 'url' => array('/formatoDemanda/admin')),
-                                        array('label' => 'Ejecutores', 'url' => array('/ejecutor/admin')),
-                                        array('label' => 'IPC', 'url' => array('/ipc/admin')),
-                                        array('label' => 'Tipos de Prestaciones', 'url' => array('/tipoPrestacion/admin')),
+                                        array('label' => 'Crear nuevo Contrato', 'url' => array('/contrato/create')),
+                                        array('label' => 'Ver Contratos vigentes', 'url' => array('contrato/admin')),
+                                        array('label' => 'Ver Contratos finiquitados', 'url' => array('/contrato/adminFiniquitados')),
                                     ),
                                 ),
-                                array('label' => 'Movimientos', 'url' => array('admin'),
+                                array('label' => 'Ctas. Corrientes', 'url' => array('index'),
                                     'items' => array(
-                                        array('label' => 'Clientes', 'url' => array('/cliente/admin')),
-                                        array('label' => 'Contratos', 'url' => array('contrato/admin')),
-                                        array('label' => 'Cuentas Corrientes', 'url' => array('cuentaCorriente/admin')),
-                                        array('label' => 'Movimientos de cuentas', 'url' => array('movimiento/indexType')),
-                                        array('label' => 'Reajustes de Renta', 'url' => array('/contrato/adminReajustes')),
-                                        array('label' => 'Cartas de aviso', 'url' => array('contrato/adminAviso')),
-                                        array('label' => 'Demandas Judiciales', 'url' => array('demandaJudicial/admin')),
-                                        array('label' => 'Contrato bienes Muebles', 'url' => array('/contratoMueble/admin')),
-                                        array('label' => 'Prestaciones', 'url' => array('/prestacion/admin')),
-                                        array('label' => 'Inventario Bienes Muebles', 'url' => array('/mueble/admin')),
+                                        array('label' => 'Contratos a reajustar el próximo mes', 'url' => array('/contrato/adminAReajustar')),
+                                        array('label' => 'Abonos/Cargos de clientes', 'url' => array('/contrato/adminAbonos')),
+                                        array('label' => 'Clientes Morosos', 'url' => array('/cuentaCorriente/adminMorosos')),
+                                        array('label' => 'Planilla de Ingresos', 'url' => array('/cuentaCorriente/planillaIngresos')),
+                                        array('label' => 'Ingresos de Cliente por fecha', 'url' => array('/cuentaCorriente/ingresosCliente')),
+                                    ),
+                                ),
+                                array('label' => 'Cobros', 'url' => array('index'),
+                                    'items' => array(
+                                        array('label' => 'Enviar avisos', 'url' => array('/contrato/adminAvisos')),
+                                    ),
+                                ),
+                                array('label' => 'Prestaciones', 'url' => array('index'),
+                                    'items' => array(
+                                        array('label' => 'Ingresar Prestación', 'url' => array('/prestacion/create')),
+                                        array('label' => 'Listado de Prestaciones', 'url' => array('/prestacion/listado')),
+                                        array('label' => 'Especialidades', 'url' => array('/especialidad/admin')),
+                                        array('label' => 'Maestros', 'url' => array('/ejecutor/admin')),
                                     ),
                                 ),
                                 array('label' => 'Mi Cuenta (' . Yii::app()->user->name . ')', 'url' => array('#'),
@@ -116,51 +118,7 @@
                         ),
                     ),
                 ));
-            }
-            if (Yii::app()->user->rol == 'propietario') {
-                $this->widget('bootstrap.widgets.TbNavbar', array(
-                    'items' => array(
-                        array(
-                            'class' => 'bootstrap.widgets.TbMenu',
-                            'items' => array(
-                                array('label' => 'Inicio', 'url' => array('/site/index'),),
-                                array('label' => 'Archivo', 'url' => array('index'),
-                                    'items' => array(
-                                        array('label' => 'Propiedades', 'url' => array('/propiedad/admin')),
-                                        array('label' => 'Departamentos', 'url' => array('/departamento/admin')),
-                                    ),
-                                ),
-                                array('label' => 'Movimientos', 'url' => array('index'),
-                                    'items' => array(
-                                        array('label' => 'Clientes', 'url' => array('/cliente/admin')),
-                                        array('label' => 'Contratos', 'url' => array('contrato/admin')),
-                                        array('label' => 'Cuentas Corrientes', 'url' => array('cuentaCorriente/admin')),
-                                        array('label' => 'Movimientos de cuentas', 'url' => array('movimiento/indexPerson')),
-                                        array('label' => 'Cartas de aviso', 'url' => array('contrato/adminAviso')),
-                                        array('label' => 'Demandas Judiciales', 'url' => array('demandaJudicial/admin')),
-                                        array('label' => 'Contrato bienes Muebles', 'url' => array('/contratoMueble/admin')),
-                                        array('label' => 'Prestaciones', 'url' => array('/prestacion/admin')),
-                                        array('label' => 'Inventario Bienes Muebles', 'url' => array('/mueble/admin')),
-                                    ),
-                                ),
-                                array('label' => 'Informes', 'url' => array('#'),
-                                    'items' => array(
-                                        array('label' => 'Movimientos de Propietario', 'url' => array('/movimiento/informe')),
-                                        array('label' => 'Emisión de contrato', 'url' => array('/site/index')),
-                                        array('label' => 'Cartas de Aviso', 'url' => array('/site/index')),
-                                    )
-                                ),
-                                array('label' => 'Mi Cuenta (' . Yii::app()->user->name . ')', 'url' => array('#'),
-                                    'items' => array(
-                                        array('label' => 'Cerrar Sesión', 'url' => array('/site/logout')),
-                                        array('label' => 'Cambiar mi Clave', 'url' => array('/site/cambiarClave')),
-                                    ))
-                            ),
-                        ),
-                    ),
-                ));
-            }
-            if (Yii::app()->user->rol == 'cliente') {
+            }else if (Yii::app()->user->rol == 'cliente') {
                 $this->widget('bootstrap.widgets.TbNavbar', array(
                     'items' => array(
                         array(
@@ -206,11 +164,11 @@
 
             <div class="clear"></div>
 
-            <div id="footer">
-                Sitio creado por <a href="http://www.mvs.cl">MVS Ingeniería</a> <br/>
-            </div><!-- footer -->
+            
 
         </div><!-- page -->
-
+        <div id="footer">
+            <a href="http://www.mvs.cl">MVS Ingeniería</a> <br/><br/>
+        </div><!-- footer -->
     </body>
 </html>

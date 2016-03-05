@@ -1,18 +1,36 @@
+<?php
+$this->breadcrumbs=array(
+	'Contratos vigentes'=>Yii::app()->user->returnUrl,
+	'Movimientos de la cuenta #'.$cuenta->id,
+);
+$movimientos = Movimiento::model()->findAll(
+                array(  'condition'=>'cuenta_corriente_id = :cuenta',
+                        'params'=>array(':cuenta'=>$cuenta->id),
+                        'order'=>'fecha',
+                    )
+            );
+?>
 
-<h4>Cta. Cte: <?php echo $cuenta->nombre; ?></h4>
-<p>Detalle de los movimientos asociados la Cuenta Corriente</p>
-<p><strong>Saldo Inicial: </strong><?php echo $cuenta->saldo_inicial; ?></p>
+<div class="span5"><h4>Cuenta Corriente: <?php echo $cuenta->nombre; ?></h4></div>
+<div class="clearfix"></div>
+<div class="span5"><p>Detalle de los movimientos asociados la Cuenta Corriente</p></div>
+<div class="span1"><?php echo CHtml::link(CHtml::image(Yii::app()->baseUrl.'/images/add.png'),array('//movimiento/abonar/'.$cuenta->id));?></div>
+<div class="span1"><?php echo CHtml::link(CHtml::image(Yii::app()->baseUrl.'/images/sub.png'),array('//movimiento/cargar/'.$cuenta->id));?></div>
+<div class="clearfix"></div>
+<div class="span2">
+    <p class='saldo'><strong>Saldo actual: </strong><span id="saldo"/></p>
+
 <table class="table table-hover table-bordered footable" data-filter="#filter" data-page-size="10">
     <thead>
         <tr>
-            <th>Fecha</th>
-            <th>Detalle</th>
-            <th>Cuenta</th>
+            <th data-sort-initial="descending" data-type='numeric'>Fecha</th>
+            <th class="th250">Detalle</th>
             <th>Abono</th>
             <th>Cargo</th>
+            <th class="th250">Forma Pago</th>
             <th>Saldo</th>
             <th>Validado</th>
-            <?php echo (Yii::app()->user->rol == 'superusuario' || Yii::app()->user->rol == 'administrativo') ? '<th>Acciones</th>' : '<th></th>'; ?>
+            <?php echo (Yii::app()->user->rol == 'superusuario' || Yii::app()->user->rol == 'propietario') ? '<th>Acciones</th>' : '<th></th>'; ?>
         </tr>
     </thead>
     <tbody>
@@ -23,7 +41,7 @@
         $validate_image = CHtml::image(Yii::app()->baseUrl . '/images/validated.png');
         $not_validate_image = CHtml::image(Yii::app()->baseUrl . '/images/not_validated.png');
         $saldo = $cuenta->saldo_inicial;
-        foreach ($model as $mov) {
+        foreach ($movimientos as $mov) {
             if ($mov->tipo == Tools::MOVIMIENTO_TIPO_ABONO && $mov->validado == 1) {
                 $saldo += $mov->monto;
             }
@@ -31,11 +49,11 @@
                 $saldo -= $mov->monto;
             ?>
             <tr>
-                <td><?php echo $mov->fecha; ?></td>
-                <td><?php echo $mov->detalle; ?></td>
-                <td><?php echo $mov->cuentaCorriente->nombre; ?></td>
+                <td style="width:100px;" data-value="<?php echo strtotime($mov->fecha);?>"><?php echo Tools::backFecha($mov->fecha); ?></td>
+                <td style="width:300px;"><?php echo $mov->detalle; ?></td>
                 <td><?php echo ($mov->tipo == Tools::MOVIMIENTO_TIPO_ABONO) ? number_format($mov->monto,0,',','.') : ''; ?></td>
                 <td><?php echo ($mov->tipo == Tools::MOVIMIENTO_TIPO_CARGO) ? number_format($mov->monto,0,',','.') : ''; ?></td>
+                <td><?php echo $mov->formaPago != null?$mov->formaPago->nombre:''; ?></td>
                 <td><?php echo number_format($saldo,0,',','.'); ?></td>
                 <td><?php
                     if ((Yii::app()->user->rol == 'superusuario' || Yii::app()->user->rol == 'administrativo' || Yii::app()->user->rol == 'propietario') && $mov->tipo == Tools::MOVIMIENTO_TIPO_ABONO) {
@@ -53,13 +71,13 @@
                 </td>
                 <td>
                     <?php
-                    echo (Yii::app()->user->rol == 'superusuario' || Yii::app()->user->rol == 'administrativo') ?
+                    echo (Yii::app()->user->rol == 'superusuario' || Yii::app()->user->rol == 'propietario') ?
                             CHtml::link($edit_image, 'movimiento/update', array(
                                 'submit' => array('movimiento/update'),
                                 'params' => array('mov_id' => $mov->id, 'cuenta_id' => $cuenta->id))) :
                             '';
                     ?>
-                    <?php echo (Yii::app()->user->rol == 'superusuario') ? 
+                    <?php echo (Yii::app()->user->rol == 'propietario') ? 
                             CHtml::link($remove_image, "#", array(
                                 "submit" => array('delete'),
                                 'params' => array('mov_id' => $mov->id, 'cuenta_id' => $cuenta->id),
@@ -81,16 +99,32 @@
         </tr>
     </tfoot>
 </table>
-<p><strong>Total: </strong><?php echo number_format($saldo,0,',','.'); ?></p>
-<?php
-if (Yii::app()->user->rol == 'superusuario' || Yii::app()->user->rol == 'administrativo'  || Yii::app()->user->rol == 'propietario') {
-    echo CHtml::link($add_image, Yii::app()->baseUrl . '/index.php/movimiento/create/' . $cuenta->id);
-}
-?>
-<br/>
+</div>
+<style>
+    .th250{
+        width:250px;
+        max-width: 250px;
+        min-width: 250px;
+    }
+    .green{
+        background:greenyellow;
+    }
+    .red{
+        background: pink;
+    }
+</style>
+<script src="<?php echo Yii::app()->baseUrl?>/js/footable.sort.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(function() {
         $('.footable').footable();
+        var saldo = '<?php echo number_format($saldo,0,',','.'); ?>';
+        $('#saldo').html('$'+saldo);
+        if(saldo >= 0){
+            $('.saldo').addClass("green");
+        }
+        else{
+            $('.saldo').addClass("red");
+        }
     });
 </script>
 

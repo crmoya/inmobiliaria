@@ -4,7 +4,7 @@
 /* @var $form CActiveForm */
 ?>
 
-<div class="form">
+<div class="span10">
 
    <?php
    $form = $this->beginWidget('CActiveForm', array(
@@ -12,12 +12,9 @@
        'enableAjaxValidation' => false,
    ));
    ?>
-
-   <p class="note">Campos con <span class="required">*</span> son obligatorios.</p>
-
       <?php echo $form->errorSummary($model); ?>
 
-   <div class="row">
+   <div class="span2">
       <?php echo $form->labelEx($model, 'fecha'); ?>
       <?php
       $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -37,7 +34,7 @@
       <?php echo $form->error($model, 'fecha'); ?>
    </div>
 
-   <div class="row">
+   <div class="span3">
       <?php echo $form->labelEx($model, 'tipo'); ?>
       <?php
       echo $form->dropDownList(
@@ -47,26 +44,34 @@
 <?php echo $form->error($model, 'tipo'); ?>
    </div>
 
-   <div class="row">
+    
+   <div class="span2">
       <?php echo $form->labelEx($model, 'monto'); ?>
       <?php echo $form->textField($model, 'monto'); ?>
 <?php echo $form->error($model, 'monto'); ?>
    </div>
-
-   <div class="row">
+    
+    
+   
+<div class="clearfix"></div>
+   
+<div class="span5">
       <?php echo $form->labelEx($model, 'detalle'); ?>
-      <?php echo $form->textField($model, 'detalle', array('size' => 60, 'maxlength' => 200)); ?>
+      <?php echo $form->textField($model, 'detalle', array('size' => 100, 'maxlength' => 200,'style'=>'width:410px !important;')); ?>
 <?php echo $form->error($model, 'detalle'); ?>
    </div>
-   
-   <div class="row">
-      <?php echo $form->labelEx($model, 'forma_pago'); ?>
-      <?php echo $form->textField($model, 'forma_pago', array('size' => 60, 'maxlength' => 100)); ?>
-      <?php echo $form->error($model, 'forma_pago'); ?>
+   <div class="span2">
+      <?php echo $form->labelEx($model, 'forma_pago_id'); ?>
+      <?php echo $form->dropDownList($model, 'forma_pago_id', 
+                        CHtml::listData(FormaPago::model()->findAll(),'id','nombre'),array('empty'=>'Selecione Forma Pago')); ?>
+      <?php echo $form->error($model, 'forma_pago_id'); ?>
    </div>
-   <div class="row buttons">
-      <?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar'); ?>
+<div class="clearfix"></div>
+<br>
+   <div class="span2 buttons">
+      <?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar',array('class'=>'btn')); ?>
    </div>
+<div class="clearfix"></div>
 
    <?php $this->endWidget(); ?>
 

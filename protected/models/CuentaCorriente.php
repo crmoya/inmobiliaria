@@ -15,6 +15,7 @@
  */
 class CuentaCorriente extends CActiveRecord
 {
+    
 	/**
 	 * @return string the associated database table name
 	 */
@@ -39,6 +40,11 @@ class CuentaCorriente extends CActiveRecord
 			array('id, saldo_inicial, nombre, contrato_id', 'safe', 'on'=>'search'),
 		);
 	}
+        
+        public function estaAsociadoPropietario($user_id){
+            $propietario_id = Propietario::model()->getId($user_id);
+            return $this->contrato->departamento->propiedad->propietario_id == $propietario_id;
+        }
 
 	/**
 	 * @return array relational rules.
@@ -58,13 +64,124 @@ class CuentaCorriente extends CActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'saldo_inicial' => 'Saldo Inicial',
-			'nombre' => 'Nombre',
-			'contrato_id' => 'Contrato',
-		);
+            return array(
+                'id' => 'ID',
+                'saldo_inicial' => 'Saldo Inicial',
+                'nombre' => 'Nombre',
+                'contrato_id' => 'Contrato',
+                'fecha_morosidad'=>'Fecha',
+                'monto_morosidad'=>'Monto',
+                'dias_morosidad'=>'Días',
+                'nombre_cliente'=>'Nombre',
+            );
 	}
+        
+        
+        
+        public function idMovUltimoSaldo0(){
+            $saldo_inicial = $this->saldo_inicial;
+            $movimientos = Movimiento::model()->findAllByAttributes(array('cuenta_corriente_id'=>$this->id),array('order'=>'id'));
+            $saldo = $saldo_inicial;
+            $ultimoId = -1;
+            foreach($movimientos as $movimiento){
+                if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_ABONO){
+                    $saldo += $movimiento->monto;
+                }
+                else if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_CARGO){
+                    $saldo -= $movimiento->monto;
+                }
+                if($saldo == 0){
+                    $ultimoId = $movimiento->id;
+                }
+            }
+            return $ultimoId;
+
+        }
+        
+        public function fechaUltimaMora(){
+            $fecha = "";
+            $saldo_actual = $this->saldoAFecha(date('Y-m-d'));
+            if($saldo_actual < 0){
+                $movimientos = Movimiento::model()->findAllByAttributes(array('cuenta_corriente_id'=>$this->id),array('order'=>'id DESC'));
+                foreach($movimientos as $movimiento){
+                    if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_ABONO){
+                        $saldo_actual += $movimiento->monto;
+                    }
+                    else if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_CARGO){
+                        $saldo_actual -= $movimiento->monto;
+                    }
+                    if($saldo_actual >= 0){
+                        return $movimiento->fecha;
+                    }
+                }
+                $fecha = $movimientos[count($movimientos)-1]->fecha;
+            }
+            return $fecha;
+        }
+
+        public function saldoAFecha($fecha){
+            $saldo_inicial = $this->saldo_inicial;
+            $movimientos = Movimiento::model()->findAll(
+            array(
+                'condition'=>'fecha <= :fDesde and cuenta_corriente_id = :cta',
+                'params'=>array(':fDesde'=>$fecha,':cta'=>$this->id),
+            ));
+            $saldo = $saldo_inicial;
+            foreach($movimientos as $movimiento){
+                if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_ABONO){
+                    $saldo += $movimiento->monto;
+                }
+                else if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_CARGO){
+                    $saldo -= $movimiento->monto;
+                }
+            }
+            return $saldo;
+        }
+        
+        public function saldoMes($mes,$agno){
+            $proxMes = $mes+1;
+            $proxAgno = $agno;
+            if($proxMes > 12){
+                $proxMes = 1;
+                $proxAgno = $agno+1;
+            }
+            $fDesde = $agno."-".str_pad($mes,2,"0",STR_PAD_LEFT)."-01";
+            $fHasta = $proxAgno."-".str_pad($proxMes,2,"0",STR_PAD_LEFT)."-01";
+            $movimientos = Movimiento::model()->findAll(
+                array(
+                    'condition'=>'fecha >= :fDesde and fecha < :fHasta and cuenta_corriente_id = :cta',
+                    'params'=>array(':fDesde'=>$fDesde,':fHasta'=>$fHasta,':cta'=>$this->id),
+                ));
+            $abonos = 0;
+            $cargos = 0;
+            foreach($movimientos as $movimiento){
+                if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_ABONO){
+                    $abonos += $movimiento->monto;
+                }
+                else if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_CARGO){
+                    $cargos -= $movimiento->monto;
+                }
+            }
+            return array('abonos'=>$abonos,'cargos'=>-$cargos);
+        }
+
+        
+        public function movimientosDeMes($mes,$agno){
+            $proxMes = $mes+1;
+            $proxAgno = $agno;
+            if($proxMes > 12){
+                $proxMes = 1;
+                $proxAgno = $agno+1;
+            }
+            $fDesde = $agno."-".str_pad($mes,2,"0",STR_PAD_LEFT)."-01";
+            $fHasta = $proxAgno."-".str_pad($proxMes,2,"0",STR_PAD_LEFT)."-01";
+            $movimientos = Movimiento::model()->findAll(
+                array(
+                    'condition'=>'fecha >= :fDesde and fecha < :fHasta and cuenta_corriente_id = :cta',
+                    'params'=>array(':fDesde'=>$fDesde,':fHasta'=>$fHasta,':cta'=>$this->id),
+                ));
+            return $movimientos;
+        }
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
@@ -85,12 +202,9 @@ class CuentaCorriente extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('saldo_inicial',$this->saldo_inicial);
-		$criteria->compare('nombre',$this->nombre,true);
-		$criteria->compare('contrato_id',$this->contrato_id);
 
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+                    'criteria'=>$criteria,
 		));
 	}
 

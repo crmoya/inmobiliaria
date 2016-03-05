@@ -37,11 +37,7 @@ class ConceptoController extends Controller
 	{
 		return array(
 			array('allow',
-                'actions' => array( 'view','create', 'update', 'exportarXLS'),
-                'roles' => array('administrativo', 'superusuario'),
-            ),
-            array('allow',
-                'actions' => array('delete', 'admin'),
+                'actions' => array('delete', 'admin','view','create', 'update', 'exportarXLS'),
                 'roles' => array('superusuario'),
             ),
 			array('deny',  // deny all users

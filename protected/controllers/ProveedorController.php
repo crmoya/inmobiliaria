@@ -37,11 +37,7 @@ class ProveedorController extends Controller
 	{
 		return array(
 			array('allow',
-                'actions' => array('view','create', 'update', 'exportarXLS'),
-                'roles' => array('administrativo', 'superusuario'),
-            ),
-            array('allow',
-                'actions' => array('delete', 'admin'),
+                'actions' => array('view','create', 'update', 'exportarXLS','delete', 'admin'),
                 'roles' => array('superusuario'),
             ),
 			array('deny',  // deny all users

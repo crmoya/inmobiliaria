@@ -34,8 +34,8 @@ class MovimientoController extends Controller {
     public function accessRules() {
         return array(
             array('allow',
-                'actions' => array( 'viewDetail', 'view'),
-                'roles' => array('propietario', 'superusuario', 'cliente', 'administrativo'),
+                'actions' => array( 'viewDetail', 'view','cargar','abonar','create','eliminar'),
+                'roles' => array('propietario', 'superusuario'),
             ),
             array('allow',
                 'actions' => array('validate','create','informe'),
@@ -43,19 +43,19 @@ class MovimientoController extends Controller {
             ),
             array('allow',
                 'actions' => array('indexPerson', 'clientesDia', 'clientesMorosos'),
-                'roles' => array('propietario', 'superusuario', 'administrativo'),
+                'roles' => array('propietario', 'superusuario'),
             ),
             array('allow',
                 'actions' => array('indexContract'),
-                'roles' => array('superusuario', 'cliente', 'administrativo'),
+                'roles' => array('superusuario', 'cliente',),
             ),
             array('allow',
                 'actions' => array('indexType', 'create', 'update', 'validate', 'resumenMovimiento', 'reporteArriendos', 'exportarXLS'),
-                'roles' => array('administrativo', 'superusuario'),
+                'roles' => array('superusuario','propietario'),
             ),
             array('allow',
                 'actions' => array('delete', 'admin'),
-                'roles' => array('superusuario'),
+                'roles' => array('superusuario','propietario'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -122,8 +122,7 @@ class MovimientoController extends Controller {
                         $cuentaCorriente = $departamento->contrato->cuentaCorriente;
                         $saldo = 0;
                         foreach($meses as $mesArreglo){
-                            $month = mktime( 0, 0, 0, $mesArreglo['mes'], 1, $mesArreglo['agno'] );
-                            $nDias = date("t",$month);
+                            $nDias = cal_days_in_month(CAL_GREGORIAN, $mesArreglo['mes'], $mesArreglo['agno']);
                             $sheet->mergeCellsByColumnAndRow($col,$row,$col+1,$row);
                             $sheet->getStyleByColumnAndRow($col,$row)->applyFromArray($styleCenter);
                             $sheet->setCellValueByColumnAndRow($col,$row,$mesArreglo['mesNombre']." ".$mesArreglo['agno']);
@@ -320,23 +319,21 @@ class MovimientoController extends Controller {
         $cs->registerScriptFile($baseUrl . '/js/footable.js');
         $cs->registerScriptFile($baseUrl . '/js/footable.paginate.js');
 
-        
+        $cuenta = CuentaCorriente::model()->findByPk($id);
         if(Yii::app()->user->rol == 'propietario'){
-            if (CuentaCorriente::model()->isOwnerProp(Yii::app()->user->id, $id)) {
-                $movs = Movimiento::model()->findAll(array(
-                    'condition' => 'cuenta_corriente_id=:cuenta_corriente_id',
-                    'order' => 'fecha',
-                    'params' => array(':cuenta_corriente_id' => $id)));
-                $cuenta = CuentaCorriente::model()->findByPk($id);
+            if($cuenta->estaAsociadoPropietario(Yii::app()->user->id)){
                 $this->render('viewDetail', array(
-                    'model' => $movs,
                     'cuenta' => $cuenta,
                 ));
-            } else {
+            }
+            else{
                 throw new CHttpException(403, 'Usted no se encuentra autorizado para realizar esta acción.');
             }
         }
-        
+        else{
+            throw new CHttpException(403, 'Usted no se encuentra autorizado para realizar esta acción.');
+        }
+        /*
         if(Yii::app()->user->rol == 'cliente'){
             if (CuentaCorriente::model()->isOwnerClient(Yii::app()->user->id, $id)) {
                 $movs = Movimiento::model()->findAll(array(
@@ -365,6 +362,8 @@ class MovimientoController extends Controller {
                 'cuenta' => $cuenta,
             ));
         }
+         * 
+         */
     }
 
     /**
@@ -393,20 +392,141 @@ class MovimientoController extends Controller {
         
     }
 
+    
+    public function actionCargar($id){
+        $model = new Movimiento;
+        $model->fecha = date('Y-m-d');
+        $model->tipo = Tools::MOVIMIENTO_TIPO_CARGO;
+        $model->cuenta_corriente_id = $id;
+        $model->monto = 0;
+        $cta = CuentaCorriente::model()->findByPk($id);
+        if($cta!=null){
+            if(Yii::app()->user->rol == 'propietario'){
+                if(!$cta->estaAsociadoPropietario(Yii::app()->user->id)){
+                    throw new CHttpException(404, 'Error, no tiene permisos para cargar esta cuenta.');
+                }
+            }
+            if(isset($_POST['Movimiento'])){
+                $model->attributes = $_POST['Movimiento'];
+                $model->validado = 1;
+                if($model->save()){
+                    $model = new Movimiento;
+                    $model->fecha = date('Y-m-d');
+                    $model->tipo = Tools::MOVIMIENTO_TIPO_CARGO;
+                    $model->cuenta_corriente_id = $id;
+                    Yii::app()->user->setFlash('success','Cuenta correctamente cargada.');
+                }
+                else{
+                    Yii::app()->user->setFlash('error','Error: No se pudo cargar la cuenta. Por favor reintente.');
+                }
+                
+            }
+        }
+        else{
+            throw new CHttpException(404, 'Error, no existe la cuenta a cargar.');
+        }
+        $this->render('cargar',array('model'=>$model));
+    }
+    
+    public function actionAbonar($id){
+        $model = new Movimiento;
+        $model->fecha = date('Y-m-d');
+        $model->tipo = Tools::MOVIMIENTO_TIPO_ABONO;
+        $model->cuenta_corriente_id = $id;
+        $model->monto = 0;
+        $cta = CuentaCorriente::model()->findByPk($id);
+        if($cta!=null){
+            if(Yii::app()->user->rol == 'propietario'){
+                if(!$cta->estaAsociadoPropietario(Yii::app()->user->id)){
+                    throw new CHttpException(404, 'Error, no tiene permisos para abonar esta cuenta.');
+                }
+            }
+            if(isset($_POST['Movimiento'])){
+                $model->attributes = $_POST['Movimiento'];
+                $model->forma_pago_id = $_POST['Movimiento']['forma_pago_id'];
+                $model->validado = 1;
+                if($model->save()){
+                    $model = new Movimiento;
+                    $model->fecha = date('Y-m-d');
+                    $model->tipo = Tools::MOVIMIENTO_TIPO_ABONO;
+                    $model->cuenta_corriente_id = $id;
+                    Yii::app()->user->setFlash('success','Cuenta correctamente abonada.');
+                }
+                else{
+                    Yii::app()->user->setFlash('error','Error: No se pudo abonar la cuenta. Por favor reintente.');
+                }
+                
+            }
+        }
+        else{
+            throw new CHttpException(404, 'Error, no existe la cuenta a abonar.');
+        }
+        $this->render('abonar',array('model'=>$model));
+    }
+    
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate($id) {
-        $model = new Movimiento;
+    public function actionCreate() {
+        $cuenta_id = $_POST['cuenta'];
+        $fecha = $_POST['fecha'];
+        $monto = $_POST['monto'];
+        $detalle = $_POST['detalle'];
+        $tipo = $_POST['tipo'];
+        $forma_pago_id = -1;
+        if(isset($_POST['formaPago'])){
+            $forma_pago_id = $_POST['formaPago'];
+        }
+        
+        $model = new Movimiento();
+        $model->fecha = $fecha;
+        $model->monto = $monto;
+        $model->detalle = $detalle;
+        $model->tipo = $tipo;
+        if($model->tipo == Tools::MOVIMIENTO_TIPO_CARGO){
+            $model->validado = 1;
+        }
+        else{
+            $model->validado = 0;
+            $model->forma_pago_id = $forma_pago_id;
+        }
+        $model->cuenta_corriente_id = $cuenta_id;
+        $cuenta = CuentaCorriente::model()->findByPk($cuenta_id);
+        if($cuenta == null){
+            echo -1;
+            die;
+        }
+        else{
+            if($cuenta->estaAsociadoPropietario(Yii::app()->user->id)){
+                $anterior = $model->findAllByAttributes(array('fecha'=>$model->fecha,'tipo'=>$model->tipo,'monto'=>$model->monto,'detalle'=>$model->detalle,'cuenta_corriente_id'=>$model->cuenta_corriente_id));
+                if(count($anterior) == 0){
+                    if($model->save()){
+                        echo $model->id;
+                    }
+                    else{
+                        echo CHtml::errorSummary($model);
+                    }
+                }
+                die;
+            }
+            else{
+                echo -1;
+                die;
+            }
+        }
+        
+        /*$model = new Movimiento;
         $cta = CuentaCorriente::model()->findByPk($id);
         $contrato = $cta->contrato;
+        $model->fecha = date('Y-m-d');
             
 // Uncomment the following line if AJAX validation is needed
 // $this->performAjaxValidation($model);
 
         if (isset($_POST['Movimiento'])) {
             $model->attributes = $_POST['Movimiento'];
+            $model->forma_pago_id = $_POST['Movimiento']['forma_pago_id'];
             $model->validado = 0;
             $model->cuenta_corriente_id = $id;
             
@@ -423,7 +543,7 @@ class MovimientoController extends Controller {
             'model' => $model,
             'cuenta_cte' => $id,
             'lista_cuentas' => $list,
-        ));
+        ));*/
     }
 
     /**
@@ -433,29 +553,39 @@ class MovimientoController extends Controller {
      */
     public function actionUpdate() {
         $mov_id = Yii::app()->request->getPost('mov_id');
-        $cuenta_id = Yii::app()->request->getPost('cuenta_id');
-        $cta = CuentaCorriente::model()->findByPk($cuenta_id);
         $model = $this->loadModel($mov_id);
-
-// Uncomment the following line if AJAX validation is needed
-// $this->performAjaxValidation($model);
 
         if (isset($_POST['Movimiento'])) {
             $model->attributes = $_POST['Movimiento'];
-            if ($model->save())
-                $this->redirect(array('viewDetail', 'id' => $cuenta_id));
+            if($model->tipo == Tools::MOVIMIENTO_TIPO_CARGO){
+                $model->forma_pago_id = null;
+            }
+            if($model->cuentaCorriente->estaAsociadoPropietario(Yii::app()->user->id)){
+                if ($model->save())
+                    $this->redirect(array('viewDetail', 'id' => $model->cuenta_corriente_id));
+            }
         }
-        $list = null;
-        $propietario_id = $cta->contrato->departamento->propiedad->propietario->id;
-        $list = Propietario::model()->getAssociatedAccounts($propietario_id);
         
         $this->render('update', array(
-            'model' => $model,
-            'cuenta_cte' => $cuenta_id,
-            'lista_cuentas' => $list,
+            'model' => $model        
         ));
     }
 
+    public function actionEliminar(){
+        $movimiento = Movimiento::model()->findByPk($_POST['mov']);
+        if($movimiento!=null){
+            if(Yii::app()->user->rol == 'propietario' && $movimiento->cuentaCorriente->estaAsociadoPropietario(Yii::app()->user->id)){
+                $movimiento->delete();
+                echo "OK";
+            }
+            else{
+                echo "ERROR: Usted no está autorizado para realizar esta acción.";
+            }
+        }
+        else{
+            echo "ERROR: No se encuentra el movimiento a eliminar.";
+        }
+    }
     /**
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.

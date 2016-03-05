@@ -37,11 +37,7 @@ class PropietarioController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('view','admin','create','update','exportarXLS'),
-				'roles'=>array('administrativo','superusuario'),
-			),
-                        array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('delete'),
+				'actions'=>array('view','admin','create','update','exportarXLS','delete'),
 				'roles'=>array('superusuario'),
 			),
 			array('deny',  // deny all users

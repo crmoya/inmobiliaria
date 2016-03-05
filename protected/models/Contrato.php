@@ -21,6 +21,9 @@
  * @property integer $monto_primer_mes
  * @property string $dias_primer_mes
  * @property integer $monto_cheque
+ * @property integer $vigente
+ * @property string $fecha_finiquito
+ * @property integer $reajusta
  *
  * The followings are the available model relations:
  * @property TipoContrato $tipoContrato
@@ -34,6 +37,9 @@
  */
 class Contrato extends CActiveRecord {
 
+    public $actual;
+    public $futuro;
+    
     public $depto_nombre;
     public $tipo_nombre;
     public $cliente_nombre;
@@ -57,7 +63,11 @@ class Contrato extends CActiveRecord {
     public function tableName() {
         return 'contrato';
     }
-
+    
+    public static function getReajusta($id){
+        $contrato = Contrato::model()->findByPk($id);
+        return $contrato->reajusta == 1?'pesoVerde':'pesoRojo';
+    }
     /**
      * @return array validation rules for model attributes.
      */
@@ -71,7 +81,7 @@ class Contrato extends CActiveRecord {
             array('folio, monto_primer_mes,monto_cheque, monto_renta, monto_castigado,monto_gastocomun, plazo, monto_mueble,monto_gastovariable,reajusta_meses,dia_pago,departamento_id, cliente_id, tipo_contrato_id', 'numerical', 'integerOnly' => true),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id,cliente_nombre,monto_primer_mes,monto_cheque,dias_primer_mes,monto_mueble,monto_castigado,monto_gastovariable,reajusta_meses,dia_pago,cliente_rut, propiedad_nombre,depto_nombre,tipo_nombre,folio, fecha_inicio, monto_renta, monto_gastocomun, plazo, departamento_id, cliente_id, tipo_contrato_id', 'safe', 'on' => 'search'),
+            array('id,vigente,reajusta,fecha_finiquito,cliente_nombre,cliente_rut, propiedad_nombre,depto_nombre,folio, fecha_inicio,cliente_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -117,6 +127,7 @@ class Contrato extends CActiveRecord {
             'propiedad_id'=>'Propiedad',
             'propiedad_nombre'=>'Propiedad',
             'cliente_rut'=>'Rut Cliente',
+            'fecha_finiquito'=>'Fecha Finiquito',
         );
     }
 
@@ -124,6 +135,396 @@ class Contrato extends CActiveRecord {
      * Retrieves a list of models based on the current search/filter conditions.
      * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
      */
+    public function searchFiniquitados() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+        
+        $nombre = "";
+        $apellido = "";
+        $nombres = explode(" ",$this->cliente_nombre);
+        if(count($nombres) == 1){
+            $nombre = $this->cliente_nombre;
+            $apellido = $this->cliente_nombre;
+        }
+        elseif(count($nombres) == 2){
+            $nombre = $nombres[0];
+            $apellido = $nombres[1];
+        }
+        
+        $criteria = new CDbCriteria;
+        $criteria->with = array('departamento', 'tipoContrato', 'cliente');
+        $criteria->join .= 'join departamento as d on d.id = t.departamento_id '
+                . '         join propiedad as p on p.id = d.propiedad_id'
+                . '         join tipo_contrato as tipo on tipo.id = t.tipo_contrato_id '
+                . '         join cliente as c on c.id = t.cliente_id '
+                . '         join usuario as u on u.id = c.usuario_id ';
+        
+        $arreglo = explode(" ",$this->cliente_nombre);
+        $nombreApellido = array();
+        foreach($arreglo as $palabra){
+            if(trim($palabra)!= ''){
+                $nombreApellido[]=$palabra;
+            }
+        }
+        $criteriaNombreUser1 = new CDbCriteria();
+        $palabras = count($nombreApellido);
+        if($palabras == 1){
+            $busqueda = $nombreApellido[0];
+            if(trim($busqueda) != ''){
+                $criteriaNombreUser1->compare('u.nombre',$busqueda,true);
+                $criteriaNombreUser1->compare('u.apellido',$busqueda,true,'OR');
+            }
+        }
+
+        if($palabras == 2){
+            $nombre = $nombreApellido[0];
+            $apellido = $nombreApellido[1];
+            $criteriaNombreUser1->compare('u.nombre',$nombre,true);
+            $criteriaNombreUser1->compare('u.apellido',$apellido,true);
+        }
+
+        $criteria->compare('folio', $this->folio);
+        $criteria->mergeWith($criteriaNombreUser1,'AND');
+        
+        $criteria->compare('fecha_inicio', Tools::fixFecha($this->fecha_inicio), true);
+        $criteria->compare('p.nombre', $this->propiedad_nombre, true);
+        $criteria->compare('d.numero', $this->depto_nombre, true);
+        $criteria->compare('c.rut', $this->cliente_rut, true);
+        $criteria->compare('t.vigente', 0);
+        $criteria->compare('t.fecha_finiquito', $this->fecha_finiquito,true);
+        
+        if(Yii::app()->user->rol == 'cliente'){
+            $cliente = Cliente::model()->findByAttributes(array('usuario_id'=>Yii::app()->user->id));
+            if($cliente!=null){
+                $criteria->compare('t.cliente_id',$cliente->id);
+            }
+            else{
+                $criteria->compare('t.cliente_id',-1);
+            }
+        }
+        
+        if(Yii::app()->user->rol == 'propietario'){
+            $criteriaPropietario = new CDbCriteria();
+            $contratos = Contrato::model()->relacionadosConPropietario(Yii::app()->user->id);
+            foreach($contratos as $contrato_id){
+                $criteriaPropietario->compare('t.id', $contrato_id, false,'OR');   
+            }
+            $criteria->mergeWith($criteriaPropietario,'AND');
+        }
+        
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'attributes' => array(
+                    'depto_nombre' => array(
+                        'asc' => 'd.numero',
+                        'desc' => 'd.numero DESC',
+                    ),
+                    'tipo_nombre' => array(
+                        'asc' => 'tipo.nombre',
+                        'desc' => 'tipo.nombre DESC',
+                    ),
+                    'cliente_rut' => array(
+                        'asc' => 'c.rut',
+                        'desc' => 'c.rut DESC',
+                    ),
+                    'cliente_nombre' => array(
+                        'asc' => 'u.apellido,u.nombre',
+                        'desc' => 'u.apellido DESC,u.nombre DESC',
+                    ),
+                    'propiedad_nombre' => array(
+                        'asc' => 'p.nombre',
+                        'desc' => 'p.nombre DESC',
+                    ),
+                    '*',
+                ),
+            ),
+        ));
+    }
+    
+    public function searchAReajustar() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+        
+        $nombre = "";
+        $apellido = "";
+        $nombres = explode(" ",$this->cliente_nombre);
+        if(count($nombres) == 1){
+            $nombre = $this->cliente_nombre;
+            $apellido = $this->cliente_nombre;
+        }
+        elseif(count($nombres) == 2){
+            $nombre = $nombres[0];
+            $apellido = $nombres[1];
+        }
+        
+        $criteria = new CDbCriteria;
+        $criteria->with = array('departamento', 'tipoContrato', 'cliente');
+        $criteria->join .= 'join departamento as d on d.id = t.departamento_id '
+                . '         join propiedad as p on p.id = d.propiedad_id'
+                . '         join tipo_contrato as tipo on tipo.id = t.tipo_contrato_id '
+                . '         join cliente as c on c.id = t.cliente_id '
+                . '         join usuario as u on u.id = c.usuario_id ';
+        
+        $arreglo = explode(" ",$this->cliente_nombre);
+        $nombreApellido = array();
+        foreach($arreglo as $palabra){
+            if(trim($palabra)!= ''){
+                $nombreApellido[]=$palabra;
+            }
+        }
+        $criteriaNombreUser1 = new CDbCriteria();
+        $palabras = count($nombreApellido);
+        if($palabras == 1){
+            $busqueda = $nombreApellido[0];
+            if(trim($busqueda) != ''){
+                $criteriaNombreUser1->compare('u.nombre',$busqueda,true);
+                $criteriaNombreUser1->compare('u.apellido',$busqueda,true,'OR');
+            }
+        }
+
+        if($palabras == 2){
+            $nombre = $nombreApellido[0];
+            $apellido = $nombreApellido[1];
+            $criteriaNombreUser1->compare('u.nombre',$nombre,true);
+            $criteriaNombreUser1->compare('u.apellido',$apellido,true);
+        }
+
+        $criteria->compare('folio', $this->folio);
+        $criteria->mergeWith($criteriaNombreUser1,'AND');
+        
+        $criteria->compare('fecha_inicio', Tools::fixFecha($this->fecha_inicio), true);
+        $criteria->compare('p.nombre', $this->propiedad_nombre, true);
+        $criteria->compare('d.numero', $this->depto_nombre, true);
+        $criteria->compare('c.rut', $this->cliente_rut, true);
+        $criteria->compare('t.vigente', 1);
+        $criteria->compare('t.reajusta', 1);
+        
+        
+        if(Yii::app()->user->rol == 'cliente'){
+            $cliente = Cliente::model()->findByAttributes(array('usuario_id'=>Yii::app()->user->id));
+            if($cliente!=null){
+                $criteria->compare('t.cliente_id',$cliente->id);
+            }
+            else{
+                $criteria->compare('t.cliente_id',-1);
+            }
+        }
+        
+        $criteriaReajustan = new CDbCriteria();
+        $reajustan = $this->reajustanProximoMes();
+        foreach($reajustan as $reajusta){
+            $criteriaReajustan->compare('t.id', $reajusta,false,'OR');
+        }
+        $criteria->mergeWith($criteriaReajustan,'AND');
+        
+        
+        if(Yii::app()->user->rol == 'propietario'){
+            $criteriaPropietario = new CDbCriteria();
+            $contratos = Contrato::model()->relacionadosConPropietario(Yii::app()->user->id);
+            foreach($contratos as $contrato_id){
+                $criteriaPropietario->compare('t.id', $contrato_id, false,'OR');   
+            }
+            $criteria->mergeWith($criteriaPropietario,'AND');
+        }
+        
+        
+        
+        
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'attributes' => array(
+                    'depto_nombre' => array(
+                        'asc' => 'd.numero',
+                        'desc' => 'd.numero DESC',
+                    ),
+                    'tipo_nombre' => array(
+                        'asc' => 'tipo.nombre',
+                        'desc' => 'tipo.nombre DESC',
+                    ),
+                    'cliente_rut' => array(
+                        'asc' => 'c.rut',
+                        'desc' => 'c.rut DESC',
+                    ),
+                    'cliente_nombre' => array(
+                        'asc' => 'u.apellido,u.nombre',
+                        'desc' => 'u.apellido DESC,u.nombre DESC',
+                    ),
+                    'propiedad_nombre' => array(
+                        'asc' => 'p.nombre',
+                        'desc' => 'p.nombre DESC',
+                    ),
+                    '*',
+                ),
+            ),
+        ));
+    }
+    
+    public function searchAvisos() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+        
+        $nombre = "";
+        $apellido = "";
+        $nombres = explode(" ",$this->cliente_nombre);
+        if(count($nombres) == 1){
+            $nombre = $this->cliente_nombre;
+            $apellido = $this->cliente_nombre;
+        }
+        elseif(count($nombres) == 2){
+            $nombre = $nombres[0];
+            $apellido = $nombres[1];
+        }
+        
+        $criteria = new CDbCriteria;
+        $criteria->with = array('departamento', 'tipoContrato', 'cliente');
+        $criteria->join .= 'join departamento as d on d.id = t.departamento_id '
+                . '         join propiedad as p on p.id = d.propiedad_id'
+                . '         join tipo_contrato as tipo on tipo.id = t.tipo_contrato_id '
+                . '         join cliente as c on c.id = t.cliente_id '
+                . '         join usuario as u on u.id = c.usuario_id ';
+        
+        $arreglo = explode(" ",$this->cliente_nombre);
+        $nombreApellido = array();
+        foreach($arreglo as $palabra){
+            if(trim($palabra)!= ''){
+                $nombreApellido[]=$palabra;
+            }
+        }
+        $criteriaNombreUser1 = new CDbCriteria();
+        $palabras = count($nombreApellido);
+        if($palabras == 1){
+            $busqueda = $nombreApellido[0];
+            if(trim($busqueda) != ''){
+                $criteriaNombreUser1->compare('u.nombre',$busqueda,true);
+                $criteriaNombreUser1->compare('u.apellido',$busqueda,true,'OR');
+            }
+        }
+
+        if($palabras == 2){
+            $nombre = $nombreApellido[0];
+            $apellido = $nombreApellido[1];
+            $criteriaNombreUser1->compare('u.nombre',$nombre,true);
+            $criteriaNombreUser1->compare('u.apellido',$apellido,true);
+        }
+
+        $criteria->compare('folio', $this->folio);
+        $criteria->mergeWith($criteriaNombreUser1,'AND');
+        
+        $criteria->compare('fecha_inicio', Tools::fixFecha($this->fecha_inicio), true);
+        $criteria->compare('p.nombre', $this->propiedad_nombre, true);
+        $criteria->compare('d.numero', $this->depto_nombre, true);
+        $criteria->compare('c.rut', $this->cliente_rut, true);
+        $criteria->compare('t.vigente', 1);
+        
+        
+        if(Yii::app()->user->rol == 'cliente'){
+            $cliente = Cliente::model()->findByAttributes(array('usuario_id'=>Yii::app()->user->id));
+            if($cliente!=null){
+                $criteria->compare('t.cliente_id',$cliente->id);
+            }
+            else{
+                $criteria->compare('t.cliente_id',-1);
+            }
+        }
+                
+        if(Yii::app()->user->rol == 'propietario'){
+            $criteriaPropietario = new CDbCriteria();
+            $contratos = Contrato::model()->relacionadosConPropietario(Yii::app()->user->id);
+            foreach($contratos as $contrato_id){
+                $criteriaPropietario->compare('t.id', $contrato_id, false,'OR');   
+            }
+            $criteria->mergeWith($criteriaPropietario,'AND');
+        }
+        
+        
+        
+        
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'attributes' => array(
+                    'depto_nombre' => array(
+                        'asc' => 'd.numero',
+                        'desc' => 'd.numero DESC',
+                    ),
+                    'tipo_nombre' => array(
+                        'asc' => 'tipo.nombre',
+                        'desc' => 'tipo.nombre DESC',
+                    ),
+                    'cliente_rut' => array(
+                        'asc' => 'c.rut',
+                        'desc' => 'c.rut DESC',
+                    ),
+                    'cliente_nombre' => array(
+                        'asc' => 'u.apellido,u.nombre',
+                        'desc' => 'u.apellido DESC,u.nombre DESC',
+                    ),
+                    'propiedad_nombre' => array(
+                        'asc' => 'p.nombre',
+                        'desc' => 'p.nombre DESC',
+                    ),
+                    '*',
+                ),
+            ),
+        ));
+    }
+    
+    
+    public function reajustanProximoMes(){
+        $reajustan = array();
+        //se listan solo los contratos que tienen marcado que deben reajustar y están vigentes
+        $contratos = Contrato::model()->findAllByAttributes(array('reajusta'=>1,'vigente'=>1));
+        
+        foreach($contratos as $contrato){
+            $reajusta_meses = $contrato->reajusta_meses;
+            $fecha_inicioArr = explode('-',$contrato->fecha_inicio);
+            $mesInicio = $fecha_inicioArr[1];
+            $agnoInicio = $fecha_inicioArr[0];
+            $esteMes = date('m');
+            $esteAgno = date('Y');
+            
+            $agnos_transcurridos = $esteAgno - $agnoInicio;
+            $meses_transcurridos = $esteMes - $mesInicio;
+            if($meses_transcurridos<0){
+                $meses_transcurridos+=12;
+            }
+            $meses_transcurridos = $agnos_transcurridos*12 + $meses_transcurridos;
+            
+            switch ($reajusta_meses) {
+                case 12:
+                    if(($meses_transcurridos+1)%12 == 0 && $agnos_transcurridos > 0)
+                    {
+                        $reajustan[] = $contrato->id;
+                    }
+                    break;
+                
+                case 8:
+                    if(($meses_transcurridos+1)%8 == 0)
+                    {
+                        $reajustan[] = $contrato->id;
+                    }
+                    break;
+                    
+                case 6:
+                    if(($meses_transcurridos+1)%6 == 0)
+                    {
+                        $reajustan[] = $contrato->id;
+                    }
+                    break;
+                
+                default:
+                    break;
+            }
+            
+        }
+        return $reajustan;
+    }
+    
     public function search() {
         // Warning: Please modify the following code to remove attributes that
         // should not be searched.
@@ -147,30 +548,39 @@ class Contrato extends CActiveRecord {
                 . '         join tipo_contrato as tipo on tipo.id = t.tipo_contrato_id '
                 . '         join cliente as c on c.id = t.cliente_id '
                 . '         join usuario as u on u.id = c.usuario_id ';
-        $criteria->compare('id', $this->id);
-        $criteria->compare('folio', $this->folio);
-        $criteria->compare('fecha_inicio', Tools::fixFecha($this->fecha_inicio), true);
-        $criteria->compare('monto_renta', $this->monto_renta);
-        $criteria->compare('monto_mueble', $this->monto_mueble);
-        $criteria->compare('monto_castigado', $this->monto_castigado);
-        $criteria->compare('monto_gastovariable', $this->monto_renta);
-        $criteria->compare('monto_gastocomun', $this->monto_gastovariable);
-        $criteria->compare('monto_primer_mes', $this->monto_primer_mes);
-        $criteria->compare('dias_primer_mes', $this->dias_primer_mes);
-        $criteria->compare('monto_cheque', $this->monto_cheque);
-        $criteria->compare('reajusta_meses', $this->reajusta_meses);
-        $criteria->compare('dia_pago', $this->dia_pago);
-        $criteria->compare('plazo', $this->plazo);
-        $criteria->compare('departamento_id', $this->departamento_id);
-        $criteria->compare('cliente_id', $this->cliente_id);
-        $criteria->compare('tipo_contrato_id', $this->tipo_contrato_id);
-        $criteria->compare('d.numero', $this->depto_nombre, true);
-        $criteria->compare('tipo.nombre', $this->tipo_nombre, true);
-        $criteria->compare('c.rut', $this->cliente_rut, true);
-        $criteria->compare('u.nombre', $nombre, true,'OR');
-        $criteria->compare('u.apellido', $apellido, true,'OR');
-        $criteria->compare('p.nombre', $this->propiedad_nombre, true);
+        
+        $arreglo = explode(" ",$this->cliente_nombre);
+        $nombreApellido = array();
+        foreach($arreglo as $palabra){
+            if(trim($palabra)!= ''){
+                $nombreApellido[]=$palabra;
+            }
+        }
+        $criteriaNombreUser1 = new CDbCriteria();
+        $palabras = count($nombreApellido);
+        if($palabras == 1){
+            $busqueda = $nombreApellido[0];
+            if(trim($busqueda) != ''){
+                $criteriaNombreUser1->compare('u.nombre',$busqueda,true);
+                $criteriaNombreUser1->compare('u.apellido',$busqueda,true,'OR');
+            }
+        }
 
+        if($palabras == 2){
+            $nombre = $nombreApellido[0];
+            $apellido = $nombreApellido[1];
+            $criteriaNombreUser1->compare('u.nombre',$nombre,true);
+            $criteriaNombreUser1->compare('u.apellido',$apellido,true);
+        }
+
+        $criteria->compare('folio', $this->folio);
+        $criteria->mergeWith($criteriaNombreUser1,'AND');
+        
+        $criteria->compare('fecha_inicio', Tools::fixFecha($this->fecha_inicio), true);
+        $criteria->compare('p.nombre', $this->propiedad_nombre, true);
+        $criteria->compare('d.numero', $this->depto_nombre, true);
+        $criteria->compare('c.rut', $this->cliente_rut, true);
+        $criteria->compare('t.vigente', 1);
         
         if(Yii::app()->user->rol == 'cliente'){
             $cliente = Cliente::model()->findByAttributes(array('usuario_id'=>Yii::app()->user->id));
@@ -183,10 +593,12 @@ class Contrato extends CActiveRecord {
         }
         
         if(Yii::app()->user->rol == 'propietario'){
+            $criteriaPropietario = new CDbCriteria();
             $contratos = Contrato::model()->relacionadosConPropietario(Yii::app()->user->id);
             foreach($contratos as $contrato_id){
-                $criteria->compare('t.id', $contrato_id, false,'OR');   
+                $criteriaPropietario->compare('t.id', $contrato_id, false,'OR');   
             }
+            $criteria->mergeWith($criteriaPropietario,'AND');
         }
         
         
@@ -233,11 +645,121 @@ class Contrato extends CActiveRecord {
     
     
     public function crearDeudaMes($fechaHoy){
-        //se debe crear un movimiento de cargo por cada pago que se deba efectuar al contrato
-        //por si es el primer pago se debe adeudar el monto del primer mes
+        
+        //para saber cuánto tiene que pagar, tengo que consultar su debe pagar actual
+        $debePagars = DebePagar::model()->findAllByAttributes(array('contrato_id'=>$this->id),array('order'=>'id DESC'));
+        $debePagar = null;
         $cta_id = $this->cuentaCorriente->id;
-        $movimientos = Movimiento::model()->findAllByAttributes(array('cuenta_corriente_id'=>$cta_id));
-        if(count($movimientos) == 0){
+        if(count($debePagars)>0){
+            $debePagar = $debePagars[0];
+            //si ya se ha pagado otros meses, o sea no es un contrato nuevo
+            //se debe crear un movimiento de cargo por cada pago que se deba efectuar al contrato
+            //este arreglo sirve por si se cae algún grabar borrar todos los que habían sido guardados
+            $idGuardados = array();
+            //deuda de renta
+            if($this->monto_renta > 0){
+                $movimiento = new Movimiento();
+                $movimiento->fecha = $fechaHoy;
+                $movimiento->tipo = Tools::MOVIMIENTO_TIPO_CARGO;
+                $movimiento->monto = $debePagar->monto_renta;
+                $movimiento->detalle = "Monto de Renta";
+                $movimiento->validado = 1;
+                $movimiento->cuenta_corriente_id = $cta_id;
+                if($movimiento->save()){
+                    $idGuardados[] = $movimiento->id;
+                }
+                else{
+                    foreach($idGuardados as $idGuardado){
+                        $movGuardado = Movimiento::model()->findByPk($idGuardado);
+                        $movGuardado->delete();
+                    }
+                    var_dump(CHtml::errorSummary($movimiento));
+                    return;
+                }
+            }
+
+            //deuda de gasto común
+            if($this->monto_gastocomun > 0){
+                $movimiento = new Movimiento();
+                $movimiento->fecha = $fechaHoy;
+                $movimiento->tipo = Tools::MOVIMIENTO_TIPO_CARGO;
+                $movimiento->monto = $debePagar->monto_gastocomun;
+                $movimiento->detalle = "Monto de Gasto Común";
+                $movimiento->validado = 1;
+                $movimiento->cuenta_corriente_id = $cta_id;
+                if($movimiento->save()){
+                    $idGuardados[] = $movimiento->id;
+                }
+                else{
+                    foreach($idGuardados as $idGuardado){
+                        $movGuardado = Movimiento::model()->findByPk($idGuardado);
+                        $movGuardado->delete();
+                    }
+                    var_dump(CHtml::errorSummary($movimiento));
+                    return;
+                }
+            }
+
+            //deuda de mueble
+            if($this->monto_mueble > 0){
+                $movimiento = new Movimiento();
+                $movimiento->fecha = $fechaHoy;
+                $movimiento->tipo = Tools::MOVIMIENTO_TIPO_CARGO;
+                $movimiento->monto = $debePagar->monto_mueble;
+                $movimiento->detalle = "Monto por Muebles";
+                $movimiento->validado = 1;
+                $movimiento->cuenta_corriente_id = $cta_id;
+                if($movimiento->save()){
+                    $idGuardados[] = $movimiento->id;
+                }
+                else{
+                    foreach($idGuardados as $idGuardado){
+                        $movGuardado = Movimiento::model()->findByPk($idGuardado);
+                        $movGuardado->delete();
+                    }
+                    var_dump(CHtml::errorSummary($movimiento));
+                    return;
+                }
+            }
+
+            //deuda de gasto variable
+            if($this->monto_gastovariable > 0){
+                $movimiento = new Movimiento();
+                $movimiento->fecha = $fechaHoy;
+                $movimiento->tipo = Tools::MOVIMIENTO_TIPO_CARGO;
+                $movimiento->monto = $debePagar->monto_gastovariable;
+                $movimiento->detalle = "Monto de Gasto Variable";
+                $movimiento->validado = 1;
+                $movimiento->cuenta_corriente_id = $cta_id;
+                if($movimiento->save()){
+                    $idGuardados[] = $movimiento->id;
+                }
+                else{
+                    foreach($idGuardados as $idGuardado){
+                        $movGuardado = Movimiento::model()->findByPk($idGuardado);
+                        $movGuardado->delete();
+                    }
+                    var_dump(CHtml::errorSummary($movimiento));
+                    return;
+                }
+            }
+        }
+        //si no hay un debe pagar, quiere decir que recién se creó el contrato, tengo que crear su primer
+        //debe pagar y se creará sólo un movimiento que tendrá un cargo por el monto de primer mes
+        else{
+            $debeNuevo = new DebePagar();
+            $debeNuevo->agno = date("Y");
+            $debeNuevo->mes = date("m");
+            $debeNuevo->dia = $this->dia_pago;
+            $debeNuevo->contrato_id = $this->id;
+            //ahora hay que reajustar los montos del contrato dependiendo del ipc_acumulado
+            //el precio base debe ser el valor anterior en debe pagar
+            $debeNuevo->monto_gastocomun = $this->monto_gastocomun;
+            $debeNuevo->monto_gastovariable = $this->monto_gastovariable;
+            $debeNuevo->monto_mueble = $this->monto_mueble;
+            $debeNuevo->monto_renta = $this->monto_renta;
+            $debeNuevo->save();
+            
             $movimiento = new Movimiento();
             $movimiento->fecha = $fechaHoy;
             $movimiento->tipo = Tools::MOVIMIENTO_TIPO_CARGO;
@@ -245,122 +767,176 @@ class Contrato extends CActiveRecord {
             $movimiento->detalle = Tools::DETALLE_PRIMER_CARGO;
             $movimiento->validado = 1;
             $movimiento->cuenta_corriente_id = $cta_id;
-            if($movimiento->validate()){
-                $movimiento->save();
-            }
-            else{
-                var_dump(CHtml::errorSummary($movimiento));
-                die;
-            }
+            $movimiento->save();
         }
     }
     
-    public function reajustar($meses){
+    public function reajustar(){
         
-        //si no está insertado en la tabla debe_pagar y además es un reajuste a 0 meses 
-        //es porque es el primer pago que se debería hacer.
-        //se inserta en debe_pagar con los montos inciales que se reflejan en la tabla contrato        
-        $debePagar = DebePagar::model()->findAllByAttributes(array('contrato_id'=>$this->id),array('order'=>'id DESC'));
-        if($debePagar == null && $meses == 0){
-            $debePagar = new DebePagar();
-            $debePagar->agno = (int)date('Y');
-            $debePagar->contrato_id = $this->id;
-            $debePagar->dia = $this->dia_pago;
-            $debePagar->mes = (int)date('m');
-            $debePagar->monto_gastocomun = $this->monto_gastocomun;
-            $debePagar->monto_gastovariable = $this->monto_gastovariable;
-            $debePagar->monto_mueble = $this->monto_mueble;
-            $debePagar->monto_renta = $this->monto_renta;
-            $debePagar->save(); 
+        //si se reajusta a 6, 8 o 12 meses hay que cambiar el valor en el contrato
+        //calculando según el IPC acumulado
+        //entre el último reajuste realizado y ahora. 
+        $mes_actual = (int)date("m");
+        $agno_actual = (int)date('Y');
+        $mes_inicio = $mes_actual - $this->reajusta_meses;
+        $agno_inicio = $agno_actual;
+        if($mes_inicio <= 0){
+            $agno_inicio -= 1;
+            $mes_inicio+= 12;
+        }
+        $ipcs = array();
+        if($agno_inicio != $agno_actual){
+            $ipcs = Ipc::model()->findAll(array('order'=>'mes','condition'=>'mes >= :m and agno = :a','params'=>array(':m'=>$mes_inicio,':a'=>$agno_inicio)));
+            $ipcs_actual = Ipc::model()->findAll(array('order'=>'mes','condition'=>'mes < :m and agno = :a','params'=>array(':m'=>$mes_actual,':a'=>$agno_actual)));
+            foreach($ipcs_actual as $ipc){
+                $ipcs[] = $ipc;
+            }
         }
         else{
-            //si se reajusta a 6, 8 o 12 meses hay que insertar en la tabla debe_pagar, calculando según el IPC acumulado
-            //entre el último reajuste realizado y ahora. 
-            $mes_actual = (int)date("m");
-            $agno_actual = (int)date('Y');
-            $mes_inicio = $mes_actual - $meses;
-            $agno_inicio = $agno_actual;
-            if($mes_inicio <= 0){
-                $agno_inicio -= 1;
-                $mes_inicio+= 12;
+            $ipcs = Ipc::model()->findAll(array('condition'=>'mes >= :m1 and mes < :m2 and agno = :a','params'=>array(':m1'=>$mes_inicio,':m2'=>$mes_actual,':a'=>$agno_actual)));
+        }
+
+        $ipc_acumulado = 0;
+        foreach($ipcs as $ipc){
+            //sumo los ipcs para generar el ipc acumulado
+            $ipc_acumulado+= $ipc->porcentaje;
+        }
+        //para hacer el cálculo según porcentaje
+        $ipc_acumulado /= 100;
+
+        //saco el último debe pagar para ver cuánto era lo que tenía que pagar antes
+        $debePagars = DebePagar::model()->findAllByAttributes(array('contrato_id'=>$this->id),array('order'=>'id DESC'));
+        $debePagar = $debePagars[0];
+        
+        $debeNuevo = new DebePagar();
+        $debeNuevo->agno = $agno_actual;
+        $debeNuevo->mes = $mes_actual;
+        $debeNuevo->dia = $debePagar->dia;
+        $debeNuevo->contrato_id = $this->id;
+        //ahora hay que reajustar los montos del contrato dependiendo del ipc_acumulado
+        //el precio base debe ser el valor anterior en debe pagar
+        $debeNuevo->monto_gastocomun = intval($debePagar->monto_gastocomun*(1+$ipc_acumulado));
+        $debeNuevo->monto_gastovariable = intval($debePagar->monto_gastovariable*(1+$ipc_acumulado));
+        $debeNuevo->monto_mueble = intval($debePagar->monto_mueble*(1+$ipc_acumulado));
+        $debeNuevo->monto_renta = intval($debePagar->monto_renta*(1+$ipc_acumulado));
+        try{
+            //se reajusta el contrato
+            $debeNuevo->save(); 
+        } catch (Exception $ex) {
+        }
+    }
+
+    
+    public function getSimulacionReajuste(){
+        
+        //si se reajusta a 6, 8 o 12 meses hay que cambiar el valor en el contrato
+        //calculando según el IPC acumulado
+        //entre el último reajuste realizado y ahora. 
+        $mes_actual = (int)date("m");
+        $agno_actual = (int)date('Y');
+        $mes_inicio = $mes_actual - $this->reajusta_meses;
+        $agno_inicio = $agno_actual;
+        if($mes_inicio <= 0){
+            $agno_inicio -= 1;
+            $mes_inicio+= 12;
+        }
+        $ipcs = array();
+        if($agno_inicio != $agno_actual){
+            $ipcs = Ipc::model()->findAll(array('order'=>'mes','condition'=>'mes >= :m and agno = :a','params'=>array(':m'=>$mes_inicio,':a'=>$agno_inicio)));
+            $ipcs_actual = Ipc::model()->findAll(array('order'=>'mes','condition'=>'mes < :m and agno = :a','params'=>array(':m'=>$mes_actual,':a'=>$agno_actual)));
+            foreach($ipcs_actual as $ipc){
+                $ipcs[] = $ipc;
             }
-            $ipcs = array();
-            if($agno_inicio != $agno_actual){
-                $ipcs = Ipc::model()->findAll(array('order'=>'mes','condition'=>'mes >= :m and agno = :a','params'=>array(':m'=>$mes_inicio,':a'=>$agno_inicio)));
-                $ipcs_actual = Ipc::model()->findAll(array('order'=>'mes','condition'=>'mes < :m and agno = :a','params'=>array(':m'=>$mes_actual,':a'=>$agno_actual)));
-                foreach($ipcs_actual as $ipc){
-                    $ipcs[] = $ipc;
-                }
+        }
+        else{
+            $ipcs = Ipc::model()->findAll(array('condition'=>'mes >= :m1 and mes < :m2 and agno = :a','params'=>array(':m1'=>$mes_inicio,':m2'=>$mes_actual,':a'=>$agno_actual)));
+        }
+
+        $ipc_acumulado = 0;
+        foreach($ipcs as $ipc){
+            //sumo los ipcs para generar el ipc acumulado
+            $ipc_acumulado+= $ipc->porcentaje;
+        }
+        //para hacer el cálculo según porcentaje
+        $ipc_acumulado /= 100;
+
+        //saco el último debe pagar para ver cuánto era lo que tenía que pagar antes
+        $debePagars = DebePagar::model()->findAllByAttributes(array('contrato_id'=>$this->id),array('order'=>'id DESC'));
+        $debePagar = $debePagars[0];
+        
+        $debeNuevo = new DebePagar();
+        $debeNuevo->agno = $agno_actual;
+        $debeNuevo->mes = $mes_actual;
+        $debeNuevo->dia = $debePagar->dia;
+        $debeNuevo->contrato_id = $this->id;
+        //ahora hay que reajustar los montos del contrato dependiendo del ipc_acumulado
+        //el precio base debe ser el valor anterior en debe pagar
+        $debeNuevo->monto_gastocomun = intval($debePagar->monto_gastocomun*(1+$ipc_acumulado));
+        $debeNuevo->monto_gastovariable = intval($debePagar->monto_gastovariable*(1+$ipc_acumulado));
+        $debeNuevo->monto_mueble = intval($debePagar->monto_mueble*(1+$ipc_acumulado));
+        $debeNuevo->monto_renta = intval($debePagar->monto_renta*(1+$ipc_acumulado));
+        
+        return array('actual'=>$debePagar, 'nuevo'=>$debeNuevo);
+    }
+    
+    
+    public static function crearDeudas(){
+        $contratos = Contrato::model()->findAllByAttributes(array('vigente'=>1));
+        $diaActual = date('d');
+        $nDias = cal_days_in_month(CAL_GREGORIAN, date('m'),date('Y'));
+        foreach($contratos as $contrato){
+            if($contrato->dia_pago == int($diaActual)){
+                $contrato->crearDeudaMes(date('Y-m-d'));
+                continue;
             }
-            else{
-                $ipcs = Ipc::model()->findAll(array('condition'=>'mes >= :m1 and mes < :m2 and agno = :a','params'=>array(':m1'=>$mes_inicio,':m2'=>$mes_actual,':a'=>$agno_actual)));
-            }
-           
-            $ipc_acumulado = 0;
-            foreach($ipcs as $ipc){
-                //sumo los ipcs para generar el ipc acumulado
-                $ipc_acumulado+= $ipc->porcentaje;
-            }
-            //para hacer el cálculo según porcentaje
-            $ipc_acumulado /= 100;
-            
-            //ahora hay que reajustar los montos del contrato dependiendo del ipc_acumulado
-            //el precio base debe ser el último reajuste hecho al contrato
-            //debePagar están ordenados por ID descendientemente, el primero de la lista es el último agregado
-            $debeAnterior = $debePagar[0];
-            $gastocomun_base = $debeAnterior->monto_gastocomun;
-            $gastovariable_base = $debeAnterior->monto_gastovariable;
-            $mueble_base = $debeAnterior->monto_mueble;
-            $renta_base = $debeAnterior->monto_renta;
-            
-            $debePagar = new DebePagar();
-            $debePagar->agno = (int)date('Y');
-            $debePagar->contrato_id = $this->id;
-            $debePagar->dia = $this->dia_pago;
-            $debePagar->mes = (int)date('m');
-            $debePagar->monto_gastocomun = intval($gastocomun_base*(1+$ipc_acumulado));
-            $debePagar->monto_gastovariable = intval($gastovariable_base*(1+$ipc_acumulado));
-            $debePagar->monto_mueble = intval($mueble_base*(1+$ipc_acumulado));
-            $debePagar->monto_renta = intval($renta_base*(1+$ipc_acumulado));
-            try{
-                //se reajusta el contrato
-                $debePagar->save(); 
-            } catch (Exception $ex) {
+            //si el mes no tiene suficientes días como para alcanzar el día de pago
+            //y si además estamos en el día final del mes
+            //hay que crear deuda pues o sino no alcanzaría a crearse deuda para ese mes
+            if($nDias < $contrato->dia_pago && $nDias == int($diaActual)){
+                $contrato->crearDeudaMes(date('Y-m-d'));
             }
         }
     }
+        
     
     public static function revisarReajustes(){
-        $contratos = Contrato::model()->findAll();
+        //se listan solo los contratos que tienen marcado que deben reajustar y están vigentes
+        $contratos = Contrato::model()->findAllByAttributes(array('reajusta'=>1,'vigente'=>1));
         foreach($contratos as $contrato){
             $reajusta_meses = $contrato->reajusta_meses;
-            $fecha_inicio = new DateTime($contrato->fecha_inicio);
-            $hoy = new DateTime(date("Y-m-d"));
-            $interval = $fecha_inicio->diff($hoy);
-            $dias_transcurridos = $interval->format('%d');
-            $meses_transcurridos = $interval->format('%m');
-            $agnos_transcurridos = $interval->format('%y');
             
+            $fecha_inicioArr = explode('-',$contrato->fecha_inicio);
+            $mesInicio = $fecha_inicioArr[1];
+            $agnoInicio = $fecha_inicioArr[0];
+            $esteMes = date('m');
+            $esteAgno = date('Y');
+            
+            $agnos_transcurridos = $esteAgno - $agnoInicio;
+            $meses_transcurridos = $esteMes - $mesInicio;
+            if($meses_transcurridos<0){
+                $meses_transcurridos+=12;
+            }
             $meses_transcurridos = $agnos_transcurridos*12 + $meses_transcurridos;
+           
             switch ($reajusta_meses) {
                 case 12:
-                    if($meses_transcurridos%12 == 0 && $agnos_transcurridos > 0 && $dias_transcurridos == 0)
+                    if($meses_transcurridos%12 == 0 && $agnos_transcurridos > 0)
                     {
-                        $contrato->reajustar(12);
+                        $contrato->reajustar();
                     }
                     break;
                 
                 case 8:
-                    if($meses_transcurridos%8 == 0 && $dias_transcurridos == 0)
+                    if($meses_transcurridos%8 == 0)
                     {
-                        $contrato->reajustar(8);
+                        $contrato->reajustar();
                     }
                     break;
                     
                 case 6:
-                    if($meses_transcurridos%6 == 0 && $dias_transcurridos == 0)
+                    if($meses_transcurridos%6 == 0)
                     {
-                        $contrato->reajustar(6);
+                        $contrato->reajustar();
                     }
                     break;
                 
@@ -369,17 +945,9 @@ class Contrato extends CActiveRecord {
             }
         }
     }
-
-    public function estaAsociadoCliente($user_id, $contrato_id) {
-        $cliente_id = Cliente::model()->getId($user_id);
-        $response = Contrato::model()->exists(array(
-            'condition' => 'cliente_id=:clientID AND id=:contratoID',
-            'params' => array(':clientID' => $cliente_id, ':contratoID' => $contrato_id),
-        ));
-        return $response;
-    }
     
-    public function estaAsociadoACliente($cliente_id) {
+    public function estaAsociadoACliente($user_id) {
+        $cliente_id = Cliente::model()->getId($user_id);
         return $this->cliente_id == $cliente_id;
     }
 /*
@@ -398,7 +966,8 @@ class Contrato extends CActiveRecord {
         return $contrato->departamento->propiedad->propietario_id == $propietario_id;
     }
     
-    public function estaAsociadoAPropietario($propietario_id){
+    public function estaAsociadoAPropietario($user_id){
+        $propietario_id = Propietario::model()->getId($user_id);
         return $this->departamento->propiedad->propietario_id == $propietario_id;
     }
 
@@ -418,7 +987,8 @@ class Contrato extends CActiveRecord {
         return $devolver;
     }
     
-    public function relacionadosConPropietario($propietario_id){
+    public function relacionadosConPropietario($usuario_id){
+        $propietario_id = Propietario::model()->getId($usuario_id);
         $contratos = array();
         $propiedades = Propiedad::model()->findAllByAttributes(array('propietario_id'=>$propietario_id));
         foreach($propiedades as $propiedad){
@@ -432,4 +1002,5 @@ class Contrato extends CActiveRecord {
         }
         return $contratos;
     }
+    
 }

@@ -4,7 +4,7 @@
 /* @var $form CActiveForm */
 ?>
 
-<div class="form">
+<div class="span12">
 
    <?php
    $form = $this->beginWidget('CActiveForm', array(
@@ -12,8 +12,6 @@
        'enableAjaxValidation' => false,
    ));
    ?>
-
-   <p class="note">Campos con <span class="required">*</span> son obligatorios.</p>
 
       <?php echo $form->errorSummary($model); ?>
 

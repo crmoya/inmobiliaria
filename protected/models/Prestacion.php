@@ -12,6 +12,7 @@
  * @property integer $tipo_prestacion_id
  * @property integer $ejecutor_id
  * @property integer $genera_cargos
+ * @property integer $general_prop
  *
  * The followings are the available model relations:
  * @property TipoPrestacion $tipoPrestacion
@@ -33,6 +34,25 @@ class Prestacion extends CActiveRecord
 		return parent::model($className);
 	}
 
+        
+        public function getDePropiedadYDepartamento($propiedad,$departamento){
+            $criteria = new CDbCriteria();
+            $criteria->condition = "";
+            if($propiedad != null){
+                $criteria->join = " join prestacion_a_departamento pd on pd.prestacion_id = t.id "
+                        . "         join departamento d on d.id = pd.departamento_id ";
+                $criteria->condition = " d.propiedad_id = :propiedad_id";
+                $criteria->params = array(':propiedad_id'=>$propiedad->id);
+            }
+            if($departamento != null){
+                $criteria->join = " join prestacion_a_departamento pd on pd.prestacion_id = t.id "
+                        . "         join departamento d on d.id = pd.departamento_id ";
+                $criteria->condition = " d.propiedad_id = :propiedad_id and d.id = :departamento_id";
+                $criteria->params = array(':propiedad_id'=>$propiedad->id,':departamento_id'=>$departamento->id);
+            }
+            $prestaciones = $this->findAll($criteria);
+            return $prestaciones;
+        }
 	/**
 	 * @return string the associated database table name
 	 */
@@ -51,7 +71,7 @@ class Prestacion extends CActiveRecord
 		return array(
 			array('fecha, monto, descripcion, tipo_prestacion_id, ejecutor_id, genera_cargos', 'required'),
 			array('monto, tipo_prestacion_id, ejecutor_id, genera_cargos', 'numerical', 'integerOnly'=>true),
-			array('documento', 'length', 'max'=>45),
+			array('documento,general_prop', 'length', 'max'=>45),
 			array('descripcion', 'length', 'max'=>200),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
@@ -85,10 +105,11 @@ class Prestacion extends CActiveRecord
 			'documento' => 'Documento',
 			'descripcion' => 'Descripcion',
 			'tipo_prestacion_id' => 'Tipo Prestación',
-			'ejecutor_id' => 'Ejecutor',
+			'ejecutor_id' => 'Maestro',
 			'genera_cargos' => 'Genera Cargos',
                         'tipo_prestacion_nombre' => 'Tipo Prestación',
                         'ejecutor_nombre' => 'Ejecutor',
+                        'general_prop'=>'General Propiedad',
 		);
 	}
 

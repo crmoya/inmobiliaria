@@ -4,56 +4,59 @@
 /* @var $form CActiveForm */
 ?>
 
-<div class="form">
+<div class="span12">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'ejecutor-form',
 	'enableAjaxValidation'=>false,
 )); ?>
-
-	<p class="note">Campos con <span class="required">*</span> son obligatorios.</p>
-
 	<?php echo $form->errorSummary($model); ?>
 
-	<div class="row">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'rut'); ?>
 		<?php echo $form->textField($model,'rut',array('size'=>11,'maxlength'=>11)); ?>
 		<?php echo $form->error($model,'rut'); ?>
 	</div>
 
-	<div class="row">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'nombre'); ?>
 		<?php echo $form->textField($model,'nombre',array('size'=>60,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'nombre'); ?>
 	</div>
 
-	<div class="row">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'direccion'); ?>
 		<?php echo $form->textField($model,'direccion',array('size'=>60,'maxlength'=>200)); ?>
 		<?php echo $form->error($model,'direccion'); ?>
 	</div>
 
-	<div class="row">
+    <div class="clearfix"></div>
+	<div class="span2">
 		<?php echo $form->labelEx($model,'telefono'); ?>
 		<?php echo $form->textField($model,'telefono',array('size'=>20,'maxlength'=>20)); ?>
 		<?php echo $form->error($model,'telefono'); ?>
 	</div>
 
-	<div class="row">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'email'); ?>
 		<?php echo $form->textField($model,'email',array('size'=>60,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'email'); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'especialidad'); ?>
-		<?php echo $form->textField($model,'especialidad',array('size'=>60,'maxlength'=>100)); ?>
-		<?php echo $form->error($model,'especialidad'); ?>
+	<div class="span2">
+		<?php echo $form->labelEx($model,'especialidad_id'); ?>
+		<?php echo $form->dropDownList($model,'especialidad_id',
+                        CHtml::listData(Especialidad::model()->findAll(),'id','nombre'),
+                        array('prompt'=>'Seleccione Especialidad')); ?>
+		<?php echo $form->error($model,'especialidad_id'); ?>
 	</div>
-
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar'); ?>
+        
+<div class="clearfix"></div>
+<br/>
+	<div class="span2">
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar',array('class'=>'btn')); ?>
 	</div>
+<br/>
 
 <?php $this->endWidget(); ?>
 

@@ -38,7 +38,7 @@ class DebePagarController extends Controller
             return array(
                 array('allow',
                     'actions' => array('view'),
-                    'roles' => array('administrativo', 'superusuario','propietario'),
+                    'roles' => array('superusuario','propietario'),
                 ),
                 array('deny',  // deny all users
                         'users'=>array('*'),
@@ -55,7 +55,7 @@ class DebePagarController extends Controller
             $contrato = Contrato::model()->findByPk($id);
             
             if(Yii::app()->user->rol == 'propietario'){
-                if(!Contrato::model()->estaAsociadoPropietario(Yii::app()->user->id, $contrato->id)){
+                if(!$contrato->estaAsociadoAPropietario(Yii::app()->user->id)){
                     throw new CHttpException(403, 'Usted no se encuentra autorizado para realizar esta acción.');
                 }   
             }

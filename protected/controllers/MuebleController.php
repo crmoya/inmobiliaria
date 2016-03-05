@@ -38,11 +38,7 @@ class MuebleController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('admin','exportarXLS','create','update','view'),
-				'roles'=>array('superusuario','administrativo'),
-			),
-                        array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('delete',),
+				'actions'=>array('admin','exportarXLS','create','update','view','delete'),
 				'roles'=>array('superusuario'),
 			),
                         array('allow',  // allow all users to perform 'index' and 'view' actions

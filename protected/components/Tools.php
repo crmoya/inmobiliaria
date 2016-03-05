@@ -25,7 +25,7 @@ class Tools{
                 $mesTope = $mesFin;
             }
             for($j=$mesInicio;$j<=$mesTope;$j++){
-                $meses[]=array('mes'=>$j,'agno'=>$i,'mesNombre'=>Tools::fixMes($j));
+                $meses[]=array('mes'=>str_pad($j,2,"0",STR_PAD_LEFT),'agno'=>$i,'mesNombre'=>Tools::fixMes($j));
             }
             $mesInicio = 1;
         }
@@ -174,5 +174,6 @@ class Tools{
 		$formatter = new Formatter();
 		return "$ ".$formatter->formatNumber($valor);
 	}
+        
        
 }

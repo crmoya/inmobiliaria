@@ -4,7 +4,7 @@
 /* @var $form CActiveForm */
 ?>
 
-<div class="form">
+<div class="span12">
 
     <?php
     $form = $this->beginWidget('CActiveForm', array(
@@ -12,28 +12,23 @@
         'enableAjaxValidation' => false,
     ));
     ?>
-
-    <p class="note">Campos con <span class="required">*</span> son obligatorios.</p>
-
     <?php
-        //no sé qué error lanza esto, así es que voy a comentarlo para poder probar mis cambios
-        //echo ($model->isNewRecord) ? $form->errorSummary($model, $ctaModel) : $form->errorSummary($model); 
         echo $form->errorSummary($model);
         if(isset($ctaModel)){
             echo $form->errorSummary($ctaModel);
         }        
-    ?>
+    ?> 
     
-    <div class="row">
+    <div class="span3">
         <?php echo $form->labelEx($model, 'folio'); ?>
         <?php echo $form->textField($model, 'folio',array('readonly'=>'readonly')); ?>
         <?php echo $form->error($model, 'folio'); ?>
     </div>
 
-    <div class="row">
+    <div class="span3">
         <?php echo $form->labelEx($model, 'fecha_inicio'); ?>
         <?php
-		$this->widget('zii.widgets.jui.CJuiDatePicker',
+                $this->widget('zii.widgets.jui.CJuiDatePicker',
                     array(
                         'model'=>$model,
                         'language' => 'es',
@@ -50,66 +45,72 @@
                         'readonly'=>'readonly',
                         ),
                     )
-		);
-		?>
+                );
+                ?>
         <?php echo $form->error($model, 'fecha_inicio'); ?>
     </div>
-
-    <div class="row">
+    
+    <div class="span3">
         <?php echo $form->labelEx($model, 'monto_renta'); ?>
         <?php echo $form->textField($model, 'monto_renta'); ?>
         <?php echo $form->error($model, 'monto_renta'); ?>
     </div>
 
-    <div class="row">
+    <div class="clearfix"></div>
+    
+    <div class="span3">
         <?php echo $form->labelEx($model, 'monto_gastocomun'); ?>
         <?php echo $form->textField($model, 'monto_gastocomun'); ?>
         <?php echo $form->error($model, 'monto_gastocomun'); ?>
     </div>
     
-    <div class="row">
+    <div class="span3">
         <?php echo $form->labelEx($model, 'monto_mueble'); ?>
         <?php echo $form->textField($model, 'monto_mueble'); ?>
         <?php echo $form->error($model, 'monto_mueble'); ?>
     </div>
     
-    <div class="row">
+    <div class="span3">
         <?php echo $form->labelEx($model, 'monto_gastovariable'); ?>
         <?php echo $form->textField($model, 'monto_gastovariable'); ?>
         <?php echo $form->error($model, 'monto_gastovariable'); ?>
     </div>
     
-    <div class="row">
+    <div class="clearfix"></div>
+    
+    <div class="span3">
         <?php echo $form->labelEx($model, 'monto_castigado'); ?>
         <?php echo $form->textField($model, 'monto_castigado'); ?>
         <?php echo $form->error($model, 'monto_castigado'); ?>
     </div>
     
-    <div class="row">
+    <div class="span3">
         <?php echo $form->labelEx($model, 'monto_primer_mes'); ?>
         <?php echo $form->textField($model, 'monto_primer_mes'); ?>
         <?php echo $form->error($model, 'monto_primer_mes'); ?>
     </div>
     
-    <div class="row">
+    <div class="span3">
         <?php echo $form->labelEx($model, 'dias_primer_mes'); ?>
         <?php echo $form->textField($model, 'dias_primer_mes'); ?>
         <?php echo $form->error($model, 'dias_primer_mes'); ?>
     </div>
     
-    <div class="row">
+    <div class="clearfix"></div>
+    
+    <div class="span3">
         <?php echo $form->labelEx($model, 'monto_cheque'); ?>
         <?php echo $form->textField($model, 'monto_cheque'); ?>
         <?php echo $form->error($model, 'monto_cheque'); ?>
     </div>
 
-    <div class="row">
+    <div class="span3">
         <?php echo $form->labelEx($model, 'plazo'); ?>
         <?php echo $form->textField($model, 'plazo'); ?>
         <?php echo $form->error($model, 'plazo'); ?>
     </div>
     
-    <div class="row">
+    <div class="span3">
         <?php echo $form->labelEx($model, 'reajusta_meses'); ?>
         <?php echo $form->dropDownList($model,'reajusta_meses', CHtml::listData(
                 array(  array('id'=>'6','nombre'=>'CADA 6 MESES'),
@@ -120,20 +121,21 @@
         <?php echo $form->error($model, 'reajusta_meses'); ?>
     </div>
     
-    <div class="row">
+    <div class="clearfix"></div>
+    
+    <div class="span3">
         <?php echo $form->labelEx($model, 'dia_pago'); ?>
         <?php echo $form->textField($model, 'dia_pago'); ?>
         <?php echo $form->error($model, 'dia_pago'); ?>
     </div>
 
-    <?php if ($model->isNewRecord) { ?>
-        <div class="row">
-            <?php echo $form->labelEx($ctaModel, 'saldo_inicial'); ?>
-            <?php echo $form->textField($ctaModel, 'saldo_inicial'); ?>
-            <?php echo $form->error($ctaModel, 'saldo_inicial'); ?>
-        </div>
-    <?php } ?>
-        <div class="row">
+    <div class="span3">
+        <?php echo $form->labelEx($ctaModel, 'saldo_inicial'); ?>
+        <?php echo $form->textField($ctaModel, 'saldo_inicial'); ?>
+        <?php echo $form->error($ctaModel, 'saldo_inicial'); ?>
+    </div>
+    
+        <div class="span3">
             <?php echo $form->labelEx($model, 'propiedad_id'); ?>
             <?php echo $form->dropDownList($model,'propiedad_id', CHtml::listData($propiedades, 'id', 'nombre'),
                 array(
@@ -145,7 +147,10 @@
                     'prompt'=>'Seleccione una Propiedad')); ?>
             <?php echo $form->error($model, 'propiedad_id'); ?>
         </div>
-        <div class="row">
+    
+    <div class="clearfix"></div>
+
+        <div class="span3">
             <?php echo $form->labelEx($model, 'departamento_id'); ?>
             <?php echo $form->dropDownList($model,'departamento_id',array(),
                 array(
@@ -156,7 +161,7 @@
             <?php echo $form->error($model, 'departamento_id'); ?>
         </div>
 
-        <div class="row">
+        <div class="span3">
             <?php echo $form->labelEx($model, 'cliente_id'); ?>
             <?php
             echo $form->dropDownList(
@@ -166,7 +171,7 @@
             <?php echo $form->error($model, 'cliente_id'); ?>
         </div>
 
-        <div class="row">
+        <div class="span3">
             <?php echo $form->labelEx($model, 'tipo_contrato_id'); ?>
             <?php
             echo $form->dropDownList(
@@ -176,10 +181,12 @@
             <?php echo $form->error($model, 'tipo_contrato_id'); ?>
         </div>
 
-        <div class="row buttons">
-            <?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar'); ?>
+    <div class="clearfix"></div>
+<br/>
+        <div class="span3 buttons">
+            <?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar',array('class'=>'btn')); ?>
         </div>
 
         <?php $this->endWidget(); ?>
-
+<br/>
 </div><!-- form -->

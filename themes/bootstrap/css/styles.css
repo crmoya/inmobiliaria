@@ -1,7 +1,15 @@
 #page {
     padding-top: 60px;
 }
+#footer{
+    background:#EFEFEF;
+    padding:10px;
+    text-align:right;
+}
 .tabla_campos td{
     border-bottom: silver 1px solid;
     padding-right: 20px;
+}
+input[type="text"]{
+    width:125px !important;
 }

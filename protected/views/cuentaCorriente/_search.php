@@ -13,16 +13,9 @@
 
 
 	<div class="row">
-		<?php echo $form->label($model,'saldo_inicial'); ?>
-		<?php echo $form->textField($model,'saldo_inicial'); ?>
+		<?php echo $form->label($model,'dias'); ?>
+		<?php echo $form->textField($model,'dias'); ?>
 	</div>
-    
-    
-	<div class="row">
-		<?php echo $form->label($model,'nombre'); ?>
-		<?php echo $form->textField($model,'nombre'); ?>
-	</div>
-
 	<div class="row buttons">
 		<?php echo CHtml::submitButton('Filtrar'); ?>
 	</div>

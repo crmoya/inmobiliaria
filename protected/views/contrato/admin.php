@@ -3,32 +3,10 @@
 /* @var $model Contrato */
 
 $this->breadcrumbs=array(
-	'Contratos'=>array('admin'),
-	'Administrar',
+	'Contratos Vigentes',
 );
 
-if(Yii::app()->user->rol != 'propietario' && Yii::app()->user->rol != 'cliente'){
-    $this->menu=array(
-	array('label'=>'Crear Contrato', 'url'=>array('create')),
-    );
-}
-
-
-
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
-$('.search-form form').submit(function(){
-	$.fn.yiiGridView.update('contrato-grid', {
-		data: $(this).serialize()
-	});
-	return false;
-});
-");
 ?>
-
 <?php $this->widget('bootstrap.widgets.TbAlert', array(
     'fade'=>true, // use transitions?
     'closeText'=>'&times;', // close link text - if set to false, no close link is displayed
@@ -46,21 +24,6 @@ $(document).ready(function(e){
         }, 5000);
 });
 </script> 
-<h1>Administrar Contratos</h1>
-
-<div class="span4"><?php echo CHtml::link('Búsqueda Avanzada','#',array('class'=>'search-button')); ?></div>
-<div class="span4"><?php 
-if(Yii::app()->user->rol != 'propietario' && Yii::app()->user->rol != 'cliente'){    
-    echo CHtml::link('Exportar a Excel',CController::createUrl("/contrato/exportarXLS"),array('class'=>'')); 
-}
-?></div>
-<br/>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
-
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'contrato-grid',
 	'dataProvider'=>$model->search(),
@@ -91,17 +54,9 @@ if(Yii::app()->user->rol != 'propietario' && Yii::app()->user->rol != 'cliente')
                         ), 
                     true), 
                 ),
-		array('name'=>'monto_renta','value'=>'Tools::formateaPlata($data->monto_renta)'),
-                array('name'=>'monto_gastocomun','value'=>'Tools::formateaPlata($data->monto_gastocomun)'),
-                array('name'=>'monto_mueble','value'=>'Tools::formateaPlata($data->monto_mueble)'),
-                array('name'=>'monto_gastovariable','value'=>'Tools::formateaPlata($data->monto_gastovariable)'),
-                array('name'=>'monto_castigado','value'=>'Tools::formateaPlata($data->monto_castigado)'),
-                array('name'=>'monto_primer_mes','value'=>'Tools::formateaPlata($data->monto_primer_mes)'),
-                array('name'=>'dias_primer_mes','value'=>'$data->dias_primer_mes'),
-                array('name'=>'monto_cheque','value'=>'Tools::formateaPlata($data->monto_cheque)'),
-		'plazo',
-		array('name'=>'depto_nombre','value'=>'$data->departamento->numero'),
-                array('name'=>'propiedad_nombre','value'=>'$data->departamento->propiedad->nombre'),
+		array('name'=>'propiedad_nombre','value'=>'$data->departamento->propiedad->nombre'),
+                array('name'=>'depto_nombre','value'=>'$data->departamento->numero'),
+                array('name'=>'cliente_nombre','value'=>'$data->cliente->usuario->nombre." ".$data->cliente->usuario->apellido'),
 		array('name'=>'cliente_rut','value'=>'$data->cliente->rut'),
 		array(
 			'class'=>'CButtonColumn',
@@ -127,7 +82,52 @@ if(Yii::app()->user->rol != 'propietario' && Yii::app()->user->rol != 'cliente')
 		),
                 array(
 			'class'=>'CButtonColumn',
-                        'visible'=>Yii::app()->user->rol == 'cliente' || Yii::app()->user->rol == 'propietario',
+                        'visible'=>Yii::app()->user->rol == 'propietario',
+                        'template'=>'{view}{update}{download}{viewCliente}{historial}',
+                        'header'=>'Acciones',
+                        'buttons'=>array(
+                            'view'=>array(
+                               'label'=>'Ver imagen de este contrato',
+                               'imageUrl'=>Yii::app()->baseUrl.'/images/imagen.png',
+                            ),
+                            'update'=>array(
+                               'label'=>'Firmar este contrato',
+                               'imageUrl'=>Yii::app()->baseUrl.'/images/contrato.png',
+                            ),
+                            'download'=>array(
+                               'label'=>'Descargar este contrato',
+                               'imageUrl'=>Yii::app()->baseUrl.'/images/download.png',
+                               'url'=>'Yii::app()->createUrl("//contrato/download", array("id"=>$data->id))',
+                            ),
+                            'viewCliente'=>array(
+                               'label'=>'Ver datos del Arrendatario',
+                               'imageUrl'=>Yii::app()->baseUrl.'/images/person.png',
+                               'url'=>'Yii::app()->createUrl("//contrato/viewCliente", array("id"=>$data->id))',
+                            ),
+                            'historial'=>array(
+                               'label'=>'Ver historial de reajustes para este contrato',
+                               'imageUrl'=>Yii::app()->baseUrl.'/images/lista.png',
+                               'url'=>'Yii::app()->createUrl("//debePagar/view", array("id"=>$data->id))',
+                            ),
+                        ),
+		),
+                array(
+			'class'=>'CustomCButtonColumn',
+                        'visible'=>Yii::app()->user->rol == 'propietario',
+                        'template'=>'{reajusta}',
+                        'header'=>'¿Debe Reajustar?',
+                        'buttons'=>array(
+                            'reajusta'=>array(
+                               'label'=>'Hacer que este contrato reajuste/no reajuste',
+                               'imageUrl'=>Yii::app()->baseUrl.'/images/pesoVerde.png',
+                               'url'=>'Yii::app()->createUrl("//contrato/reajusta", array("id"=>$data->id))',
+                            ),
+                            
+                        ),
+		),
+                array(
+			'class'=>'CButtonColumn',
+                        'visible'=>Yii::app()->user->rol == 'cliente',
                         'template'=>'{view} {download}',
                         'header'=>'Acciones',
                         'buttons'=>array(
@@ -141,6 +141,34 @@ if(Yii::app()->user->rol != 'propietario' && Yii::app()->user->rol != 'cliente')
                                'url'=>'Yii::app()->createUrl("//contrato/download", array("id"=>$data->id))',
                             ),
                             
+                        ),
+		),
+                array(
+			'class'=>'CButtonColumn',
+                        'visible'=>Yii::app()->user->rol == 'propietario',
+                        'template'=>'{finiquitar}',
+                        'header'=>'Finiquitar',
+                        'buttons'=>array(
+                            'finiquitar'=>array(
+                                'url'=>'Yii::app()->createUrl("//contrato/finiquitar", array("id"=>$data->id))',
+                                'label'=>'Finiquitar este contrato',
+                                'imageUrl'=>Yii::app()->baseUrl.'/images/eliminar.png',
+                                'click'=>'function(){'
+                                . 'var url = $(this).attr("href");'
+                                . 'swal({   '
+                                . '         title: "Seguro desea finiquitar este contrato?",   '
+                                . '         text: "Esta acción no se puede deshacer",   '
+                                . '         type: "warning",   '
+                                . '         cancelButtonText: "Cancelar",'
+                                . '         showCancelButton: true,   '
+                                . '         confirmButtonColor: "#DD6B55",  '
+                                . '         confirmButtonText: "Sí, finiquitarlo",   '
+                                . '         closeOnConfirm: true }, '
+                                . '         function(){   '
+                                . '             window.location = url;'
+                                . '         });'
+                                . 'return false;}',
+                            ),
                         ),
 		),
 	),

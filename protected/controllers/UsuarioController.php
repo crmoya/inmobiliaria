@@ -59,12 +59,12 @@ class UsuarioController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('view','create','createRoles','update','admin','delete','exportarXLS'),
-				'users'=>array('*'),
+				'actions'=>array('view','create','update','admin','delete','exportarXLS'),
+				'roles'=>array('superusuario'),
 			),
                         array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('checkRut','checkEmail'),
-				'users'=>array('@'),
+				'roles'=>array('superusuario','propietario'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),

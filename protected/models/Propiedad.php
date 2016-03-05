@@ -142,4 +142,17 @@ class Propiedad extends CActiveRecord
         ));
         return $response;
     }
+    
+    public function estaAsociadaAPropietario($user_id){
+        $propietario_id = Propietario::model()->getId($user_id);
+        return $this->propietario_id == $propietario_id;
+    }
+    
+    public function getDeUsuario($user_id){
+        $criteria = new CDbCriteria();
+        $criteria->join = "join propietario on propietario.id = t.propietario_id";
+        $criteria->condition = "propietario.usuario_id=:usuario_id";
+        $criteria->params = array(':usuario_id' => $user_id);
+        return $this->findAll($criteria);
+    }
 }

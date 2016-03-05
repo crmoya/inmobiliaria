@@ -29,7 +29,7 @@ class ContratoMuebleController extends Controller
 		return array(
 			array('allow',
                             'actions' => array('admin','create','view'),
-                            'roles' => array('superusuario','administrativo','propietario'),
+                            'roles' => array('superusuario','propietario'),
                         ),
                         array('allow',
                             'actions' => array('admin','view'),

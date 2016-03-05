@@ -6,7 +6,7 @@ class DepartamentoController extends Controller
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public $layout='//layouts/column2';
+	public $layout='//layouts/column1';
 
 	public function behaviors()
     {
@@ -38,14 +38,10 @@ class DepartamentoController extends Controller
             return array(
                 array('allow', // allow all users to perform 'index' and 'view' actions
                     'actions' => array( 'view','admin'),
-                    'roles' => array('administrativo', 'superusuario', 'propietario','cliente'),
+                    'roles' => array('superusuario', 'propietario','cliente'),
                 ),
                 array('allow', // allow all users to perform 'index' and 'view' actions
-                    'actions' => array('admin', 'create', 'update', 'exportarXLS'),
-                    'roles' => array('administrativo', 'superusuario'),
-                ),
-                array('allow', // allow all users to perform 'index' and 'view' actions
-                    'actions' => array('delete'),
+                    'actions' => array('admin', 'create', 'update', 'exportarXLS','delete'),
                     'roles' => array('superusuario'),
                 ),
                 array('deny',  // deny all users

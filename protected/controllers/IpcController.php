@@ -37,11 +37,7 @@ class IpcController extends Controller
 	{
             return array(
                 array('allow',
-                    'actions' => array( 'view','create', 'update', 'exportarXLS', 'admin'),
-                    'roles' => array('administrativo', 'superusuario'),
-                ),
-                array('allow',
-                    'actions' => array('delete'),
+                    'actions' => array( 'view','create', 'update', 'exportarXLS', 'admin','delete'),
                     'roles' => array('superusuario'),
                 ),
                 array('deny',  // deny all users
@@ -75,8 +71,15 @@ class IpcController extends Controller
 		if(isset($_POST['Ipc']))
 		{
 			$model->attributes=$_POST['Ipc'];
-			if($model->save())
+                        $anterior = Ipc::model()->findByAttributes(array('mes'=>$model->mes,'agno'=>$model->agno));
+                        if($anterior != null){
+                            $model->addError('mes', Tools::fixMes($model->mes)." de ".$model->agno." ya existe.");
+                        }
+                        else{
+                            if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
+                        }
+			
 		}
 
 		$this->render('create',array(
@@ -98,9 +101,18 @@ class IpcController extends Controller
 
 		if(isset($_POST['Ipc']))
 		{
-			$model->attributes=$_POST['Ipc'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+                    $model->attributes=$_POST['Ipc'];
+                    $anterior = Ipc::model()->findByAttributes(array('mes'=>$model->mes,'agno'=>$model->agno));
+                    if($anterior!= null){
+                        if($anterior->id != $id){
+                            $model->addError('mes', Tools::fixMes($model->mes)." de ".$model->agno." ya existe.");
+                        }
+                        else{
+                            if($model->save())
+                                $this->redirect(array('view','id'=>$model->id));
+                        }
+                    }
+                    
 		}
 
 		$this->render('update',array(

@@ -9,5 +9,5 @@ $code = "";
 if(isset($_GET['code'])){
     $code = $_GET['code'];
 }
-header("Location: ./contrato/reajustes?code=$code");
+header("Location: ./contrato/crearDeudas?code=$code");
 

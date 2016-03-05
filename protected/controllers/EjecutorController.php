@@ -37,12 +37,8 @@ class EjecutorController extends Controller
 	{
             return array(
                 array('allow',
-                    'actions' => array( 'view','create', 'update', 'exportarXLS', 'admin'),
-                    'roles' => array('administrativo', 'superusuario'),
-                ),
-                array('allow',
-                    'actions' => array('delete'),
-                    'roles' => array('superusuario'),
+                    'actions' => array( 'view','create', 'update', 'exportarXLS', 'admin','delete'),
+                    'roles' => array('superusuario','propietario'),
                 ),
                 array('deny',  // deny all users
                         'users'=>array('*'),

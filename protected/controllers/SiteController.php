@@ -192,16 +192,12 @@ class SiteController extends Controller
 	{
 		return array(
 		array('allow',
-                    'actions'=>array('index','login','admin','error','download'),
+                    'actions'=>array('index','login','admin','error','download','olvidaste'),
                     'users'=>array('*'),
 		),
                 array('allow',
                     'actions'=>array('logout','cambiarClave'),
                     'users'=>array('@'),
-		),
-                array('allow',
-                    'actions'=>array('olvidaste'),
-                    'users'=>array('*'),
 		),
 		array('deny',  // deny all users
                     'users'=>array('*'),

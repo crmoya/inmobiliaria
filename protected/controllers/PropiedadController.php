@@ -34,16 +34,12 @@ class PropiedadController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('admin',),
+                'actions' => array('admin','getDepartamentos','getDepartamentosAll'),
                 'roles' => array('propietario'),
             ),
             array('allow', // allow all users to perform 'index' and 'view' actions
                 'actions' => array('admin', 'create','delete','update', 'exportarXLS','view','getDepartamentos','getDepartamentosAll'),
                 'roles' => array('superusuario'),
-            ),
-            array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('admin', 'create','update', 'exportarXLS','view','getDepartamentos','getDepartamentosAll'),
-                'roles' => array('administrativo'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -58,7 +54,7 @@ class PropiedadController extends Controller {
     public function actionView($id) {
         $model = Propiedad::model()->findByPk($id);
         
-        if (Contrato::model()->estaAsociadoPropietario(Yii::app()->user->id, $id) ||
+        if ($model->estaAsociadaAPropietario(Yii::app()->user->id) ||
                 Yii::app()->user->rol == 'administrativo' ||
                 Yii::app()->user->rol == 'superusuario') {
             $this->render('view', array(
@@ -74,6 +70,23 @@ class PropiedadController extends Controller {
             $propiedad_id = $_POST['Contrato']['propiedad_id'];
             $departamentos = Departamento::model()->getListWithoutContractProp($propiedad_id);
             echo "<option value=''>Seleccione un Departamento</option>";
+            foreach($departamentos as $departamento){
+                echo "<option value=".$departamento->id.">".$departamento->numero."</option>";
+            }
+        }
+        if(isset($_POST['IngresosClienteForm']['propiedad_id'])){
+            $propiedad_id = $_POST['IngresosClienteForm']['propiedad_id'];
+            $departamentos = Departamento::model()->getListWithContractProp($propiedad_id);
+            echo "<option value=''>Seleccione un Departamento</option>";
+            foreach($departamentos as $departamento){
+                echo "<option value=".$departamento->id.">".$departamento->numero."</option>";
+            }
+        }
+        
+        if(isset($_POST['ListadoPrestacionesForm']['propiedad_id'])){
+            $propiedad_id = $_POST['ListadoPrestacionesForm']['propiedad_id'];
+            $departamentos = Departamento::model()->getListWithContractProp($propiedad_id);
+            echo "<option value=''>TODOS LOS DEPARTAMENTOS</option>";
             foreach($departamentos as $departamento){
                 echo "<option value=".$departamento->id.">".$departamento->numero."</option>";
             }

@@ -1,10 +1,9 @@
 <?php
 $this->breadcrumbs=array(
-	'Reajustes de Renta'=>array('//contrato/adminReajustes'),
-	'Administrar',
+	'Contratos vigentes'=>array('//contrato/admin'),
+	'Historial de montos reajustados para el Contrato # '.$contrato->folio,
 );
 ?>
-<h4>Historial de montos reajustados para el contrato folio <?php echo $contrato->folio; ?></h4>
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'debepagar-grid',

@@ -2,7 +2,31 @@
 /* @var $this PrestacionController */
 /* @var $model Prestacion */
 /* @var $form CActiveForm */
+
+
+$this->breadcrumbs=array(
+    'Nueva Prestación',
+);
+
 ?>
+
+<?php $this->widget('bootstrap.widgets.TbAlert', array(
+    'fade'=>true, // use transitions?
+    'closeText'=>'&times;', // close link text - if set to false, no close link is displayed
+    'alerts'=>array( // configurations per alert type
+        'success'=>array('block'=>true, 'fade'=>true, 'closeText'=>'&times;'), // success, info, warning, error or danger
+        'error'=>array('block'=>true, 'fade'=>true, 'closeText'=>'&times;'), // success, info, warning, error or danger
+      ),)
+); ?>
+<script>
+$(document).ready(function(e){
+    window.setTimeout(function() {
+            $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                $(this).remove(); 
+            });
+        }, 5000);
+});
+</script> 
 <script>
 $(document).ready(function(e){
     
@@ -39,18 +63,10 @@ $(document).ready(function(e){
 	'id'=>'prestacion-form',
 	'enableAjaxValidation'=>false,
 )); ?>
-    <?php
-    $fecha = "";
-    if($model->isNewRecord){
-        $fecha = date("d/m/Y");
-    }
-    else{
-        $fecha = Tools::backFecha($model->fecha);
-    }
-    ?>
-	<?php echo $form->errorSummary($model); ?>
+    <div class="span12">
+        <?php echo $form->errorSummary($model); ?>
 
-	<div class="row">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'fecha'); ?>
 		<?php
                 $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -61,7 +77,7 @@ $(document).ready(function(e){
                         'id' => 'datepicker_for_fecha',
                         'size' => '10',
                         'maxlength' =>'10',
-                        'value' => $fecha,
+                        'value' => date("d/m/Y"),
                         'readonly'=> 'readonly',
                     ),
                     'defaultOptions' => array(  // (#3)
@@ -78,25 +94,25 @@ $(document).ready(function(e){
 		<?php echo $form->error($model,'fecha'); ?>
 	</div>
 
-	<div class="row">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'monto'); ?>
 		<?php echo $form->textField($model,'monto'); ?>
 		<?php echo $form->error($model,'monto'); ?>
 	</div>
 
-	<div class="row">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'documento'); ?>
 		<?php echo $form->textField($model,'documento',array('size'=>45,'maxlength'=>45)); ?>
 		<?php echo $form->error($model,'documento'); ?>
 	</div>
 
-	<div class="row">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'descripcion'); ?>
 		<?php echo $form->textField($model,'descripcion',array('size'=>60,'maxlength'=>200)); ?>
 		<?php echo $form->error($model,'descripcion'); ?>
 	</div>
 
-	<div class="row">
+	<div class="span3">
 		<?php echo $form->labelEx($model,'tipo_prestacion_id'); ?>
 		<?php echo $form->dropDownList(
                     $model,
@@ -108,60 +124,67 @@ $(document).ready(function(e){
 		<?php echo $form->error($model,'tipo_prestacion_id'); ?>
 	</div>
 
-	<div class="row">
+        
+        <div class="clearfix"></div>
+	<div class="span4">
 		<?php echo $form->labelEx($model,'ejecutor_id'); ?>
 		<?php echo $form->dropDownList(
                     $model,
                     'ejecutor_id',
-                    CHtml::listData(Ejecutor::model()->findAll(), 'id', 'nombre'),
-                    array('prompt'=>'Seleccione Ejecutor',)
+                    CHtml::listData(Ejecutor::model()->listar(), 'id', 'nombre'),
+                    array('prompt'=>'Seleccione Maestro',)
                 ); 
 		?>
 		<?php echo $form->error($model,'ejecutor_id'); ?>
 	</div>
 
-	<div class="row compactRadioGroup">
-		<?php echo $form->labelEx($model,'genera_cargos'); ?>
-		<?php 
-                echo $form->radioButtonList($model,'genera_cargos',array('1'=>'Sí', '0'=>'No'),array('separator'=>'&nbsp;&nbsp;&nbsp;&nbsp;'));
-                ?>
-		<?php echo $form->error($model,'genera_cargos'); ?>
+	<div class="span2">
+            <?php echo $form->labelEx($model,'genera_cargos'); ?>
+            <?php echo $form->checkbox($model,'genera_cargos'); ?>
 	</div>
-    
-    
-    <fieldset>
-        <legend>¿En qué departamentos va a ejecutar la Prestación?</legend>
-        <?php
-        $this->widget('ext.selgridview.SelGridView', array(
-            'id' => 'departamentos-grid',
-            'filter'=>$departamentos,
-            'dataProvider' => $departamentos->searchChb(),
-            'selectableRows' => 2,
-            'columns'=>array(
-                array(
-                        'class' => 'CCheckBoxColumn',
-                        'checked' => '$data["id"]',
-                        'checkBoxHtmlOptions' => array(
-                        'name' => 'chbDepartamentoId[]',
+        
+        <div class="span2">
+            <?php echo $form->labelEx($model,'general_prop'); ?>
+            <?php echo $form->checkbox($model,'general_prop'); ?>
+	</div>
+    </div>
+    <div class="clearfix"></div>
+    <br/>
+    <div class="span12">
+        <span><big>¿En qué departamentos va a ejecutar la Prestación?</big></span>
+            <?php
+            $this->widget('ext.selgridview.SelGridView', array(
+                'id' => 'departamentos-grid',
+                'filter'=>$departamentos,
+                'dataProvider' => $departamentos->searchChb(),
+                'selectableRows' => 2,
+                'columns'=>array(
+                    array(
+                            'class' => 'CCheckBoxColumn',
+                            'checked' => '$data["id"]',
+                            'checkBoxHtmlOptions' => array(
+                            'name' => 'chbDepartamentoId[]',
+                        ),
+                    'value'=>'$data->id',
                     ),
-                'value'=>'$data->id',
-                ),
-                array('name'=>'propiedad_nombre','value'=>'$data->propiedad->nombre'),
-                'numero',
-                'mt2',
-                'dormitorios',
-                'estacionamientos',
-                'renta',
-             ),
-          ));
-        ?>
-    <span class="note">Solo los departamentos que estén seleccionados quedarán asociados a la prestación.</span>
-    </fieldset>
-
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar'); ?>
-	</div>
-
+                    array('name'=>'propiedad_nombre','value'=>'$data->propiedad->nombre'),
+                    'numero',
+                    'mt2',
+                    'dormitorios',
+                    'estacionamientos',
+                    'renta',
+                 ),
+              ));
+            ?>
+        <span class="note">Solo los departamentos que estén seleccionados quedarán asociados a la prestación.</span>
+        
+    </div>
+    <div class="clearfix"></div>
+    <br/>
+    <div class="span2">
+            <?php echo CHtml::submitButton('Guardar',array('class'=>'btn')); ?>
+    </div>
+<br/>
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
