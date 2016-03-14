@@ -98,31 +98,53 @@ class DemandaJudicial extends CActiveRecord
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
+                $arreglo = explode(" ",$this->cliente_nombre);
+                $nombreApellido = array();
+                foreach($arreglo as $palabra){
+                    if(trim($palabra)!= ''){
+                        $nombreApellido[]=$palabra;
+                    }
+                }
+                $criteriaNombreUser1 = new CDbCriteria();
+                $palabras = count($nombreApellido);
+                if($palabras == 1){
+                    $busqueda = $nombreApellido[0];
+                    if(trim($busqueda) != ''){
+                        $criteriaNombreUser1->compare('u.nombre',$busqueda,true);
+                        $criteriaNombreUser1->compare('u.apellido',$busqueda,true,'OR');
+                    }
+                }
 
-		$criteria->compare('id',$this->id);
+                if($palabras == 2){
+                    $nombre = $nombreApellido[0];
+                    $apellido = $nombreApellido[1];
+                    $criteriaNombreUser1->compare('u.nombre',$nombre,true);
+                    $criteriaNombreUser1->compare('u.apellido',$apellido,true);
+                }
+
+                $criteria->compare('id',$this->id);
+                $criteria->mergeWith($criteriaNombreUser1,'AND');
+
+		
 		$criteria->compare('rol',$this->rol,true);
 		$criteria->compare('causa',$this->causa,true);
 		$criteria->compare('contrato_id',$this->contrato_id);
-                $criteria->compare('f.nombre',$this->formato);
-                $criteria->compare('formato_demanda_id',$this->formato_demanda_id);
+                $criteria->compare('f.nombre',$this->formato,true);
                 $criteria->join = 
                         '   join contrato on contrato.id = t.contrato_id'
                 . '         join cliente as c on c.id = contrato.cliente_id '
                 . '         join usuario as u on u.id = c.usuario_id '
                         . ' join formato_demanda as f on f.id = t.formato_demanda_id';
                 $criteria->compare('contrato.folio',$this->folio);
-                $nombre = "";
-                $apellido = "";
-                $nombres = explode(" ",$this->cliente_nombre);
-                if(count($nombres) == 1){
-                    $nombre = $this->cliente_nombre;
-                    $apellido = $this->cliente_nombre;
+                
+                if(Yii::app()->user->rol == 'propietario'){
+                    $criteriaPropietario = new CDbCriteria();
+                    $contratos = Contrato::model()->relacionadosConPropietario(Yii::app()->user->id);
+                    foreach($contratos as $contrato_id){
+                        $criteriaPropietario->compare('contrato.id', $contrato_id, false,'OR');   
+                    }
+                    $criteria->mergeWith($criteriaPropietario,'AND');
                 }
-                elseif(count($nombres) == 2){
-                    $nombre = $nombres[0];
-                    $apellido = $nombres[1];
-                }
-                $criteria->compare('c.rut',$this->cliente_rut,true);
                 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

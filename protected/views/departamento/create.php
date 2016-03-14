@@ -12,6 +12,4 @@ $this->menu=array(
 );
 ?>
 
-<h1>Crear Departamento</h1>
-
 <?php echo $this->renderPartial('_form', array('model'=>$model,'propiedades'=>$propiedades)); ?>

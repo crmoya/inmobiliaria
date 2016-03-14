@@ -4,11 +4,14 @@
 
 $this->menu=array(
 	array('label'=>'Crear Mueble', 'url'=>array('create')),
-	array('label'=>'Ver Mueble', 'url'=>array('view', 'id'=>$model->id)),
 	array('label'=>'Administrar Muebles', 'url'=>array('admin')),
 );
+
+$this->breadcrumbs=array(
+	'Muebles'=>array('admin'),
+	'Administrar',
+);
 ?>
-
-<h1>Editar Mueble <?php echo $model->id; ?></h1>
-
+<div class="span10">
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+</div>

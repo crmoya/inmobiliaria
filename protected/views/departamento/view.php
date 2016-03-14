@@ -17,8 +17,6 @@ if (Yii::app()->user->rol == 'superusuario' ||
 }
 ?>
 
-<h1>Departamento #<?php echo $model->id; ?></h1>
-
 <?php
 $this->widget('zii.widgets.CDetailView', array(
     'data' => $model,

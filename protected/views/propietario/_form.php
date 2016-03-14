@@ -78,50 +78,52 @@
             $email = $_POST['Cliente']['email'];
         }
         ?>
-	<div class="row">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'rut'); ?>
 		<?php echo $form->textField($model,'rut',array('size'=>11,'maxlength'=>11,$readonly=>$readonly)); ?>
 		<?php echo $form->error($model,'rut'); ?><div class="error_rutpropietario"></div>
 	</div>
     
-        <div class="row">
+        <div class="span2">
 		<?php echo $form->labelEx($model,'nombre'); ?>
 		<?php echo $form->textField($model,'nombre',array('size'=>60,'maxlength'=>100,'value'=>$nombre)); ?>
 		<?php echo $form->error($model,'nombre'); ?>
 	</div>
     
-        <div class="row">
+        <div class="span2">
 		<?php echo $form->labelEx($model,'apellido'); ?>
 		<?php echo $form->textField($model,'apellido',array('size'=>60,'maxlength'=>100,'value'=>$apellido)); ?>
 		<?php echo $form->error($model,'apellido'); ?>
 	</div>
-    
-        <div class="row">
+<div class="clearfix"></div>    
+        <div class="span2">
 		<?php echo $form->labelEx($model,'email'); ?>
 		<?php echo $form->textField($model,'email',array('size'=>60,'maxlength'=>100,'value'=>$email)); ?>
 		<?php echo $form->error($model,'email'); ?><div class="error_email"></div>
 	</div>
 
-	<div class="row">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'direccion'); ?>
 		<?php echo $form->textField($model,'direccion',array('size'=>60,'maxlength'=>200)); ?>
 		<?php echo $form->error($model,'direccion'); ?>
 	</div>
-    
+    <div class="clearfix"></div>
         <?php
         if($model->isNewRecord):?>
-        <div class="row">
+        <div class="span8">
             <?php echo $form->labelEx($model,'clave'); ?>
             <p class="note">Su clave serán los dígitos de su rut sin dígito verificador. Por favor cámbiela cuanto antes.</p>
             <?php echo $form->error($model,'clave'); ?>
 	</div>
+    <div class="clearfix"></div>
         <?php
         endif;
         ?>
 
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar',array('class'=>$btn)); ?>
+	<div class="span2 buttons">
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar',array('class'=>$btn." btn")); ?>
 	</div>
+    <br>
 
 <?php $this->endWidget(); ?>
 

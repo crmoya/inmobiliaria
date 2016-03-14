@@ -55,6 +55,24 @@ $(document).ready(function(e){
             $(this).attr('checked',true);
         }
     });
+    if($('#general').prop('checked')){
+        $('#deptos').hide();
+        $('#propiedad').show();
+    }
+    else{
+        $('#deptos').show();
+        $('#propiedad').hide();
+    }
+    $('#general').click(function(e){
+        if($(this).prop('checked')){
+            $('#deptos').fadeOut();
+            $('#propiedad').fadeIn();
+        }
+        else{
+            $('#deptos').fadeIn();
+            $('#propiedad').fadeOut();
+        }
+    });
 });
 </script>
 <div class="form">
@@ -145,12 +163,12 @@ $(document).ready(function(e){
         
         <div class="span2">
             <?php echo $form->labelEx($model,'general_prop'); ?>
-            <?php echo $form->checkbox($model,'general_prop'); ?>
+            <?php echo $form->checkbox($model,'general_prop',array('id'=>'general')); ?>
 	</div>
     </div>
     <div class="clearfix"></div>
     <br/>
-    <div class="span12">
+    <div class="span12" id="deptos">
         <span><big>¿En qué departamentos va a ejecutar la Prestación?</big></span>
             <?php
             $this->widget('ext.selgridview.SelGridView', array(
@@ -178,6 +196,22 @@ $(document).ready(function(e){
             ?>
         <span class="note">Solo los departamentos que estén seleccionados quedarán asociados a la prestación.</span>
         
+    </div>
+    <div class="span12" id="propiedad">
+        <div class="span10">
+        <span><big>¿En qué propiedad va a ejecutar la Prestación?</big></span><br/><br/>
+        </div>
+        <div class="clearfix"></div>
+        <div class="span4">
+            <?php echo $form->dropDownList(
+                $model,
+                'propiedad_id',
+                CHtml::listData(Propiedad::model()->getDeUsuario(Yii::app()->user->id), 'id', 'nombre'),
+                array('prompt'=>'Seleccione Propiedad',)
+            ); 
+            ?>
+            <?php echo $form->error($model,'propiedad_id'); ?>
+        </div>
     </div>
     <div class="clearfix"></div>
     <br/>

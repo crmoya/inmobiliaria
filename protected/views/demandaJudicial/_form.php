@@ -27,8 +27,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'contrato_id'); ?>
-		<?php echo $form->dropDownList($model,'contrato_id', CHtml::listData(Contrato::model()->findAll(), 'id', 'folio'),
-                            array('prompt'=>'Seleccione un Contrato')); ?>
+		<?php echo $form->dropDownList($model,'contrato_id', CHtml::listData(Contrato::model()->getDeUsuario(Yii::app()->user->id), 'id', 'folio'),array('prompt'=>'Seleccione un Contrato')); ?>
 		<?php echo $form->error($model,'contrato_id'); ?>
 	</div>
     
@@ -40,7 +39,7 @@
 	</div>
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar'); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar',array('class'=>'btn')); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

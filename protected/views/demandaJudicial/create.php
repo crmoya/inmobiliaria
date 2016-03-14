@@ -4,7 +4,7 @@
 
 $this->breadcrumbs=array(
 	'Demandas Judiciales'=>array('admin'),
-	'Create',
+	'Nueva demanada',
 );
 
 $this->menu=array(
@@ -12,6 +12,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Crear Demanda Judicial</h1>
-
+<div class="span10">
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+</div>

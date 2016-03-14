@@ -82,6 +82,8 @@ class ContratoMueble extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'contrato_id' => 'Contrato',
+                    'depto_nombre'=>'Departamento',
+                    'propiedad_nombre'=>'Propiedad',
 		);
 	}
 
@@ -106,6 +108,14 @@ class ContratoMueble extends CActiveRecord
                 . '         join usuario as u on u.id = c.usuario_id ';
 
                 
+                if(Yii::app()->user->rol == 'propietario'){
+                    $criteriaPropietario = new CDbCriteria();
+                    $contratos = Contrato::model()->relacionadosConPropietario(Yii::app()->user->id);
+                    foreach($contratos as $contrato_id){
+                        $criteriaPropietario->compare('contrato.id', $contrato_id, false,'OR');   
+                    }
+                    $criteria->mergeWith($criteriaPropietario,'AND');
+                }
                 $nombre = "";
                 $apellido = "";
                 $nombres = explode(" ",$this->cliente_nombre);

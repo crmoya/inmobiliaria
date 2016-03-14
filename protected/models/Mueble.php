@@ -17,6 +17,7 @@ class Mueble extends CActiveRecord
     
     public $departamento_num;
     public $propiedad_nom;
+    public $propiedad_id;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -44,7 +45,7 @@ class Mueble extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('nombre, departamento_id', 'required'),
-			array('departamento_id', 'numerical', 'integerOnly'=>true),
+			array('departamento_id,propiedad_id', 'numerical', 'integerOnly'=>true),
 			array('nombre', 'length', 'max'=>45),
 			array('fecha_compra', 'safe'),
 			// The following rule is used by search().
@@ -77,6 +78,7 @@ class Mueble extends CActiveRecord
 			'departamento_id' => 'Departamento',
                         'departamento_num' => 'N° Departamento',
                         'propiedad_nom' => 'Propiedad',
+                        'propiedad_id' => 'Propiedad',
 		);
 	}
 
@@ -91,13 +93,23 @@ class Mueble extends CActiveRecord
 
 		$criteria=new CDbCriteria;
                 $criteria->join = " join departamento on departamento.id = t.departamento_id "
-                        . "         join propiedad on propiedad.id = departamento.propiedad_id";
+                        . "         join propiedad on propiedad.id = departamento.propiedad_id"
+                        . "         join contrato on contrato.departamento_id = t.departamento_id";
 		$criteria->compare('id',$this->id);
 		$criteria->compare('t.nombre',$this->nombre,true);
 		$criteria->compare('fecha_compra',Tools::fixFecha($this->fecha_compra),true);
 		$criteria->compare('t.departamento_id',$this->departamento_id);
                 $criteria->compare('departamento.numero',$this->departamento_num,true);
                 $criteria->compare('propiedad.nombre',$this->propiedad_nom,true);
+                
+                if(Yii::app()->user->rol == 'propietario'){
+                    $criteriaPropietario = new CDbCriteria();
+                    $contratos = Contrato::model()->relacionadosConPropietario(Yii::app()->user->id);
+                    foreach($contratos as $contrato_id){
+                        $criteriaPropietario->compare('contrato.id', $contrato_id, false,'OR');   
+                    }
+                    $criteria->mergeWith($criteriaPropietario,'AND');
+                }
                 
 		return new CActiveDataProvider($this, array(
                     'criteria'=>$criteria,

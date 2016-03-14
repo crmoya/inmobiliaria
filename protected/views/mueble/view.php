@@ -5,9 +5,13 @@
 $this->menu=array(
 	array('label'=>'Administrar Muebles', 'url'=>array('admin')),
 );
-?>
 
-<h1>View Mueble #<?php echo $model->id; ?></h1>
+
+$this->breadcrumbs=array(
+	'Muebles'=>array('admin'),
+	'Administrar',
+);
+?>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,

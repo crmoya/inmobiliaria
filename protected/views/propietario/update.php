@@ -2,6 +2,12 @@
 /* @var $this PropietarioController */
 /* @var $model Propietario */
 
+
+$this->breadcrumbs=array(
+	'Propietarios'=>array('admin'),
+	'Actualizar',
+);
+
 $this->menu=array(
 	array('label'=>'Crear Propietario', 'url'=>array('create')),
 	array('label'=>'Ver Propietario', 'url'=>array('view', 'id'=>$model->id)),
@@ -9,6 +15,5 @@ $this->menu=array(
 );
 ?>
 
-<h1>Editar Propietario <?php echo $model->id; ?></h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

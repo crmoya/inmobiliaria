@@ -5,8 +5,13 @@
 $this->menu=array(
 	array('label'=>'Administrar Muebles', 'url'=>array('admin')),
 );
-?>
 
-<h1>Crear Mueble</h1>
+$this->breadcrumbs=array(
+	'Muebles'=>array('admin'),
+	'Administrar',
+);
+?>
+<div class="span10">
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+</div>

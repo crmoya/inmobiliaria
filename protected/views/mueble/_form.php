@@ -59,7 +59,7 @@
     
         <div class="row">
             <?php echo $form->labelEx($model, 'propiedad_id'); ?>
-            <?php echo $form->dropDownList($model,'propiedad_id', CHtml::listData(Propiedad::model()->findAll(), 'id', 'nombre'),
+            <?php echo $form->dropDownList($model,'propiedad_id', CHtml::listData(Propiedad::model()->getDeUsuario(Yii::app()->user->id), 'id', 'nombre'),
                 array(
                     'ajax' => array(
                         'type'=>'POST', //request type
@@ -90,7 +90,7 @@
         </div>
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar'); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar',array('class'=>'btn')); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

@@ -10,19 +10,6 @@ $this->breadcrumbs=array(
 $this->menu=array(
 	array('label'=>'Crear Demanda Judicial', 'url'=>array('create')),
 );
-
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
-$('.search-form form').submit(function(){
-	$('#demanda-judicial-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
-});
-");
 ?>
 
 <?php $this->widget('bootstrap.widgets.TbAlert', array(
@@ -43,15 +30,6 @@ $(document).ready(function(e){
 });
 </script> 
 
-<h1>Administrar Demandas Judiciales</h1>
-
-<?php echo CHtml::link('Búsqueda Avanzada','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
-
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'demanda-judicial-grid',
 	'dataProvider'=>$model->search(),
@@ -61,8 +39,7 @@ $(document).ready(function(e){
 		'causa',
                 array('name'=>'cliente_rut','value'=>'$data->contrato->cliente->rut'),
                 array('name'=>'cliente_nombre','value'=>'$data->contrato->cliente->usuario->nombre." ".$data->contrato->cliente->usuario->apellido'),
-		array('name'=>'folio','value'=>'$data->contrato->folio'),
-                array('name'=>'formato','value'=>'$data->formatoDemanda->nombre'),
+		array('name'=>'formato','value'=>'$data->formatoDemanda->nombre'),
 		array(
                         'class'=>'CButtonColumn',
                         'template'=>'{view} {delete}',

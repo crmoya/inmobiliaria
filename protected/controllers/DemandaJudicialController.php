@@ -68,6 +68,10 @@ class DemandaJudicialController extends Controller
 	public function actionView($id)
 	{
             $contrato = DemandaJudicial::model()->findByPk($id)->contrato;
+            if(!$contrato->estaAsociadoAPropietario(Yii::app()->user->id)){
+                Yii::app()->user->setFlash('error',"No tiene permisos para ver esta demanda.");
+                $this->redirect(CController::createUrl("//demandaJudicial/admin"));
+            }
             $departamento = $contrato->departamento;
             $file = Yii::app()->basePath.'/documentos/demandas/Demanda_'.$contrato->cliente->rut.'_depto'.$departamento->numero.'.docx';
             if (file_exists($file)) {
@@ -105,6 +109,10 @@ class DemandaJudicialController extends Controller
                                         
 			$model->attributes=$_POST['DemandaJudicial'];
                         $contrato = Contrato::model()->findByPk($model->contrato_id);
+                        if(!$contrato->estaAsociadoAPropietario(Yii::app()->user->id)){
+                            Yii::app()->user->setFlash('error',"No tiene permisos para crear esta demanda.");
+                            $this->redirect(CController::createUrl("//demandaJudicial/admin"));
+                        }
                         $cliente = $contrato->cliente;
                         $usuario = $cliente->usuario;
                         $departamento = $contrato->departamento;
@@ -186,6 +194,10 @@ class DemandaJudicialController extends Controller
 	{
                 $model = $this->loadModel($id);
                 $contrato = $model->contrato;
+                if(!$contrato->estaAsociadoAPropietario(Yii::app()->user->id)){
+                    Yii::app()->user->setFlash('error',"No tiene permisos para eliminar esta demanda.");
+                    $this->redirect(CController::createUrl("//demandaJudicial/admin"));
+                }
                 $departamento = $contrato->departamento;
                 $model->delete();
 		

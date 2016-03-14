@@ -265,8 +265,7 @@ $(document).ready(function(e){
         var mov = $(this).attr('mov');
         $.ajax({
             type: "POST",
-            url: '<?php echo CController::createUrl('//movimiento/eliminar');?>',
-            data: { mov:mov}
+            url: '<?php echo CController::createUrl('//movimiento/delete/');?>/'+mov
         }).done(function( msg ) {
             if(msg == 'OK'){
                 $("#mov"+mov).remove();

@@ -39,7 +39,7 @@ class MuebleController extends Controller
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('admin','exportarXLS','create','update','view','delete'),
-				'roles'=>array('superusuario'),
+				'roles'=>array('superusuario','propietario'),
 			),
                         array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('admin'),
@@ -94,17 +94,21 @@ class MuebleController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
+                $departamento = Departamento::model()->findByPk($model->departamento_id);
+                $propiedad = $departamento->propiedad;
+                $model->propiedad_id = $propiedad->id;
+                
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['Mueble']))
 		{
-			$model->attributes=$_POST['Mueble'];
-                        $model->fecha_compra = Tools::fixFecha($model->fecha_compra);
-			$model->departamento_id = $_POST['Mueble']['departamento_id'];
-                        if($model->save())
-				$this->redirect(array('admin','id'=>$model->id));
+                    $model->attributes=$_POST['Mueble'];
+                    $model->fecha_compra = Tools::fixFecha($model->fecha_compra);
+                    $model->departamento_id = $_POST['Mueble']['departamento_id'];
+
+                    if($model->save())
+                        $this->redirect(array('admin','id'=>$model->id));
 		}
 
 		$this->render('update',array(

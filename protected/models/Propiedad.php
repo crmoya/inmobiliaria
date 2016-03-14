@@ -84,7 +84,7 @@ class Propiedad extends CActiveRecord
 			'direccion' => 'Direccion',
 			'mt_construidos' => 'Metros Construidos',
 			'mt_terreno' => 'Metros Terreno',
-			'cant_estacionamientos' => 'Cantidad Estacionamientos',
+			'cant_estacionamientos' => 'Estacionamientos',
 			'inscripcion' => 'Inscripcion',
                         'propietario_nom' => 'Propietario',
 		);

@@ -11,8 +11,6 @@
         }
         ?>
     
-	<p class="note">Campos con <span class="required">*</span> son requeridos.</p>
-
 	<?php echo $form->errorSummary($model); ?>
         
 	<div class="row">
@@ -52,7 +50,7 @@
 		<?php echo $form->error($model,'rol'); ?>
 	</div>
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar'); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar',array('class'=>'btn')); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

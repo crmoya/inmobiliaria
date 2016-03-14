@@ -35,24 +35,7 @@ class Prestacion extends CActiveRecord
 	}
 
         
-        public function getDePropiedadYDepartamento($propiedad,$departamento){
-            $criteria = new CDbCriteria();
-            $criteria->condition = "";
-            if($propiedad != null){
-                $criteria->join = " join prestacion_a_departamento pd on pd.prestacion_id = t.id "
-                        . "         join departamento d on d.id = pd.departamento_id ";
-                $criteria->condition = " d.propiedad_id = :propiedad_id";
-                $criteria->params = array(':propiedad_id'=>$propiedad->id);
-            }
-            if($departamento != null){
-                $criteria->join = " join prestacion_a_departamento pd on pd.prestacion_id = t.id "
-                        . "         join departamento d on d.id = pd.departamento_id ";
-                $criteria->condition = " d.propiedad_id = :propiedad_id and d.id = :departamento_id";
-                $criteria->params = array(':propiedad_id'=>$propiedad->id,':departamento_id'=>$departamento->id);
-            }
-            $prestaciones = $this->findAll($criteria);
-            return $prestaciones;
-        }
+        
 	/**
 	 * @return string the associated database table name
 	 */
@@ -70,7 +53,7 @@ class Prestacion extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('fecha, monto, descripcion, tipo_prestacion_id, ejecutor_id, genera_cargos', 'required'),
-			array('monto, tipo_prestacion_id, ejecutor_id, genera_cargos', 'numerical', 'integerOnly'=>true),
+			array('monto, tipo_prestacion_id, ejecutor_id, genera_cargos,propiedad_id', 'numerical', 'integerOnly'=>true),
 			array('documento,general_prop', 'length', 'max'=>45),
 			array('descripcion', 'length', 'max'=>200),
 			// The following rule is used by search().
@@ -110,6 +93,7 @@ class Prestacion extends CActiveRecord
                         'tipo_prestacion_nombre' => 'Tipo Prestación',
                         'ejecutor_nombre' => 'Ejecutor',
                         'general_prop'=>'General Propiedad',
+                        'propiedad_id'=>'Propiedad',
 		);
 	}
 

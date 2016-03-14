@@ -5,9 +5,12 @@ $this->menu=array(
 	array('label'=>'Eliminar Usuario', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Seguro desea borrar este registro?')),
 	array('label'=>'Administrar Usuarios', 'url'=>array('admin')),
 );
-?>
-<h1>Ver Usuario #<?php echo $model->id; ?></h1>
 
+$this->breadcrumbs = array(
+    'Usuarios' => array('admin'),
+    $model->id,
+);
+?>
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(

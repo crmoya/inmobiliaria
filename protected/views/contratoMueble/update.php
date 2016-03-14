@@ -5,17 +5,15 @@
 $this->breadcrumbs=array(
 	'Contrato Muebles'=>array('index'),
 	$model->id=>array('view','id'=>$model->id),
-	'Update',
+	'Actualizar',
 );
 
 $this->menu=array(
-	array('label'=>'List ContratoMueble', 'url'=>array('index')),
-	array('label'=>'Create ContratoMueble', 'url'=>array('create')),
-	array('label'=>'View ContratoMueble', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage ContratoMueble', 'url'=>array('admin')),
+	array('label'=>'Listar Contratos Muebles', 'url'=>array('admin')),
+	array('label'=>'Crear Contrato Mueble', 'url'=>array('create')),
+	array('label'=>'Ver Contrato Mueble', 'url'=>array('view', 'id'=>$model->id)),
 );
 ?>
-
-<h1>Update ContratoMueble <?php echo $model->id; ?></h1>
-
+<div class="span10">
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+</div>

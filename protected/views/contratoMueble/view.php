@@ -3,22 +3,18 @@
 /* @var $model ContratoMueble */
 
 $this->breadcrumbs=array(
-	'Contrato Muebles'=>array('index'),
+	'Contratos de Muebles'=>array('admin'),
 	$model->id,
 );
 
 $this->menu=array(
-	array('label'=>'List ContratoMueble', 'url'=>array('index')),
-	array('label'=>'Create ContratoMueble', 'url'=>array('create')),
-	array('label'=>'Update ContratoMueble', 'url'=>array('update', 'id'=>$model->id)),
-	array('label'=>'Delete ContratoMueble', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage ContratoMueble', 'url'=>array('admin')),
+	array('label'=>'Listar Contratos de Muebles', 'url'=>array('admin')),
+	array('label'=>'Crear Contrato Mueble', 'url'=>array('create')),
+	array('label'=>'Actualizar Contrato Mueble', 'url'=>array('update', 'id'=>$model->id)),
+	array('label'=>'Eliminar Contrato Mueble', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
 );
 ?>
-
-<h1>View ContratoMueble #<?php echo $model->id; ?></h1>
-
-<?php $this->widget('zii.widgets.CDetailView', array(
+    <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',

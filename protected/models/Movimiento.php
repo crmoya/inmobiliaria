@@ -12,54 +12,35 @@
  * @property integer $validado
  * @property integer $cuenta_corriente_id
  * @property integer $forma_pago_id
+ * @property integer $saldo_cuenta
  *
  * The followings are the available model relations:
  * @property CuentaCorriente $cuentaCorriente
- * @propery FormaPago $formaPago
+ * @property FormaPago $formaPago
  */
 class Movimiento extends CActiveRecord
 {
     public $abono_str;
     public $cargo_str;
-    public $saldo;
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'movimiento';
-	}
-
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('fecha, tipo, monto, detalle, validado, cuenta_corriente_id', 'required'),
-			array('monto, validado, cuenta_corriente_id', 'numerical', 'integerOnly'=>true),
-			array('detalle', 'length', 'max'=>200),
-                        // The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, fecha, tipo, monto, detalle, validado, cuenta_corriente_id', 'safe', 'on'=>'search'),
-		);
-	}
-
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-                    'cuentaCorriente' => array(self::BELONGS_TO, 'CuentaCorriente', 'cuenta_corriente_id'),
-                    'formaPago' => array(self::BELONGS_TO, 'FormaPago', 'forma_pago_id'),
-		);
-	}
-        
+    
+    public function actualizaSaldosPosteriores($monto){
+        $movs_posteriores = $this->findAll(array(
+            'condition'=>'((fecha > :fecha) or (fecha = :fecha1 and id > :id)) and cuenta_corriente_id = :cta',
+            'params'=>array(':fecha'=>$this->fecha,':fecha1'=>$this->fecha,':cta'=>$this->cuenta_corriente_id,':id'=>$this->id),
+            'order'=>'fecha,id',
+        ));
+        foreach($movs_posteriores as $mov_posterior){
+            $mov_posterior->saldo_cuenta += $monto;
+            $mov_posterior->save();
+        }
+        $this->saldo_cuenta += $monto;
+        $this->save();
+    }
+    
+    public function ultimoSaldo(){
+        return $this->cuentaCorriente->saldoAFecha(date('Y-m-d'));
+    }
+    
         public function getIngresosDePropietarioEntreFechas($user_id,$fDesde,$fHasta){
             $criteria = new CDbCriteria();
             $criteria->join='join cuenta_corriente cc on cc.id = t.cuenta_corriente_id '
@@ -92,6 +73,45 @@ class Movimiento extends CActiveRecord
         }
         
 	/**
+	 * @return string the associated database table name
+	 */
+	public function tableName()
+	{
+		return 'movimiento';
+	}
+
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+			array('fecha, tipo, monto, detalle, validado, cuenta_corriente_id', 'required'),
+			array('monto, validado, cuenta_corriente_id, forma_pago_id, saldo_cuenta', 'numerical', 'integerOnly'=>true),
+			array('tipo', 'length', 'max'=>5),
+			array('detalle', 'length', 'max'=>200),
+			// The following rule is used by search().
+			// @todo Please remove those attributes that should not be searched.
+			array('id, fecha, tipo, monto, detalle, validado, cuenta_corriente_id, forma_pago_id, saldo_cuenta', 'safe', 'on'=>'search'),
+		);
+	}
+
+	/**
+	 * @return array relational rules.
+	 */
+	public function relations()
+	{
+		// NOTE: you may need to adjust the relation name and the related
+		// class name for the relations automatically generated below.
+		return array(
+			'cuentaCorriente' => array(self::BELONGS_TO, 'CuentaCorriente', 'cuenta_corriente_id'),
+			'formaPago' => array(self::BELONGS_TO, 'FormaPago', 'forma_pago_id'),
+		);
+	}
+
+	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
 	public function attributeLabels()
@@ -107,38 +127,8 @@ class Movimiento extends CActiveRecord
 			'forma_pago_id' => 'Forma de Pago',
                         'abono_str'=>'Abono',
                         'cargo_str'=>'Cargo',
+                        'saldo_cuenta'=>'Saldo',
 		);
-	}
-
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
-	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('fecha',$this->fecha,true);
-		$criteria->compare('tipo',$this->tipo);
-		$criteria->compare('monto',$this->monto);
-		$criteria->compare('detalle',$this->detalle,true);
-		$criteria->compare('validado',$this->validado);
-		$criteria->compare('cuenta_corriente_id',$this->cuenta_corriente_id);
-		
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
 	}
         
         public function searchCuenta($id)
@@ -183,6 +173,43 @@ class Movimiento extends CActiveRecord
 		));
 	}
         
+        public function searchCartola($cuenta_id)
+	{
+            $cuenta = CuentaCorriente::model()->findByPk($cuenta_id);
+            if($cuenta == null){
+                throw new CHttpException(403, 'Usted no se encuentra autorizado para realizar esta acción.');
+            }
+                //revisar que puede ver estos movimientos
+                if(Yii::app()->user->rol == 'propietario'){
+                    if(!$cuenta->estaAsociadoPropietario(Yii::app()->user->id)){
+                        throw new CHttpException(403, 'Usted no se encuentra autorizado para realizar esta acción.');
+                    }
+                }
+                if(Yii::app()->user->rol == 'cliente'){
+                    die;
+                }
+            
+		// @todo Please modify the following code to remove attributes that should not be searched.
+
+		$criteria=new CDbCriteria;
+                
+		$criteria->compare('cuenta_corriente_id',$cuenta_id);
+		
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+                        'sort' => array(
+                            'defaultOrder'=>'fecha DESC,id DESC',
+                            'attributes' => array(
+                                'fecha' => array(
+                                    'asc' => 'fecha',
+                                    'desc' => 'fecha DESC',
+                                ),
+                                '*',
+                            ),
+                        ),
+		));
+	}
+        
         
         public function getTypeMovOptions(){
             return CHtml::listData(
@@ -191,6 +218,39 @@ class Movimiento extends CActiveRecord
                         array('tipo'=>  Tools::MOVIMIENTO_TIPO_CARGO)
                     ),'tipo','tipo');
         }
+
+	/**
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 *
+	 * Typical usecase:
+	 * - Initialize the model fields with values from filter form.
+	 * - Execute this method to get CActiveDataProvider instance which will filter
+	 * models according to data in model fields.
+	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 *
+	 * @return CActiveDataProvider the data provider that can return the models
+	 * based on the search/filter conditions.
+	 */
+	public function search()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+
+		$criteria=new CDbCriteria;
+
+		$criteria->compare('id',$this->id);
+		$criteria->compare('fecha',$this->fecha,true);
+		$criteria->compare('tipo',$this->tipo,true);
+		$criteria->compare('monto',$this->monto);
+		$criteria->compare('detalle',$this->detalle,true);
+		$criteria->compare('validado',$this->validado);
+		$criteria->compare('cuenta_corriente_id',$this->cuenta_corriente_id);
+		$criteria->compare('forma_pago_id',$this->forma_pago_id);
+		$criteria->compare('saldo_cuenta',$this->saldo_cuenta);
+
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+		));
+	}
 
 	/**
 	 * Returns the static model of the specified AR class.

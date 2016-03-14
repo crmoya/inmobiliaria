@@ -121,26 +121,29 @@ class PrestacionController extends Controller
                 
                 $i++;
                 
-                $prestaciones = Prestacion::model()->getDePropiedadYDepartamento($propiedad,$departamento);
+                $prestaciones = Prestacionesadepartamentos::model()->getDePropiedadYDepartamento($propiedad,$departamento);
                 foreach($prestaciones as $prestacion){
-                    foreach($prestacion->prestacionADepartamentos as $prestacionDepto){
-                        $sheet->setCellValueByColumnAndRow(0,$i, Tools::backFecha($prestacion->fecha));
-                        $sheet->setCellValueByColumnAndRow(1,$i, $prestacionDepto->departamento->propiedad->nombre);
-                        $sheet->setCellValueByColumnAndRow(2,$i, $prestacionDepto->departamento->numero);
-                        $sheet->setCellValueByColumnAndRow(3,$i, $prestacion->general_prop==1?"SÍ":"NO");
-                        $sheet->setCellValueByColumnAndRow(4,$i, $prestacion->documento);
-                        $sheet->setCellValueByColumnAndRow(5,$i, $prestacion->monto);
-                        $sheet->setCellValueByColumnAndRow(6,$i, $prestacion->genera_cargos==1?"SÍ":"NO");
-                        $sheet->setCellValueByColumnAndRow(7,$i, $prestacion->descripcion);
-                        $sheet->setCellValueByColumnAndRow(8,$i, $prestacion->ejecutor->nombre." (".$prestacion->ejecutor->especialidad->nombre.")");
-                        $sheet->setCellValueByColumnAndRow(9,$i, $prestacion->tipoPrestacion->nombre);
-                        $i++;
+                    $sheet->setCellValueByColumnAndRow(0,$i, Tools::backFecha($prestacion->fecha));
+                    $propiedad = Propiedad::model()->findByPk($prestacion->propiedad_id);
+                    $departamento = Departamento::model()->findByPk($prestacion->departamento_id);
+                    if($propiedad == null){
+                        $propiedad = $departamento->propiedad;
                     }
+                    $sheet->setCellValueByColumnAndRow(1,$i, $propiedad->nombre);
+                    $sheet->setCellValueByColumnAndRow(2,$i, $departamento!=null?$departamento->numero:"SIN DEPARTAMENTO");
+                    $sheet->setCellValueByColumnAndRow(3,$i, $prestacion->general_prop==1?"SÍ":"NO");
+                    $sheet->setCellValueByColumnAndRow(4,$i, $prestacion->documento);
+                    $sheet->setCellValueByColumnAndRow(5,$i, $prestacion->monto);
+                    $sheet->setCellValueByColumnAndRow(6,$i, $prestacion->genera_cargos==1?"SÍ":"NO");
+                    $sheet->setCellValueByColumnAndRow(7,$i, $prestacion->descripcion);
+                    $sheet->setCellValueByColumnAndRow(8,$i, $prestacion->maestro);
+                    $sheet->setCellValueByColumnAndRow(9,$i, $prestacion->tipo);
+                    $i++;
                 }
                 $objPHPExcel->setActiveSheetIndex(0);
 
                 header('Content-Type: application/vnd.ms-excel');
-                header('Content-Disposition: attachment;filename="Movimientos Propietario.xls"');
+                header('Content-Disposition: attachment;filename="Prestaciones a Propiedades.xls"');
                 header('Cache-Control: max-age=0');
                 // If you're serving to IE 9, then the following may be needed
                 header('Cache-Control: max-age=1');
@@ -199,45 +202,83 @@ class PrestacionController extends Controller
             {
                 $model->attributes=$_POST['Prestacion'];
                 $model->fecha = Tools::fixFecha($model->fecha);
-                
-                if($model->save()){
-                    if(isset($_POST['chbDepartamentoId'])){
-                        $cant_deptos = count($_POST['chbDepartamentoId']);
-                        if($cant_deptos > 0){
-                            $monto = (int)$model->monto/$cant_deptos;
-                            foreach($_POST['chbDepartamentoId'] as $i=>$departamento){
-                                $prest_depto = new PrestacionADepartamento();
-                                $prest_depto->departamento_id = $departamento;
-                                $prest_depto->prestacion_id = $model->id;
-                                if($prest_depto->validate()){
-                                    $prest_depto->save();
+                $ok = true;
+                $propiedad = null;
+                if($model->general_prop){
+                    $propiedad = Propiedad::model()->findByPk($model->propiedad_id);
+                    if($propiedad==null){
+                        $ok = false;
+                    }
+                }
+                if($ok){
+                    if($model->save()){
+                        if($model->general_prop!="1"){
+                            if(isset($_POST['chbDepartamentoId'])){
+                                $cant_deptos = count($_POST['chbDepartamentoId']);
+                                if($cant_deptos > 0){
+                                    $monto = (int)$model->monto/$cant_deptos;
+                                    foreach($_POST['chbDepartamentoId'] as $i=>$departamento){
+                                        $prest_depto = new PrestacionADepartamento();
+                                        $prest_depto->departamento_id = $departamento;
+                                        $prest_depto->prestacion_id = $model->id;
+                                        if($prest_depto->validate()){
+                                            $prest_depto->save();
+                                        }
+                                        if($model->genera_cargos == "1"){
+                                            //se crean los cargos para el depto
+                                            $cargo = new Movimiento();
+                                            $depto = Departamento::model()->findByPk($departamento);
+                                            if($depto->contrato != null){
+                                                $cargo->cuenta_corriente_id = $depto->contrato->cuentaCorriente->id;
+                                            }
+                                            else{
+                                                continue;
+                                            }
+                                            $cargo->fecha = $model->fecha;
+                                            $cargo->tipo = Tools::MOVIMIENTO_TIPO_CARGO;
+                                            $cargo->monto = $monto;
+                                            $cargo->detalle = "PRESTACIÓN REALIZADA: ".$model->descripcion;
+                                            $cargo->validado = 1;
+                                            $cargo->save();                                
+                                        }
+                                    }
                                 }
-                                //se crean los cargos para cada depto
-                                $cargo = new Movimiento();
-                                $depto = Departamento::model()->findByPk($departamento);
-                                if($depto->contrato != null){
-                                    $cargo->cuenta_corriente_id = $depto->contrato->cuentaCorriente->id;
-                                }
-                                else{
-                                    continue;
-                                }
-                                $cargo->fecha = $model->fecha;
-                                $cargo->tipo = Tools::MOVIMIENTO_TIPO_CARGO;
-                                $cargo->monto = $monto;
-                                $cargo->detalle = "PRESTACIÓN REALIZADA: ".$model->descripcion;
-                                $cargo->validado = 1;
-                                $cargo->save();                                
                             }
                         }
-                        else{
-                            
+                        else{ //general_prop == "1"
+                            if($model->genera_cargos == "1"){                                    
+                                //se crean los cargos para el depto
+                                $departamentos = $propiedad->departamentos;
+                                $cant_deptos = count($departamentos);
+                                if($cant_deptos != 0){
+                                    $monto = (int)$model->monto/$cant_deptos;
+                                    foreach($departamentos as $depto){
+                                        $cargo = new Movimiento();
+                                        if($depto->contrato != null){
+                                            $cargo->cuenta_corriente_id = $depto->contrato->cuentaCorriente->id;
+                                        }
+                                        else{
+                                            continue;
+                                        }
+                                        $cargo->fecha = $model->fecha;
+                                        $cargo->tipo = Tools::MOVIMIENTO_TIPO_CARGO;
+
+                                        $cargo->monto = $monto;
+                                        $cargo->detalle = "PRESTACIÓN REALIZADA: ".$model->descripcion;
+                                        $cargo->validado = 1;
+                                        $cargo->save();                                
+                                    }
+                                }                                    
+                            }
                         }
+                        Yii::app()->user->setFlash('success','Prestación creada correctamente.');
+                        $model = new Prestacion;
                     }
-                    Yii::app()->user->setFlash('success','Prestación creada correctamente.');
-                    $model = new Prestacion;
-                }
-                else{
-                    Yii::app()->user->setFlash('error','Error: No se pudo crear la Prestación. Reintente.');
+                    else{
+                        Yii::app()->user->setFlash('error','Error: No se pudo crear la Prestación. Reintente.');
+                    }
+                }else{
+                    Yii::app()->user->setFlash('error','Debe seleccionar una propiedad válida.');
                 }
             }
 

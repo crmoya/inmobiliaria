@@ -2,10 +2,11 @@
 /* @var $this PropiedadController */
 /* @var $model Propiedad */
 
-$this->breadcrumbs = array(
-    'Propiedades' => array('admin'),
-    $model->id,
+$this->breadcrumbs=array(
+	'Propiedades'=>array('admin'),
+	'Propiedad #'.$model->id,
 );
+
 if (Yii::app()->user->rol == 'superusuario' || Yii::app()->user->rol == 'administrativo') {
     $this->menu = array(
         array('label' => 'Crear Propiedad', 'url' => array('create')),
@@ -15,9 +16,6 @@ if (Yii::app()->user->rol == 'superusuario' || Yii::app()->user->rol == 'adminis
     );
 }
 ?>
-
-<h1>Propiedad #<?php echo $model->id; ?></h1>
-
 <?php
 $this->widget('zii.widgets.CDetailView', array(
     'data' => $model,

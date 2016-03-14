@@ -3,15 +3,13 @@
 /* @var $model TipoContrato */
 
 $this->breadcrumbs=array(
-	'Tipo Contratos'=>array('admin'),
+	'Formatos de Contratos'=>array('admin'),
 	'Crear',
 );
 
 $this->menu=array(
-	array('label'=>'Administrar Tipos de Contrato', 'url'=>array('admin')),
+	array('label'=>'Administrar Formatos de Contrato', 'url'=>array('admin')),
 );
 ?>
-
-<h1>Crear Tipo de Contrato</h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

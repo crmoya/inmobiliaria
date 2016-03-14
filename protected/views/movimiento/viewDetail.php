@@ -3,12 +3,27 @@ $this->breadcrumbs=array(
 	'Contratos vigentes'=>Yii::app()->user->returnUrl,
 	'Movimientos de la cuenta #'.$cuenta->id,
 );
-$movimientos = Movimiento::model()->findAll(
-                array(  'condition'=>'cuenta_corriente_id = :cuenta',
-                        'params'=>array(':cuenta'=>$cuenta->id),
-                        'order'=>'fecha',
-                    )
-            );
+?>
+<?php
+$saldo = $cuenta->saldoAFecha(date('Y-m-d'));
+
+Yii::app()->clientScript->registerScript('refresh', "
+    function refresh(){
+        $.ajax({
+            type: 'POST',
+            url: '".Yii::app()->createUrl('//cuentaCorriente/getSaldo/')."',
+            data: { cuenta_id: ".$cuenta->id." }
+        }).done(function(msg){
+            $('#saldo').html('$'+msg);
+            if(msg >= 0){
+                $('.saldo').addClass('green');
+            }
+            else{
+                $('.saldo').addClass('red');
+            }
+        });
+    }
+");
 ?>
 
 <div class="span5"><h4>Cuenta Corriente: <?php echo $cuenta->nombre; ?></h4></div>
@@ -17,95 +32,59 @@ $movimientos = Movimiento::model()->findAll(
 <div class="span1"><?php echo CHtml::link(CHtml::image(Yii::app()->baseUrl.'/images/add.png'),array('//movimiento/abonar/'.$cuenta->id));?></div>
 <div class="span1"><?php echo CHtml::link(CHtml::image(Yii::app()->baseUrl.'/images/sub.png'),array('//movimiento/cargar/'.$cuenta->id));?></div>
 <div class="clearfix"></div>
-<div class="span2">
-    <p class='saldo'><strong>Saldo actual: </strong><span id="saldo"/></p>
+<div class="span4">
+    <p class='saldo'><strong>Saldo actual: <span id="saldo"></span></strong> (incluye saldo inicial de $<?php echo number_format($cuenta->saldo_inicial,0,",",".");?>)</p>
 
-<table class="table table-hover table-bordered footable" data-filter="#filter" data-page-size="10">
-    <thead>
-        <tr>
-            <th data-sort-initial="descending" data-type='numeric'>Fecha</th>
-            <th class="th250">Detalle</th>
-            <th>Abono</th>
-            <th>Cargo</th>
-            <th class="th250">Forma Pago</th>
-            <th>Saldo</th>
-            <th>Validado</th>
-            <?php echo (Yii::app()->user->rol == 'superusuario' || Yii::app()->user->rol == 'propietario') ? '<th>Acciones</th>' : '<th></th>'; ?>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        $add_image = CHtml::image(Yii::app()->baseUrl . '/images/add.jpg');
-        $remove_image = CHtml::image(Yii::app()->baseUrl . '/images/eliminar.png');
-        $edit_image = CHtml::image(Yii::app()->baseUrl . '/images/edit.png');
-        $validate_image = CHtml::image(Yii::app()->baseUrl . '/images/validated.png');
-        $not_validate_image = CHtml::image(Yii::app()->baseUrl . '/images/not_validated.png');
-        $saldo = $cuenta->saldo_inicial;
-        foreach ($movimientos as $mov) {
-            if ($mov->tipo == Tools::MOVIMIENTO_TIPO_ABONO && $mov->validado == 1) {
-                $saldo += $mov->monto;
-            }
-            if ($mov->tipo == Tools::MOVIMIENTO_TIPO_CARGO)
-                $saldo -= $mov->monto;
-            ?>
-            <tr>
-                <td style="width:100px;" data-value="<?php echo strtotime($mov->fecha);?>"><?php echo Tools::backFecha($mov->fecha); ?></td>
-                <td style="width:300px;"><?php echo $mov->detalle; ?></td>
-                <td><?php echo ($mov->tipo == Tools::MOVIMIENTO_TIPO_ABONO) ? number_format($mov->monto,0,',','.') : ''; ?></td>
-                <td><?php echo ($mov->tipo == Tools::MOVIMIENTO_TIPO_CARGO) ? number_format($mov->monto,0,',','.') : ''; ?></td>
-                <td><?php echo $mov->formaPago != null?$mov->formaPago->nombre:''; ?></td>
-                <td><?php echo number_format($saldo,0,',','.'); ?></td>
-                <td><?php
-                    if ((Yii::app()->user->rol == 'superusuario' || Yii::app()->user->rol == 'administrativo' || Yii::app()->user->rol == 'propietario') && $mov->tipo == Tools::MOVIMIENTO_TIPO_ABONO) {
-                        echo ($mov->validado) ?
-                                CHtml::link($validate_image, 'movimiento/validate', array(
-                                    'submit' => array('movimiento/validate'),
-                                    'params' => array('mov_id' => $mov->id, 'cuenta_id' => $cuenta->id))) :
-                                CHtml::link($not_validate_image, 'movimiento/validate', array(
-                                    'submit' => array('movimiento/validate'),
-                                    'params' => array('mov_id' => $mov->id, 'cuenta_id' => $cuenta->id)));
-                    } else {
-                        echo ($mov->validado) ? $validate_image : $not_validate_image;
-                    }
-                    ?>
-                </td>
-                <td>
-                    <?php
-                    echo (Yii::app()->user->rol == 'superusuario' || Yii::app()->user->rol == 'propietario') ?
-                            CHtml::link($edit_image, 'movimiento/update', array(
-                                'submit' => array('movimiento/update'),
-                                'params' => array('mov_id' => $mov->id, 'cuenta_id' => $cuenta->id))) :
-                            '';
-                    ?>
-                    <?php echo (Yii::app()->user->rol == 'propietario') ? 
-                            CHtml::link($remove_image, "#", array(
-                                "submit" => array('delete'),
-                                'params' => array('mov_id' => $mov->id, 'cuenta_id' => $cuenta->id),
-                                'confirm' => '¿Está seguro de querer borrar este movimiento?')) : 
-                            ''; ?>
-                </td>
+<div class="span11">
+<?php 
 
-
-            </tr>
-            <?php
-        }
-        ?>
-    </tbody>
-    <tfoot class="hide-if-no-paging">
-        <tr>
-            <td colspan="5">
-                <div class="pagination pagination-centered"></div>
-            </td>
-        </tr>
-    </tfoot>
-</table>
+    $this->widget('zii.widgets.grid.CGridView', array(
+	'id'=>'movimiento-grid',
+        'afterAjaxUpdate' => 'refresh',
+	'dataProvider'=>$mov->searchCartola($cuenta->id),
+	'columns'=>array(
+            'fecha',
+            'detalle',
+            array('name'=>'cargo_str','value'=>'$data->cargo'),
+            array('name'=>'abono_str','value'=>'$data->abono'),
+            array('name'=>'forma_pago_id','value'=>'$data->formaPago!=null?$data->formaPago->nombre:""'),
+            'saldo_cuenta',
+            array(
+                'class'=>'ValidadoButtonColumn',
+                'template'=>'{validado}',
+                'header'=>'Validado',
+                'buttons'=>array
+                (
+                    'validado' => array
+                    (
+                        'label'=>'Validar',
+                        'url'=>'$data->tipo==Tools::MOVIMIENTO_TIPO_ABONO?Yii::app()->createUrl("//movimiento/validate/$data->id"):""',
+                    ),
+                ),
+            ),
+            array(
+                'class'=>'CButtonColumn',
+                'template'=>'{update}{delete}',
+                'buttons'=>array
+                (
+                    'delete' => array
+                    (
+                        'label'=>'Eliminar',
+                        'url'=>'Yii::app()->createUrl("//movimiento/delete/$data->id")',
+                        'imageUrl'=>Yii::app()->baseUrl.'/images/eliminar.png',
+                    ),
+                    'update' => array
+                    (
+                        'label'=>'Actualizar',
+                        'imageUrl'=>Yii::app()->baseUrl.'/images/edit.png',
+                    ),
+                ),
+            ),
+	),
+)); ?>
 </div>
+
 <style>
-    .th250{
-        width:250px;
-        max-width: 250px;
-        min-width: 250px;
-    }
     .green{
         background:greenyellow;
     }
@@ -113,10 +92,8 @@ $movimientos = Movimiento::model()->findAll(
         background: pink;
     }
 </style>
-<script src="<?php echo Yii::app()->baseUrl?>/js/footable.sort.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(function() {
-        $('.footable').footable();
         var saldo = '<?php echo number_format($saldo,0,',','.'); ?>';
         $('#saldo').html('$'+saldo);
         if(saldo >= 0){

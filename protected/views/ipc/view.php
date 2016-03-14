@@ -2,6 +2,12 @@
 /* @var $this IpcController */
 /* @var $model Ipc */
 
+
+$this->breadcrumbs = array(
+    'IPC' => array('admin'),
+    $model->id,
+);
+
 $this->menu=array(
 	array('label'=>'Crear IPC', 'url'=>array('create')),
 	array('label'=>'Editar IPC', 'url'=>array('update', 'id'=>$model->id)),
@@ -10,7 +16,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Ver Ipc #<?php echo $model->id; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,

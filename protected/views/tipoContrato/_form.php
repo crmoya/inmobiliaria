@@ -2,6 +2,8 @@
 /* @var $this TipoContratoController */
 /* @var $model TipoContrato */
 /* @var $form CActiveForm */
+
+
 ?>
 
 <div class="form">
@@ -11,9 +13,6 @@
 	'enableAjaxValidation'=>false,
         'htmlOptions' => array('enctype' => 'multipart/form-data'),
 )); ?>
-
-	<p class="note">Campos con <span class="required">*</span> son obligatorios.</p>
-
         <div class="span3">
             <?php echo $form->errorSummary($model); ?>
 
@@ -30,7 +29,7 @@
             </div>	
 
             <div class="row buttons">
-                    <?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar'); ?>
+                    <?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar',array('class'=>'btn')); ?>
             </div>
         </div>
         <div class="span5">

@@ -11,7 +11,6 @@ $this->menu=array(
 	array('label'=>'Administrar Contrato Mueble', 'url'=>array('admin')),
 );
 ?>
-
-<h1>Crear Contrato de Bienes Muebles</h1>
-
+<div class="span10">
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+</div>

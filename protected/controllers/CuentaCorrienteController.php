@@ -26,7 +26,7 @@ class CuentaCorrienteController extends Controller {
     public function accessRules() {
         return array(
             array('allow',
-                'actions' => array( 'view','send'),
+                'actions' => array( 'view','send','getSaldo'),
                 'roles' => array('propietario', 'superusuario'),
             ),
             array('allow',
@@ -43,6 +43,20 @@ class CuentaCorrienteController extends Controller {
         );
     }
     
+    public function actionGetSaldo(){
+        if(isset($_POST['cuenta_id'])){
+            $cuenta = CuentaCorriente::model()->findByPk($_POST['cuenta_id']);
+            if($cuenta != null){
+                echo number_format($cuenta->saldoAFecha(date('Y-m-d')),0,',','.');
+            }
+            else{
+                echo '0';
+            }
+        }
+        else{
+            echo "0";
+        }
+    }
     
     public function actionPlanillaIngresos(){
         $model = new IngresosForm();

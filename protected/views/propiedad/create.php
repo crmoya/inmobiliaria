@@ -4,7 +4,7 @@
 
 $this->breadcrumbs=array(
 	'Propiedades'=>array('admin'),
-	'Crear',
+	'Nueva Propiedad',
 );
 
 $this->menu=array(
@@ -12,6 +12,7 @@ $this->menu=array(
 );
 ?>
 
-<h1>Crear Propiedad</h1>
+<div class="span12">
 
 <?php echo $this->renderPartial('_form', array('model'=>$model,'propietarios'=>$propietarios)); ?>
+</div>

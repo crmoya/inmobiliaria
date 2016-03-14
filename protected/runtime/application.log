@@ -9183,3 +9183,1178 @@ Stack trace:
 REQUEST_URI=/inmobiliaria/index.php/prestacion/listado
 HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/prestacion/listado
 ---
+2016/03/05 16:11:27 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'No es posible resolver la solicitud "gii"' in D:\pega\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('gii')
+#1 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#2 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#3 {main}
+REQUEST_URI=/inmobiliaria/index.php/gii
+---
+2016/03/05 17:08:50 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'No es posible resolver la solicitud "gii"' in D:\pega\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('gii')
+#1 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#2 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#3 {main}
+REQUEST_URI=/inmobiliaria/index.php/gii
+---
+2016/03/05 17:10:20 [error] [system.db.CDbCommand] CDbCommand::fetchAll() falló: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'propiedad' in 'order clause'. La sentencia SQL ejecutada fue: SELECT * FROM `prestacionesadepartamentos` `t` ORDER BY fecha,propiedad,departamento.
+in D:\pega\mvs\inmobiliaria\protected\models\Prestacionesadepartamentos.php (40)
+in D:\pega\mvs\inmobiliaria\protected\controllers\PrestacionController.php (124)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/05 17:10:20 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand falló al ejecutar la sentencia SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'propiedad' in 'order clause'. The SQL statement executed was: SELECT * FROM `prestacionesadepartamentos` `t` ORDER BY fecha,propiedad,departamento' in D:\pega\yii\framework\db\CDbCommand.php:543
+Stack trace:
+#0 D:\pega\yii\framework\db\CDbCommand.php(396): CDbCommand->queryInternal('fetchAll', Array, Array)
+#1 D:\pega\yii\framework\db\ar\CActiveRecord.php(1356): CDbCommand->queryAll()
+#2 D:\pega\yii\framework\db\ar\CActiveRecord.php(1475): CActiveRecord->query(Object(CDbCriteria), true)
+#3 D:\pega\mvs\inmobiliaria\protected\models\Prestacionesadepartamentos.php(40): CActiveRecord->findAll(Object(CDbCriteria))
+#4 D:\pega\mvs\inmobiliaria\protected\controllers\PrestacionController.php(124): Prestacionesadepartamentos->getDePropiedadYDepartamento(NULL, NULL)
+#5 D:\pega\yii\framework\web\actions\CInlineAction.php(49): PrestacionController->actionListado()
+#6 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#7 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#8 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#9 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#10 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#11 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#12 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#13 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#14 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('listado')
+#15 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('prestacion/list...')
+#16 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#17 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#18 {main}
+REQUEST_URI=/inmobiliaria/index.php/prestacion/listado
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/prestacion/listado
+---
+2016/03/09 21:44:12 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'No es posible resolver la solicitud "gii"' in D:\pega\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('gii')
+#1 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#2 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#3 {main}
+REQUEST_URI=/inmobiliaria/index.php/gii
+---
+2016/03/09 22:56:47 [error] [php] Undefined variable: saldo (D:\pega\mvs\inmobiliaria\protected\views\movimiento\viewDetail.php:26)
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(869): MovimientoController->renderFile()
+#1 D:\pega\yii\framework\web\CController.php(782): MovimientoController->renderPartial()
+#2 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(327): MovimientoController->render()
+#3 unknown(0): MovimientoController->actionViewDetail()
+#4 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs()
+#5 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CInlineAction->runWithParamsInternal()
+#6 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#7 D:\pega\yii\framework\web\filters\CFilterChain.php(133): MovimientoController->runAction()
+#8 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#9 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#10 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): MovimientoController->filterAccessControl()
+#11 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#12 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#13 D:\pega\yii\framework\web\CController.php(265): MovimientoController->runActionWithFilters()
+#14 D:\pega\yii\framework\web\CWebApplication.php(282): MovimientoController->run()
+#15 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#16 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#17 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/movimiento/viewDetail/28
+in D:\pega\mvs\inmobiliaria\protected\views\movimiento\viewDetail.php (26)
+in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php (327)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/09 23:12:33 [error] [exception.CException] exception 'CException' with message 'MovimientoController no ha podido encontrar la vista "viewDetail2" solicitada.' in D:\pega\yii\framework\web\CController.php:878
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('viewDetail2', Array, true)
+#1 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(329): CController->render('viewDetail2', Array)
+#2 [internal function]: MovimientoController->actionViewDetail('28')
+#3 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(MovimientoController), Array)
+#4 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(MovimientoController), Object(ReflectionMethod), Array)
+#5 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#6 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#7 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#8 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#9 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#10 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#11 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#12 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('viewDetail')
+#14 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/view...')
+#15 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#16 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#17 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/viewDetail/28
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/contrato/adminAbonos
+---
+2016/03/09 23:13:45 [error] [php] Trying to get property of non-object (D:\pega\yii\framework\base\CComponent.php(612) : eval()'d code:1)
+Stack trace:
+#0 D:\pega\yii\framework\zii\widgets\grid\CGridColumn.php(231): CDataColumn->getDataCellContent()
+#1 D:\pega\yii\framework\zii\widgets\grid\CGridColumn.php(154): CDataColumn->renderDataCellContent()
+#2 D:\pega\yii\framework\zii\widgets\grid\CGridView.php(638): CDataColumn->renderDataCell()
+#3 D:\pega\yii\framework\zii\widgets\grid\CGridView.php(622): CGridView->renderDataCell()
+#4 D:\pega\yii\framework\zii\widgets\grid\CGridView.php(578): CGridView->renderTableRow()
+#5 D:\pega\yii\framework\zii\widgets\grid\CGridView.php(488): CGridView->renderTableBody()
+#6 D:\pega\yii\framework\zii\widgets\CBaseListView.php(181): CGridView->renderItems()
+#7 unknown(0): CGridView->renderSection()
+#8 D:\pega\yii\framework\zii\widgets\CBaseListView.php(164): preg_replace_callback()
+#9 D:\pega\yii\framework\zii\widgets\CBaseListView.php(149): CGridView->renderContent()
+#10 D:\pega\yii\framework\web\CBaseController.php(181): CGridView->run()
+#11 D:\pega\mvs\inmobiliaria\protected\views\movimiento\viewDetail.php(39): MovimientoController->widget()
+#12 D:\pega\yii\framework\web\CBaseController.php(126): require()
+#13 D:\pega\yii\framework\web\CBaseController.php(95): MovimientoController->renderInternal()
+#14 D:\pega\yii\framework\web\CController.php(869): MovimientoController->renderFile()
+#15 D:\pega\yii\framework\web\CController.php(782): MovimientoController->renderPartial()
+#16 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(329): MovimientoController->render()
+#17 unknown(0): MovimientoController->actionViewDetail()
+#18 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs()
+#19 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CInlineAction->runWithParamsInternal()
+#20 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#21 D:\pega\yii\framework\web\filters\CFilterChain.php(133): MovimientoController->runAction()
+#22 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#23 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#24 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): MovimientoController->filterAccessControl()
+#25 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#26 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#27 D:\pega\yii\framework\web\CController.php(265): MovimientoController->runActionWithFilters()
+#28 D:\pega\yii\framework\web\CWebApplication.php(282): MovimientoController->run()
+#29 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#30 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#31 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/movimiento/viewDetail/28
+in D:\pega\mvs\inmobiliaria\protected\views\movimiento\viewDetail.php (39)
+in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php (329)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/09 23:15:35 [error] [php] Trying to get property of non-object (D:\pega\mvs\inmobiliaria\protected\models\CuentaCorriente.php:223)
+Stack trace:
+#0 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs()
+#1 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CInlineAction->runWithParamsInternal()
+#2 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#3 D:\pega\yii\framework\web\filters\CFilterChain.php(133): MovimientoController->runAction()
+#4 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#5 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#6 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): MovimientoController->filterAccessControl()
+#7 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#8 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#9 D:\pega\yii\framework\web\CController.php(265): MovimientoController->runActionWithFilters()
+#10 D:\pega\yii\framework\web\CWebApplication.php(282): MovimientoController->run()
+#11 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#12 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#13 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/movimiento/21
+in D:\pega\mvs\inmobiliaria\protected\models\CuentaCorriente.php (223)
+in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php (348)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/09 23:16:08 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The requested page does not exist.' in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php:617
+Stack trace:
+#0 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(503): MovimientoController->loadModel(NULL)
+#1 D:\pega\yii\framework\web\actions\CInlineAction.php(49): MovimientoController->actionUpdate()
+#2 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#3 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#4 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#5 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#6 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#7 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#8 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#9 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#10 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('update')
+#11 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/upda...')
+#12 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#13 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#14 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/update/21
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/viewDetail/28
+---
+2016/03/09 23:16:23 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The requested page does not exist.' in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php:617
+Stack trace:
+#0 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(503): MovimientoController->loadModel(NULL)
+#1 D:\pega\yii\framework\web\actions\CInlineAction.php(49): MovimientoController->actionUpdate()
+#2 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#3 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#4 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#5 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#6 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#7 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#8 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#9 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#10 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('update')
+#11 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/upda...')
+#12 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#13 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#14 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/update/21
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/viewDetail/28
+---
+2016/03/09 23:17:29 [error] [exception.CException] exception 'CException' with message 'MovimientoController y sus behaviors no tienen un método o closure llamado "findByPk".' in D:\pega\yii\framework\base\CComponent.php:266
+Stack trace:
+#0 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(502): CComponent->__call('findByPk', Array)
+#1 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(502): MovimientoController->findByPk('21')
+#2 [internal function]: MovimientoController->actionUpdate('21')
+#3 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(MovimientoController), Array)
+#4 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(MovimientoController), Object(ReflectionMethod), Array)
+#5 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#6 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#7 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#8 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#9 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#10 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#11 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#12 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('update')
+#14 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/upda...')
+#15 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#16 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#17 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/update/21
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/viewDetail/28
+---
+2016/03/11 19:13:48 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The requested page does not exist.' in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php:615
+Stack trace:
+#0 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(542): MovimientoController->loadModel(NULL)
+#1 D:\pega\yii\framework\web\actions\CInlineAction.php(49): MovimientoController->actionDelete()
+#2 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#3 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#4 D:\pega\yii\framework\web\CController.php(1116): CFilterChain->run()
+#5 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterPostOnly(Object(CFilterChain))
+#6 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#7 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#8 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#9 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#10 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#11 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#12 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('delete')
+#14 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/dele...')
+#15 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#16 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#17 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/delete/107?ajax=movimiento-grid
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/viewDetail/28
+---
+2016/03/11 19:14:36 [error] [php] Undefined index: mov (D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php:520)
+Stack trace:
+#0 D:\pega\yii\framework\web\filters\CFilterChain.php(133): MovimientoController->runAction()
+#1 D:\pega\yii\framework\web\CController.php(1116): CFilterChain->run()
+#2 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): MovimientoController->filterPostOnly()
+#3 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#4 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#5 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#6 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): MovimientoController->filterAccessControl()
+#7 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#8 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#9 D:\pega\yii\framework\web\CController.php(265): MovimientoController->runActionWithFilters()
+#10 D:\pega\yii\framework\web\CWebApplication.php(282): MovimientoController->run()
+#11 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#12 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#13 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/movimiento/delete/107?ajax=movimiento-grid
+in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php (520)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/11 19:20:10 [error] [php] include(ValidadoButtonColumn.php): failed to open stream: No such file or directory (D:\pega\yii\framework\YiiBase.php:432)
+Stack trace:
+#0 unknown(0): spl_autoload_call()
+#1 D:\pega\yii\framework\YiiBase.php(303): class_exists()
+#2 D:\pega\yii\framework\YiiBase.php(196): import()
+#3 D:\pega\yii\framework\zii\widgets\grid\CGridView.php(388): createComponent()
+#4 D:\pega\yii\framework\zii\widgets\grid\CGridView.php(359): CGridView->initColumns()
+#5 D:\pega\yii\framework\web\CBaseController.php(147): CGridView->init()
+#6 D:\pega\yii\framework\web\CBaseController.php(180): MovimientoController->createWidget()
+#7 D:\pega\mvs\inmobiliaria\protected\views\movimiento\viewDetail.php(52): MovimientoController->widget()
+#8 D:\pega\yii\framework\web\CBaseController.php(126): require()
+#9 D:\pega\yii\framework\web\CBaseController.php(95): MovimientoController->renderInternal()
+#10 D:\pega\yii\framework\web\CController.php(869): MovimientoController->renderFile()
+#11 D:\pega\yii\framework\web\CController.php(782): MovimientoController->renderPartial()
+#12 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(329): MovimientoController->render()
+#13 unknown(0): MovimientoController->actionViewDetail()
+#14 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs()
+#15 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CInlineAction->runWithParamsInternal()
+#16 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#17 D:\pega\yii\framework\web\filters\CFilterChain.php(133): MovimientoController->runAction()
+#18 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#19 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#20 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): MovimientoController->filterAccessControl()
+#21 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#22 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#23 D:\pega\yii\framework\web\CController.php(265): MovimientoController->runActionWithFilters()
+#24 D:\pega\yii\framework\web\CWebApplication.php(282): MovimientoController->run()
+#25 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#26 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#27 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/movimiento/viewDetail/28
+in D:\pega\mvs\inmobiliaria\protected\views\movimiento\viewDetail.php (52)
+in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php (329)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/11 19:22:32 [error] [php] Trying to get property of non-object (D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php:603)
+Stack trace:
+#0 D:\pega\yii\framework\web\filters\CFilterChain.php(133): MovimientoController->runAction()
+#1 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#2 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#3 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): MovimientoController->filterAccessControl()
+#4 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#5 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#6 D:\pega\yii\framework\web\CController.php(265): MovimientoController->runActionWithFilters()
+#7 D:\pega\yii\framework\web\CWebApplication.php(282): MovimientoController->run()
+#8 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#9 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#10 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/movimiento/validate/21
+in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php (603)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/11 19:41:15 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "create" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('create')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/28
+---
+2016/03/11 19:41:18 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "create" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('create')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/28
+---
+2016/03/11 19:41:21 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "create" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('create')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/28
+---
+2016/03/11 19:41:22 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "create" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('create')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/28
+---
+2016/03/11 19:41:22 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "create" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('create')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/28
+---
+2016/03/11 19:41:22 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "create" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('create')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/28
+---
+2016/03/11 19:41:22 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "create" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('create')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/28
+---
+2016/03/11 19:41:27 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "create" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('create')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/28
+---
+2016/03/11 19:41:27 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "create" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('create')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/28
+---
+2016/03/11 19:41:27 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "create" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('create')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/28
+---
+2016/03/11 19:41:28 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "create" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('create')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/28
+---
+2016/03/11 19:41:28 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "create" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('create')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/28
+---
+2016/03/11 19:41:28 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "create" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('create')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/28
+---
+2016/03/11 19:41:28 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "create" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('create')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/28
+---
+2016/03/11 21:58:14 [warning] [application] Error al establecer unsafe al atributo "dias_primer_mes" de "Contrato".
+in D:\pega\mvs\inmobiliaria\protected\controllers\ContratoController.php (188)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/11 22:17:10 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "eliminar" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('eliminar')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('eliminar')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/elim...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/eliminar
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/abonar/33
+---
+2016/03/11 22:17:12 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "eliminar" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('eliminar')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('eliminar')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/elim...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/eliminar
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/abonar/33
+---
+2016/03/11 22:17:12 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "eliminar" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('eliminar')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('eliminar')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/elim...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/eliminar
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/abonar/33
+---
+2016/03/11 22:17:13 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "eliminar" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('eliminar')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('eliminar')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/elim...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/eliminar
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/abonar/33
+---
+2016/03/11 22:17:14 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "eliminar" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('eliminar')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('eliminar')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/elim...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/eliminar
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/abonar/33
+---
+2016/03/11 22:19:41 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "delete131" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('delete131')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('delete131')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/dele...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/delete131
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/abonar/33
+---
+2016/03/11 22:25:52 [error] [system.db.CDbCommand] CDbCommand::fetchAll() falló: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens. La sentencia SQL ejecutada fue: SELECT * FROM `movimiento` `t` WHERE fecha >= :fecha and cuenta_corriente_id = :cta and id ORDER BY fecha,id.
+in D:\pega\mvs\inmobiliaria\protected\models\Movimiento.php (31)
+in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php (608)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/11 22:25:52 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand falló al ejecutar la sentencia SQL: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens. The SQL statement executed was: SELECT * FROM `movimiento` `t` WHERE fecha >= :fecha and cuenta_corriente_id = :cta and id ORDER BY fecha,id' in D:\pega\yii\framework\db\CDbCommand.php:543
+Stack trace:
+#0 D:\pega\yii\framework\db\CDbCommand.php(396): CDbCommand->queryInternal('fetchAll', Array, Array)
+#1 D:\pega\yii\framework\db\ar\CActiveRecord.php(1356): CDbCommand->queryAll()
+#2 D:\pega\yii\framework\db\ar\CActiveRecord.php(1475): CActiveRecord->query(Object(CDbCriteria), true)
+#3 D:\pega\mvs\inmobiliaria\protected\models\Movimiento.php(31): CActiveRecord->findAll(Array)
+#4 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(608): Movimiento->refrescaSaldosPosteriores()
+#5 [internal function]: MovimientoController->actionValidate('135')
+#6 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(MovimientoController), Array)
+#7 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(MovimientoController), Object(ReflectionMethod), Array)
+#8 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#9 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#10 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#11 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#12 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#13 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#14 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#15 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('validate')
+#17 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/vali...')
+#18 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#19 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#20 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/validate/135
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/viewDetail/33
+---
+2016/03/11 22:26:05 [error] [system.db.CDbCommand] CDbCommand::fetchAll() falló: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens. La sentencia SQL ejecutada fue: SELECT * FROM `movimiento` `t` WHERE fecha >= :fecha and cuenta_corriente_id = :cta ORDER BY fecha,id.
+in D:\pega\mvs\inmobiliaria\protected\models\Movimiento.php (31)
+in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php (608)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/11 22:26:05 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand falló al ejecutar la sentencia SQL: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens. The SQL statement executed was: SELECT * FROM `movimiento` `t` WHERE fecha >= :fecha and cuenta_corriente_id = :cta ORDER BY fecha,id' in D:\pega\yii\framework\db\CDbCommand.php:543
+Stack trace:
+#0 D:\pega\yii\framework\db\CDbCommand.php(396): CDbCommand->queryInternal('fetchAll', Array, Array)
+#1 D:\pega\yii\framework\db\ar\CActiveRecord.php(1356): CDbCommand->queryAll()
+#2 D:\pega\yii\framework\db\ar\CActiveRecord.php(1475): CActiveRecord->query(Object(CDbCriteria), true)
+#3 D:\pega\mvs\inmobiliaria\protected\models\Movimiento.php(31): CActiveRecord->findAll(Array)
+#4 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(608): Movimiento->refrescaSaldosPosteriores()
+#5 [internal function]: MovimientoController->actionValidate('135')
+#6 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(MovimientoController), Array)
+#7 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(MovimientoController), Object(ReflectionMethod), Array)
+#8 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#9 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#10 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#11 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#12 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#13 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#14 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#15 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('validate')
+#17 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/vali...')
+#18 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#19 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#20 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/validate/135
+---
+2016/03/11 22:46:25 [error] [exception.CException] exception 'CException' with message 'La propiedad "CSort"."0" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:173
+Stack trace:
+#0 D:\pega\yii\framework\web\CDataProvider.php(154): CComponent->__set('0', '*')
+#1 D:\pega\yii\framework\base\CComponent.php(152): CDataProvider->setSort(Array)
+#2 D:\pega\yii\framework\web\CActiveDataProvider.php(96): CComponent->__set('sort', Array)
+#3 D:\pega\mvs\inmobiliaria\protected\models\Movimiento.php(233): CActiveDataProvider->__construct(Object(Movimiento), Array)
+#4 D:\pega\mvs\inmobiliaria\protected\views\movimiento\viewDetail.php(26): Movimiento->searchCartola('33')
+#5 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#6 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#7 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#8 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('viewDetail', Array, true)
+#9 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(323): CController->render('viewDetail', Array)
+#10 [internal function]: MovimientoController->actionViewDetail('33')
+#11 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(MovimientoController), Array)
+#12 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(MovimientoController), Object(ReflectionMethod), Array)
+#13 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#14 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#15 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#16 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#17 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#18 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#19 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#20 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#21 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('viewDetail')
+#22 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/view...')
+#23 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#24 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#25 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/viewDetail/33
+---
+2016/03/11 22:48:52 [error] [exception.CException] exception 'CException' with message 'La propiedad "ValidadoButtonColumn"."name" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:173
+Stack trace:
+#0 D:\pega\yii\framework\YiiBase.php(220): CComponent->__set('name', 'validado')
+#1 D:\pega\yii\framework\zii\widgets\grid\CGridView.php(388): YiiBase::createComponent(Array, Object(CGridView))
+#2 D:\pega\yii\framework\zii\widgets\grid\CGridView.php(359): CGridView->initColumns()
+#3 D:\pega\yii\framework\web\CBaseController.php(147): CGridView->init()
+#4 D:\pega\yii\framework\web\CBaseController.php(180): CBaseController->createWidget('zii.widgets.gri...', Array)
+#5 D:\pega\mvs\inmobiliaria\protected\views\movimiento\viewDetail.php(53): CBaseController->widget('zii.widgets.gri...', Array)
+#6 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#7 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#8 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#9 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('viewDetail', Array, true)
+#10 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(323): CController->render('viewDetail', Array)
+#11 [internal function]: MovimientoController->actionViewDetail('33')
+#12 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(MovimientoController), Array)
+#13 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(MovimientoController), Object(ReflectionMethod), Array)
+#14 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#15 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#16 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#17 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#18 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#19 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#20 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#21 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#22 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('viewDetail')
+#23 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/view...')
+#24 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#25 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#26 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/viewDetail/33
+---
+2016/03/11 22:48:52 [error] [exception.CException] exception 'CException' with message 'La propiedad "ValidadoButtonColumn"."name" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:173
+Stack trace:
+#0 D:\pega\yii\framework\YiiBase.php(220): CComponent->__set('name', 'validado')
+#1 D:\pega\yii\framework\zii\widgets\grid\CGridView.php(388): YiiBase::createComponent(Array, Object(CGridView))
+#2 D:\pega\yii\framework\zii\widgets\grid\CGridView.php(359): CGridView->initColumns()
+#3 D:\pega\yii\framework\web\CBaseController.php(147): CGridView->init()
+#4 D:\pega\yii\framework\web\CBaseController.php(180): CBaseController->createWidget('zii.widgets.gri...', Array)
+#5 D:\pega\mvs\inmobiliaria\protected\views\movimiento\viewDetail.php(53): CBaseController->widget('zii.widgets.gri...', Array)
+#6 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#7 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#8 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#9 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('viewDetail', Array, true)
+#10 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(323): CController->render('viewDetail', Array)
+#11 [internal function]: MovimientoController->actionViewDetail('33')
+#12 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(MovimientoController), Array)
+#13 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(MovimientoController), Object(ReflectionMethod), Array)
+#14 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#15 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#16 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#17 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#18 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#19 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#20 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#21 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#22 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('viewDetail')
+#23 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/view...')
+#24 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#25 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#26 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/viewDetail/33
+---
+2016/03/11 22:59:56 [error] [exception.CHttpException.403] exception 'CHttpException' with message 'Inicio de sesión necesario' in D:\pega\yii\framework\web\auth\CWebUser.php:394
+Stack trace:
+#0 D:\pega\yii\framework\web\auth\CAccessControlFilter.php(180): CWebUser->loginRequired()
+#1 D:\pega\yii\framework\web\auth\CAccessControlFilter.php(145): CAccessControlFilter->accessDenied(Object(CWebUser), 'Usted no se enc...')
+#2 D:\pega\yii\framework\web\filters\CFilter.php(38): CAccessControlFilter->preFilter(Object(CFilterChain))
+#3 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#4 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#5 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#6 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#7 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#8 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#9 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#10 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#11 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#12 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/abonar/33
+---
+2016/03/11 22:59:58 [error] [exception.CHttpException.403] exception 'CHttpException' with message 'Inicio de sesión necesario' in D:\pega\yii\framework\web\auth\CWebUser.php:394
+Stack trace:
+#0 D:\pega\yii\framework\web\auth\CAccessControlFilter.php(180): CWebUser->loginRequired()
+#1 D:\pega\yii\framework\web\auth\CAccessControlFilter.php(145): CAccessControlFilter->accessDenied(Object(CWebUser), 'Usted no se enc...')
+#2 D:\pega\yii\framework\web\filters\CFilter.php(38): CAccessControlFilter->preFilter(Object(CFilterChain))
+#3 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#4 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#5 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#6 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#7 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#8 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#9 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#10 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#11 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#12 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/abonar/33
+---
+2016/03/11 22:59:58 [error] [exception.CHttpException.403] exception 'CHttpException' with message 'Inicio de sesión necesario' in D:\pega\yii\framework\web\auth\CWebUser.php:394
+Stack trace:
+#0 D:\pega\yii\framework\web\auth\CAccessControlFilter.php(180): CWebUser->loginRequired()
+#1 D:\pega\yii\framework\web\auth\CAccessControlFilter.php(145): CAccessControlFilter->accessDenied(Object(CWebUser), 'Usted no se enc...')
+#2 D:\pega\yii\framework\web\filters\CFilter.php(38): CAccessControlFilter->preFilter(Object(CFilterChain))
+#3 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#4 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#5 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#6 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#7 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#8 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#9 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#10 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#11 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#12 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/abonar/33
+---
+2016/03/11 23:00:00 [error] [exception.CHttpException.403] exception 'CHttpException' with message 'Inicio de sesión necesario' in D:\pega\yii\framework\web\auth\CWebUser.php:394
+Stack trace:
+#0 D:\pega\yii\framework\web\auth\CAccessControlFilter.php(180): CWebUser->loginRequired()
+#1 D:\pega\yii\framework\web\auth\CAccessControlFilter.php(145): CAccessControlFilter->accessDenied(Object(CWebUser), 'Usted no se enc...')
+#2 D:\pega\yii\framework\web\filters\CFilter.php(38): CAccessControlFilter->preFilter(Object(CFilterChain))
+#3 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#4 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#5 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#6 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#7 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#8 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#9 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/crea...')
+#10 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#11 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#12 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/abonar/33
+---
+2016/03/11 23:39:59 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "eliminar" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('eliminar')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('eliminar')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/elim...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/eliminar
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/33
+---
+2016/03/11 23:40:00 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "eliminar" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('eliminar')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('eliminar')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/elim...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/eliminar
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/33
+---
+2016/03/11 23:40:01 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "eliminar" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('eliminar')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('eliminar')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/elim...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/eliminar
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/33
+---
+2016/03/11 23:40:51 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "eliminar" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('eliminar')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('eliminar')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/elim...')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/eliminar
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/cargar/33
+---
+2016/03/11 23:59:38 [error] [exception.CException] exception 'CException' with message 'Movimiento y sus behaviors no tienen un método o closure llamado "sumaASaldosPosteriores".' in D:\pega\yii\framework\base\CComponent.php:266
+Stack trace:
+#0 D:\pega\yii\framework\db\ar\CActiveRecord.php(227): CComponent->__call('sumaASaldosPost...', Array)
+#1 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(621): CActiveRecord->__call('sumaASaldosPost...', Array)
+#2 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(621): Movimiento->sumaASaldosPosteriores()
+#3 [internal function]: MovimientoController->actionValidate('154')
+#4 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(MovimientoController), Array)
+#5 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(MovimientoController), Object(ReflectionMethod), Array)
+#6 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#7 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#8 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#9 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#10 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#11 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#12 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#13 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#14 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('validate')
+#15 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/vali...')
+#16 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#17 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#18 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/validate/154
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/viewDetail/33
+---
+2016/03/12 00:23:35 [error] [php] Undefined variable: saldo (D:\pega\mvs\inmobiliaria\protected\views\movimiento\viewDetail.php:28)
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(869): MovimientoController->renderFile()
+#1 D:\pega\yii\framework\web\CController.php(782): MovimientoController->renderPartial()
+#2 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(323): MovimientoController->render()
+#3 unknown(0): MovimientoController->actionViewDetail()
+#4 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs()
+#5 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CInlineAction->runWithParamsInternal()
+#6 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#7 D:\pega\yii\framework\web\filters\CFilterChain.php(133): MovimientoController->runAction()
+#8 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#9 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#10 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): MovimientoController->filterAccessControl()
+#11 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#12 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#13 D:\pega\yii\framework\web\CController.php(265): MovimientoController->runActionWithFilters()
+#14 D:\pega\yii\framework\web\CWebApplication.php(282): MovimientoController->run()
+#15 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#16 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#17 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/movimiento/viewDetail/33
+in D:\pega\mvs\inmobiliaria\protected\views\movimiento\viewDetail.php (28)
+in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php (323)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/12 19:50:39 [error] [php] Object of class CuentaCorriente could not be converted to string (D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php:490)
+Stack trace:
+#0 D:\pega\yii\framework\web\filters\CFilterChain.php(133): MovimientoController->runAction()
+#1 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#2 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#3 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): MovimientoController->filterAccessControl()
+#4 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#5 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#6 D:\pega\yii\framework\web\CController.php(265): MovimientoController->runActionWithFilters()
+#7 D:\pega\yii\framework\web\CWebApplication.php(282): MovimientoController->run()
+#8 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#9 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#10 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php (490)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/12 20:29:00 [error] [system.db.CDbCommand] CDbCommand::fetchAll() falló: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') ORDER BY fecha,id' at line 1. La sentencia SQL ejecutada fue: SELECT * FROM `movimiento` `t` WHERE   ((fecha > :fecha) or (fecha = :fecha1 and id > :id)) and cuenta_corriente_id = :cta) ORDER BY fecha,id.
+in D:\pega\mvs\inmobiliaria\protected\models\Movimiento.php (31)
+in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php (630)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/12 20:29:00 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand falló al ejecutar la sentencia SQL: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') ORDER BY fecha,id' at line 1. The SQL statement executed was: SELECT * FROM `movimiento` `t` WHERE   ((fecha > :fecha) or (fecha = :fecha1 and id > :id)) and cuenta_corriente_id = :cta) ORDER BY fecha,id' in D:\pega\yii\framework\db\CDbCommand.php:543
+Stack trace:
+#0 D:\pega\yii\framework\db\CDbCommand.php(396): CDbCommand->queryInternal('fetchAll', Array, Array)
+#1 D:\pega\yii\framework\db\ar\CActiveRecord.php(1356): CDbCommand->queryAll()
+#2 D:\pega\yii\framework\db\ar\CActiveRecord.php(1475): CActiveRecord->query(Object(CDbCriteria), true)
+#3 D:\pega\mvs\inmobiliaria\protected\models\Movimiento.php(31): CActiveRecord->findAll(Array)
+#4 D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php(630): Movimiento->actualizaSaldosPosteriores(-1000)
+#5 [internal function]: MovimientoController->actionValidate('188')
+#6 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(MovimientoController), Array)
+#7 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(MovimientoController), Object(ReflectionMethod), Array)
+#8 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#9 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#10 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#11 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#12 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#13 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#14 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#15 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('validate')
+#17 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('movimiento/vali...')
+#18 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#19 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#20 {main}
+REQUEST_URI=/inmobiliaria/index.php/movimiento/validate/188
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/viewDetail/33
+---
+2016/03/12 20:29:50 [error] [php] Undefined offset: 1 (D:\pega\mvs\inmobiliaria\protected\models\CuentaCorriente.php:129)
+Stack trace:
+#0 D:\pega\yii\framework\web\actions\CInlineAction.php(49): MovimientoController->actionCreate()
+#1 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#2 D:\pega\yii\framework\web\filters\CFilterChain.php(133): MovimientoController->runAction()
+#3 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#4 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#5 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): MovimientoController->filterAccessControl()
+#6 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#7 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#8 D:\pega\yii\framework\web\CController.php(265): MovimientoController->runActionWithFilters()
+#9 D:\pega\yii\framework\web\CWebApplication.php(282): MovimientoController->run()
+#10 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#11 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#12 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/movimiento/create
+in D:\pega\mvs\inmobiliaria\protected\models\CuentaCorriente.php (129)
+in D:\pega\mvs\inmobiliaria\protected\models\Movimiento.php (37)
+in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php (477)
+2016/03/12 20:30:22 [error] [php] Undefined offset: 1 (D:\pega\mvs\inmobiliaria\protected\models\CuentaCorriente.php:129)
+Stack trace:
+#0 unknown(0): MovimientoController->actionDelete()
+#1 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs()
+#2 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CInlineAction->runWithParamsInternal()
+#3 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#4 D:\pega\yii\framework\web\filters\CFilterChain.php(133): MovimientoController->runAction()
+#5 D:\pega\yii\framework\web\CController.php(1116): CFilterChain->run()
+#6 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): MovimientoController->filterPostOnly()
+#7 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#8 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#9 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#10 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): MovimientoController->filterAccessControl()
+#11 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#12 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#13 D:\pega\yii\framework\web\CController.php(265): MovimientoController->runActionWithFilters()
+#14 D:\pega\yii\framework\web\CWebApplication.php(282): MovimientoController->run()
+#15 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#16 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#17 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/movimiento/delete/189?ajax=movimiento-grid
+in D:\pega\mvs\inmobiliaria\protected\models\CuentaCorriente.php (129)
+in D:\pega\mvs\inmobiliaria\protected\models\Movimiento.php (37)
+in D:\pega\mvs\inmobiliaria\protected\controllers\MovimientoController.php (542)
+2016/03/13 23:56:40 [error] [exception.CHttpException.403] exception 'CHttpException' with message 'Usted no se encuentra autorizado a realizar esta acción.' in D:\pega\yii\framework\web\auth\CAccessControlFilter.php:182
+Stack trace:
+#0 D:\pega\yii\framework\web\auth\CAccessControlFilter.php(145): CAccessControlFilter->accessDenied(Object(CWebUser), 'Usted no se enc...')
+#1 D:\pega\yii\framework\web\filters\CFilter.php(38): CAccessControlFilter->preFilter(Object(CFilterChain))
+#2 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#3 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#4 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#5 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#6 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#7 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#8 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('mueble/create')
+#9 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#10 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#11 {main}
+REQUEST_URI=/inmobiliaria/index.php/mueble/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/mueble/admin
+---
+2016/03/13 23:57:12 [error] [exception.CException] exception 'CException' with message 'La propiedad "Mueble"."propiedad_id" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:130
+Stack trace:
+#0 D:\pega\yii\framework\db\ar\CActiveRecord.php(145): CComponent->__get('propiedad_id')
+#1 D:\pega\yii\framework\web\helpers\CHtml.php(2728): CActiveRecord->__get('propiedad_id')
+#2 D:\pega\yii\framework\web\helpers\CHtml.php(1981): CHtml::resolveValue(Object(Mueble), 'propiedad_id')
+#3 D:\pega\yii\framework\web\widgets\CActiveForm.php(914): CHtml::activeDropDownList(Object(Mueble), 'propiedad_id', Array, Array)
+#4 D:\pega\mvs\inmobiliaria\protected\views\mueble\_form.php(69): CActiveForm->dropDownList(Object(Mueble), 'propiedad_id', Array, Array)
+#5 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#6 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#7 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#8 D:\pega\mvs\inmobiliaria\protected\views\mueble\create.php(11): CController->renderPartial('_form', Array)
+#9 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#10 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#11 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#12 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('create', Array, true)
+#13 D:\pega\mvs\inmobiliaria\protected\controllers\MuebleController.php(86): CController->render('create', Array)
+#14 D:\pega\yii\framework\web\actions\CInlineAction.php(49): MuebleController->actionCreate()
+#15 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#16 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#17 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#18 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#19 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#20 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#21 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#22 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#23 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#24 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('mueble/create')
+#25 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#26 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#27 {main}
+REQUEST_URI=/inmobiliaria/index.php/mueble/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/mueble/admin
+---
+2016/03/13 23:57:57 [error] [exception.CException] exception 'CException' with message 'La propiedad "Mueble"."propiedad_id" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:130
+Stack trace:
+#0 D:\pega\yii\framework\db\ar\CActiveRecord.php(145): CComponent->__get('propiedad_id')
+#1 D:\pega\yii\framework\web\helpers\CHtml.php(2728): CActiveRecord->__get('propiedad_id')
+#2 D:\pega\yii\framework\web\helpers\CHtml.php(1981): CHtml::resolveValue(Object(Mueble), 'propiedad_id')
+#3 D:\pega\yii\framework\web\widgets\CActiveForm.php(914): CHtml::activeDropDownList(Object(Mueble), 'propiedad_id', Array, Array)
+#4 D:\pega\mvs\inmobiliaria\protected\views\mueble\_form.php(69): CActiveForm->dropDownList(Object(Mueble), 'propiedad_id', Array, Array)
+#5 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#6 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#7 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#8 D:\pega\mvs\inmobiliaria\protected\views\mueble\create.php(11): CController->renderPartial('_form', Array)
+#9 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#10 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#11 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#12 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('create', Array, true)
+#13 D:\pega\mvs\inmobiliaria\protected\controllers\MuebleController.php(86): CController->render('create', Array)
+#14 D:\pega\yii\framework\web\actions\CInlineAction.php(49): MuebleController->actionCreate()
+#15 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#16 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#17 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#18 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#19 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#20 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#21 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#22 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#23 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#24 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('mueble/create')
+#25 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#26 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#27 {main}
+REQUEST_URI=/inmobiliaria/index.php/mueble/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/mueble/admin
+---
+2016/03/13 23:58:48 [error] [exception.CException] exception 'CException' with message 'La propiedad "Mueble"."propiedad_id" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:130
+Stack trace:
+#0 D:\pega\yii\framework\db\ar\CActiveRecord.php(145): CComponent->__get('propiedad_id')
+#1 D:\pega\yii\framework\web\helpers\CHtml.php(2728): CActiveRecord->__get('propiedad_id')
+#2 D:\pega\yii\framework\web\helpers\CHtml.php(1981): CHtml::resolveValue(Object(Mueble), 'propiedad_id')
+#3 D:\pega\yii\framework\web\widgets\CActiveForm.php(914): CHtml::activeDropDownList(Object(Mueble), 'propiedad_id', Array, Array)
+#4 D:\pega\mvs\inmobiliaria\protected\views\mueble\_form.php(69): CActiveForm->dropDownList(Object(Mueble), 'propiedad_id', Array, Array)
+#5 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#6 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#7 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#8 D:\pega\mvs\inmobiliaria\protected\views\mueble\create.php(11): CController->renderPartial('_form', Array)
+#9 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#10 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#11 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#12 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('create', Array, true)
+#13 D:\pega\mvs\inmobiliaria\protected\controllers\MuebleController.php(86): CController->render('create', Array)
+#14 D:\pega\yii\framework\web\actions\CInlineAction.php(49): MuebleController->actionCreate()
+#15 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#16 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#17 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#18 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#19 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#20 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#21 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#22 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#23 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#24 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('mueble/create')
+#25 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#26 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#27 {main}
+REQUEST_URI=/inmobiliaria/index.php/mueble/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/mueble/admin
+---
+2016/03/14 00:01:53 [error] [exception.CException] exception 'CException' with message 'La propiedad "Mueble"."proveedor" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:130
+Stack trace:
+#0 D:\pega\yii\framework\db\ar\CActiveRecord.php(145): CComponent->__get('proveedor')
+#1 D:\pega\mvs\inmobiliaria\protected\views\mueble\view.php(15): CActiveRecord->__get('proveedor')
+#2 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#3 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#4 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#5 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('view', Array, true)
+#6 D:\pega\mvs\inmobiliaria\protected\controllers\MuebleController.php(62): CController->render('view', Array)
+#7 [internal function]: MuebleController->actionView('1')
+#8 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(MuebleController), Array)
+#9 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(MuebleController), Object(ReflectionMethod), Array)
+#10 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#11 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#12 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#13 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#14 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#15 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#16 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#17 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#18 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('view')
+#19 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('mueble/view')
+#20 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#21 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#22 {main}
+REQUEST_URI=/inmobiliaria/index.php/mueble/1
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/mueble/update/1
+---
+2016/03/14 00:03:34 [error] [php] Undefined index: departamento_id (D:\pega\mvs\inmobiliaria\protected\controllers\MuebleController.php:105)
+Stack trace:
+#0 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CInlineAction->runWithParamsInternal()
+#1 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#2 D:\pega\yii\framework\web\filters\CFilterChain.php(133): MuebleController->runAction()
+#3 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#4 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#5 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): MuebleController->filterAccessControl()
+#6 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#7 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#8 D:\pega\yii\framework\web\CController.php(265): MuebleController->runActionWithFilters()
+#9 D:\pega\yii\framework\web\CWebApplication.php(282): MuebleController->run()
+#10 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#11 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#12 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/mueble/update/1
+in D:\pega\mvs\inmobiliaria\protected\controllers\MuebleController.php (105)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/14 00:03:46 [error] [php] Undefined index: departamento_id (D:\pega\mvs\inmobiliaria\protected\controllers\MuebleController.php:105)
+Stack trace:
+#0 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CInlineAction->runWithParamsInternal()
+#1 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#2 D:\pega\yii\framework\web\filters\CFilterChain.php(133): MuebleController->runAction()
+#3 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#4 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#5 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): MuebleController->filterAccessControl()
+#6 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#7 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#8 D:\pega\yii\framework\web\CController.php(265): MuebleController->runActionWithFilters()
+#9 D:\pega\yii\framework\web\CWebApplication.php(282): MuebleController->run()
+#10 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#11 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#12 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/mueble/update/1
+in D:\pega\mvs\inmobiliaria\protected\controllers\MuebleController.php (105)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/14 00:42:41 [error] [exception.CException] exception 'CException' with message 'La propiedad "Mueble"."proveedor" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:130
+Stack trace:
+#0 D:\pega\yii\framework\db\ar\CActiveRecord.php(145): CComponent->__get('proveedor')
+#1 D:\pega\mvs\inmobiliaria\protected\views\mueble\view.php(21): CActiveRecord->__get('proveedor')
+#2 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#3 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#4 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#5 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('view', Array, true)
+#6 D:\pega\mvs\inmobiliaria\protected\controllers\MuebleController.php(62): CController->render('view', Array)
+#7 [internal function]: MuebleController->actionView('1')
+#8 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(MuebleController), Array)
+#9 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(MuebleController), Object(ReflectionMethod), Array)
+#10 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#11 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#12 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#13 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#14 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#15 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#16 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#17 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#18 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('view')
+#19 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('mueble/view')
+#20 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#21 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#22 {main}
+REQUEST_URI=/inmobiliaria/index.php/mueble/1
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/mueble/update/1
+---
+2016/03/14 00:42:45 [error] [exception.CException] exception 'CException' with message 'La propiedad "Mueble"."proveedor" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:130
+Stack trace:
+#0 D:\pega\yii\framework\db\ar\CActiveRecord.php(145): CComponent->__get('proveedor')
+#1 D:\pega\mvs\inmobiliaria\protected\views\mueble\view.php(21): CActiveRecord->__get('proveedor')
+#2 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#3 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#4 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#5 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('view', Array, true)
+#6 D:\pega\mvs\inmobiliaria\protected\controllers\MuebleController.php(62): CController->render('view', Array)
+#7 [internal function]: MuebleController->actionView('1')
+#8 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(MuebleController), Array)
+#9 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(MuebleController), Object(ReflectionMethod), Array)
+#10 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#11 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#12 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#13 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#14 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#15 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#16 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#17 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#18 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('view')
+#19 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('mueble/view')
+#20 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#21 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#22 {main}
+REQUEST_URI=/inmobiliaria/index.php/mueble/1
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/mueble/update/1
+---

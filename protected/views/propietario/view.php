@@ -8,9 +8,14 @@ $this->menu=array(
 	array('label'=>'Eliminar Propietario', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Seguro desea eliminar este propietario?')),
 	array('label'=>'Administrar Propietarios', 'url'=>array('admin')),
 );
+
+
+$this->breadcrumbs=array(
+	'Propietarios'=>array('admin'),
+	'Propietario #'.$model->id,
+);
 ?>
 
-<h1>Ver Propietario #<?php echo $model->id; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,

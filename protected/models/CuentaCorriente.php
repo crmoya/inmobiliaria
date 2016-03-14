@@ -79,63 +79,57 @@ class CuentaCorriente extends CActiveRecord
         
         
         public function idMovUltimoSaldo0(){
-            $saldo_inicial = $this->saldo_inicial;
-            $movimientos = Movimiento::model()->findAllByAttributes(array('cuenta_corriente_id'=>$this->id),array('order'=>'id'));
-            $saldo = $saldo_inicial;
-            $ultimoId = -1;
-            foreach($movimientos as $movimiento){
-                if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_ABONO){
-                    $saldo += $movimiento->monto;
-                }
-                else if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_CARGO){
-                    $saldo -= $movimiento->monto;
-                }
-                if($saldo == 0){
-                    $ultimoId = $movimiento->id;
-                }
+            $movimientos = Movimiento::model()->findAll(array(
+                'condition'=>':cuenta = cuenta_corriente_id and saldo_cuenta = 0',
+                'params'=>array(':cuenta'=>$this->id),
+                'order'=>'fecha DESC,id DESC',
+            ));
+            if(count($movimientos)>0){
+                return $movimientos[0]->id;
             }
-            return $ultimoId;
-
+            return -1;
         }
         
         public function fechaUltimaMora(){
-            $fecha = "";
-            $saldo_actual = $this->saldoAFecha(date('Y-m-d'));
-            if($saldo_actual < 0){
-                $movimientos = Movimiento::model()->findAllByAttributes(array('cuenta_corriente_id'=>$this->id),array('order'=>'id DESC'));
-                foreach($movimientos as $movimiento){
-                    if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_ABONO){
-                        $saldo_actual += $movimiento->monto;
-                    }
-                    else if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_CARGO){
-                        $saldo_actual -= $movimiento->monto;
-                    }
-                    if($saldo_actual >= 0){
-                        return $movimiento->fecha;
+            $movimientos = Movimiento::model()->findAllByAttributes(
+                array('cuenta_corriente_id'=>$this->id),
+                array('order'=>'fecha DESC,id DESC')
+            );
+            $mov_anterior = null;
+            foreach($movimientos as $movimiento){
+                if($movimiento->saldo_cuenta < 0){
+                    if($mov_anterior != null){
+                        if($mov_anterior->saldo_cuenta >= 0){
+                            return $movimiento->fecha;
+                        }
                     }
                 }
-                $fecha = $movimientos[count($movimientos)-1]->fecha;
+                $mov_anterior = $movimiento;
             }
-            return $fecha;
+            if($mov_anterior!=null){
+                if($mov_anterior->saldo_cuenta < 0){
+                    return $mov_anterior->fecha;
+                }
+                else{
+                    return "";
+                }
+            }
         }
 
         public function saldoAFecha($fecha){
-            $saldo_inicial = $this->saldo_inicial;
             $movimientos = Movimiento::model()->findAll(
-            array(
-                'condition'=>'fecha <= :fDesde and cuenta_corriente_id = :cta',
-                'params'=>array(':fDesde'=>$fecha,':cta'=>$this->id),
-            ));
-            $saldo = $saldo_inicial;
-            foreach($movimientos as $movimiento){
-                if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_ABONO){
-                    $saldo += $movimiento->monto;
-                }
-                else if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_CARGO){
-                    $saldo -= $movimiento->monto;
-                }
+                array(
+                    'condition'=>'fecha <= :fecha and cuenta_corriente_id = :cta and validado = 1',
+                    'params'=>array(':fecha'=>$fecha,':cta'=>$this->id),
+                    'order'=>'fecha DESC,id DESC',
+                )
+            );
+            if(count($movimientos)>0){
+                return $movimientos[0]->saldo_cuenta;
             }
-            return $saldo;
+            else{
+                return $this->saldo_inicial;
+            }
         }
         
         public function saldoMes($mes,$agno){

@@ -312,18 +312,14 @@ class MovimientoController extends Controller {
     }
 
     public function actionViewDetail($id) {
-// Including js for table pagination
-        $baseUrl = Yii::app()->baseUrl;
-        $cs = Yii::app()->getClientScript();
-        $cs->registerCssFile($baseUrl . '/css/footable.core.css');
-        $cs->registerScriptFile($baseUrl . '/js/footable.js');
-        $cs->registerScriptFile($baseUrl . '/js/footable.paginate.js');
 
         $cuenta = CuentaCorriente::model()->findByPk($id);
+        $mov = new Movimiento('search');
         if(Yii::app()->user->rol == 'propietario'){
             if($cuenta->estaAsociadoPropietario(Yii::app()->user->id)){
                 $this->render('viewDetail', array(
                     'cuenta' => $cuenta,
+                    'mov'=>$mov,
                 ));
             }
             else{
@@ -333,37 +329,6 @@ class MovimientoController extends Controller {
         else{
             throw new CHttpException(403, 'Usted no se encuentra autorizado para realizar esta acción.');
         }
-        /*
-        if(Yii::app()->user->rol == 'cliente'){
-            if (CuentaCorriente::model()->isOwnerClient(Yii::app()->user->id, $id)) {
-                $movs = Movimiento::model()->findAll(array(
-                    'condition' => 'cuenta_corriente_id=:cuenta_corriente_id',
-                    'order' => 'fecha',
-                    'params' => array(':cuenta_corriente_id' => $id)));
-                $cuenta = CuentaCorriente::model()->findByPk($id);
-                $this->render('viewDetail', array(
-                    'model' => $movs,
-                    'cuenta' => $cuenta,
-                ));
-            } else {
-                throw new CHttpException(403, 'Usted no se encuentra autorizado para realizar esta acción.');
-            }
-        }
-        
-        
-        if(Yii::app()->user->rol == 'superusuario' || Yii::app()->user->rol == 'administrativo'){
-            $movs = Movimiento::model()->findAll(array(
-                'condition' => 'cuenta_corriente_id=:cuenta_corriente_id',
-                'order' => 'fecha',
-                'params' => array(':cuenta_corriente_id' => $id)));
-            $cuenta = CuentaCorriente::model()->findByPk($id);
-            $this->render('viewDetail', array(
-                'model' => $movs,
-                'cuenta' => $cuenta,
-            ));
-        }
-         * 
-         */
     }
 
     /**
@@ -409,6 +374,9 @@ class MovimientoController extends Controller {
             if(isset($_POST['Movimiento'])){
                 $model->attributes = $_POST['Movimiento'];
                 $model->validado = 1;
+                
+                
+                    //falta saldo_cuenta
                 if($model->save()){
                     $model = new Movimiento;
                     $model->fecha = date('Y-m-d');
@@ -445,6 +413,9 @@ class MovimientoController extends Controller {
                 $model->attributes = $_POST['Movimiento'];
                 $model->forma_pago_id = $_POST['Movimiento']['forma_pago_id'];
                 $model->validado = 1;
+                
+                
+                    //falta saldo_cuenta
                 if($model->save()){
                     $model = new Movimiento;
                     $model->fecha = date('Y-m-d');
@@ -464,10 +435,6 @@ class MovimientoController extends Controller {
         $this->render('abonar',array('model'=>$model));
     }
     
-    /**
-     * Creates a new model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     */
     public function actionCreate() {
         $cuenta_id = $_POST['cuenta'];
         $fecha = $_POST['fecha'];
@@ -501,12 +468,27 @@ class MovimientoController extends Controller {
             if($cuenta->estaAsociadoPropietario(Yii::app()->user->id)){
                 $anterior = $model->findAllByAttributes(array('fecha'=>$model->fecha,'tipo'=>$model->tipo,'monto'=>$model->monto,'detalle'=>$model->detalle,'cuenta_corriente_id'=>$model->cuenta_corriente_id));
                 if(count($anterior) == 0){
+                    $model->saldo_cuenta = $model->cuentaCorriente->saldoAFecha($model->fecha);
                     if($model->save()){
+                        if($model->validado){
+                            if($model->tipo == Tools::MOVIMIENTO_TIPO_ABONO){
+                                $model->actualizaSaldosPosteriores($model->monto);
+                            }
+                            else{
+                                $model->actualizaSaldosPosteriores(-$model->monto);
+                            }
+                        }
+                        else{
+                            $model->actualizaSaldosPosteriores(0);
+                        }
                         echo $model->id;
                     }
                     else{
                         echo CHtml::errorSummary($model);
                     }
+                }
+                else{
+                    echo -1;
                 }
                 die;
             }
@@ -516,34 +498,7 @@ class MovimientoController extends Controller {
             }
         }
         
-        /*$model = new Movimiento;
-        $cta = CuentaCorriente::model()->findByPk($id);
-        $contrato = $cta->contrato;
-        $model->fecha = date('Y-m-d');
-            
-// Uncomment the following line if AJAX validation is needed
-// $this->performAjaxValidation($model);
-
-        if (isset($_POST['Movimiento'])) {
-            $model->attributes = $_POST['Movimiento'];
-            $model->forma_pago_id = $_POST['Movimiento']['forma_pago_id'];
-            $model->validado = 0;
-            $model->cuenta_corriente_id = $id;
-            
-            if ($model->save()) {
-                $this->redirect(array('viewDetail', 'id' => $id));
-            }
-        }
-
-
-        $list = null;
-        $propietario_id = $cta->contrato->departamento->propiedad->propietario->id;
-        $list = Propietario::model()->getAssociatedAccounts($propietario_id);
-        $this->render('create', array(
-            'model' => $model,
-            'cuenta_cte' => $id,
-            'lista_cuentas' => $list,
-        ));*/
+       
     }
 
     /**
@@ -551,18 +506,23 @@ class MovimientoController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate() {
-        $mov_id = Yii::app()->request->getPost('mov_id');
-        $model = $this->loadModel($mov_id);
-
+    public function actionUpdate($id) {
+        $model = Movimiento::model()->findByPk($id);
+        $monto_anterior = $model->monto;
         if (isset($_POST['Movimiento'])) {
             $model->attributes = $_POST['Movimiento'];
+            $diferencia = $model->monto - $monto_anterior;
             if($model->tipo == Tools::MOVIMIENTO_TIPO_CARGO){
                 $model->forma_pago_id = null;
+                $diferencia = -$diferencia;
             }
             if($model->cuentaCorriente->estaAsociadoPropietario(Yii::app()->user->id)){
-                if ($model->save())
+                if ($model->save()){
+                    if($model->validado){
+                        $model->actualizaSaldosPosteriores($diferencia);
+                    }
                     $this->redirect(array('viewDetail', 'id' => $model->cuenta_corriente_id));
+                }
             }
         }
         
@@ -571,10 +531,19 @@ class MovimientoController extends Controller {
         ));
     }
 
-    public function actionEliminar(){
-        $movimiento = Movimiento::model()->findByPk($_POST['mov']);
+    public function actionDelete($id){
+        $movimiento = Movimiento::model()->findByPk($id);
         if($movimiento!=null){
             if(Yii::app()->user->rol == 'propietario' && $movimiento->cuentaCorriente->estaAsociadoPropietario(Yii::app()->user->id)){
+                //reajusto los saldos
+                if($movimiento->validado){
+                    if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_ABONO){
+                        $movimiento->actualizaSaldosPosteriores(-$movimiento->monto);
+                    }
+                    else{
+                        $movimiento->actualizaSaldosPosteriores($movimiento->monto);
+                    }
+                }
                 $movimiento->delete();
                 echo "OK";
             }
@@ -586,11 +555,13 @@ class MovimientoController extends Controller {
             echo "ERROR: No se encuentra el movimiento a eliminar.";
         }
     }
+    
     /**
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be deleted
      */
+    /*
     public function actionDelete() {
         $mov_id = Yii::app()->request->getPost('mov_id');
         $cuenta_id = Yii::app()->request->getPost('cuenta_id');
@@ -601,7 +572,7 @@ class MovimientoController extends Controller {
         if (!isset($_GET['ajax']))
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('movimiento/viewDetail/' . $cuenta_id));
     }
-
+*/
     /**
      * Lists all models.
      */
@@ -647,16 +618,23 @@ class MovimientoController extends Controller {
         $this->render('resumenMovimiento', array('model' => $model));
     }
 
-    public function actionValidate() {
+    public function actionValidate($id) {
 // Changing the validation state
-        $mov_id = Yii::app()->request->getPost('mov_id');
-        $cuenta_id = Yii::app()->request->getPost('cuenta_id');
-        $mov = Movimiento::model()->findByPk($mov_id);
-        
-        $mov->validado = $mov->validado==0?1:0;
-
-        $mov->save();
-        $this->redirect(array('viewDetail', 'id' => $cuenta_id));
+        $mov = Movimiento::model()->findByPk($id);
+        if($mov!=null){
+            if($mov->tipo == Tools::MOVIMIENTO_TIPO_ABONO){
+                $mov->validado = $mov->validado==0?1:0;
+                $mov->save();
+                if($mov->validado){
+                    $mov->actualizaSaldosPosteriores($mov->monto);
+                }
+                else{
+                    $mov->actualizaSaldosPosteriores(-$mov->monto);
+                }
+                
+            }
+            $this->redirect(array('viewDetail', 'id' => $mov->cuenta_corriente_id));
+        }       
     }
 
     /**

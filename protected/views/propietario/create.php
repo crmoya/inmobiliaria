@@ -5,8 +5,13 @@
 $this->menu=array(
 	array('label'=>'Administrar Propietarios', 'url'=>array('admin')),
 );
+
+$this->breadcrumbs=array(
+	'Propietarios'=>array('admin'),
+	'Nuevo Propietario',
+);
+
 ?>
-
-<h1>Crear Propietario</h1>
-
+<div class="span12">
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+</div>

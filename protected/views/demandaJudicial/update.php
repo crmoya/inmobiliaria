@@ -3,18 +3,16 @@
 /* @var $model DemandaJudicial */
 
 $this->breadcrumbs=array(
-	'Demanda Judicials'=>array('admin'),
-	'Update',
+	'Demandas Judiciales'=>array('admin'),
+	'Actualizar',
 );
 
 $this->menu=array(
-	array('label'=>'List DemandaJudicial', 'url'=>array('index')),
-	array('label'=>'Create DemandaJudicial', 'url'=>array('create')),
-	array('label'=>'View DemandaJudicial', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage DemandaJudicial', 'url'=>array('admin')),
+	array('label'=>'Listar Demandas', 'url'=>array('admin')),
+	array('label'=>'Crear Demanda', 'url'=>array('create')),
+	array('label'=>'Ver Demanda', 'url'=>array('view', 'id'=>$model->id)),
 );
 ?>
-
-<h1>Update DemandaJudicial <?php echo $model->id; ?></h1>
-
+<div class="span10">
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+</div>

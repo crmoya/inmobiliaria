@@ -12,20 +12,6 @@ if(Yii::app()->user->rol == 'superusuario' || Yii::app()->user->rol == 'administ
 	array('label'=>'Crear Contrato Bienes Muebles', 'url'=>array('create')),
 );
 }
-
-
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
-$('.search-form form').submit(function(){
-	$.fn.yiiGridView.update('contrato-grid', {
-		data: $(this).serialize()
-	});
-	return false;
-});
-");
 ?>
 
 <?php $this->widget('bootstrap.widgets.TbAlert', array(
@@ -45,24 +31,16 @@ $(document).ready(function(e){
         }, 5000);
 });
 </script> 
-<h1>Contratos de Bienes Muebles</h1>
-
-<div class="span4"><?php echo CHtml::link('Búsqueda Avanzada','#',array('class'=>'search-button')); ?></div>
-<br/>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
-
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'contrato-grid',
 	'dataProvider'=>$model->search(),
         'afterAjaxUpdate' => 'reinstallDatePicker',
 	'filter'=>$model,
 	'columns'=>array(
-		array('name'=>'folio','value'=>'$data->contrato->folio'),
-		array(            
+		array('name'=>'propiedad_nombre','value'=>'$data->contrato->departamento->propiedad->nombre'),
+		array('name'=>'depto_nombre','value'=>'$data->contrato->departamento->numero'),
+                array('name'=>'cliente_rut','value'=>'$data->contrato->cliente->rut'),
+                array(            
                     'name'=>'fecha_inicio',
                     'value'=>array($model,'gridDataColumn'),
                     'filter' => $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -85,11 +63,6 @@ $(document).ready(function(e){
                         ), 
                     true), 
                 ),
-		'monto',
-		array('name'=>'depto_nombre','value'=>'$data->contrato->departamento->numero'),
-                array('name'=>'propiedad_nombre','value'=>'$data->contrato->departamento->propiedad->nombre'),
-		array('name'=>'cliente_rut','value'=>'$data->contrato->cliente->rut'),
-                array('name'=>'cliente_nombre','value'=>'$data->contrato->cliente->usuario->nombre." ".$data->contrato->cliente->usuario->apellido'),
 		array(
 			'class'=>'CButtonColumn',
                         'template'=>'{view}{delete}',

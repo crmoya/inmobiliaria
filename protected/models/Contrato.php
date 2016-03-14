@@ -64,6 +64,18 @@ class Contrato extends CActiveRecord {
         return 'contrato';
     }
     
+    public function getDeUsuario($usuario_id){
+        $contratos = $this->findAll();
+        $dev = array();
+        foreach($contratos as $contrato){
+            $propietario = $contrato->departamento->propiedad->propietario;
+            if($propietario->usuario_id == $usuario_id){
+                $dev[] = $contrato;
+            }
+        }
+        return $dev;
+    }
+    
     public static function getReajusta($id){
         $contrato = Contrato::model()->findByPk($id);
         return $contrato->reajusta == 1?'pesoVerde':'pesoRojo';
@@ -138,18 +150,6 @@ class Contrato extends CActiveRecord {
     public function searchFiniquitados() {
         // Warning: Please modify the following code to remove attributes that
         // should not be searched.
-        
-        $nombre = "";
-        $apellido = "";
-        $nombres = explode(" ",$this->cliente_nombre);
-        if(count($nombres) == 1){
-            $nombre = $this->cliente_nombre;
-            $apellido = $this->cliente_nombre;
-        }
-        elseif(count($nombres) == 2){
-            $nombre = $nombres[0];
-            $apellido = $nombres[1];
-        }
         
         $criteria = new CDbCriteria;
         $criteria->with = array('departamento', 'tipoContrato', 'cliente');
@@ -666,6 +666,7 @@ class Contrato extends CActiveRecord {
                 $movimiento->validado = 1;
                 $movimiento->cuenta_corriente_id = $cta_id;
                 if($movimiento->save()){
+                    $movimiento->actualizaSaldosPosteriores(-$movimiento->monto);
                     $idGuardados[] = $movimiento->id;
                 }
                 else{
@@ -688,6 +689,7 @@ class Contrato extends CActiveRecord {
                 $movimiento->validado = 1;
                 $movimiento->cuenta_corriente_id = $cta_id;
                 if($movimiento->save()){
+                    $movimiento->actualizaSaldosPosteriores(-$movimiento->monto);
                     $idGuardados[] = $movimiento->id;
                 }
                 else{
@@ -710,6 +712,7 @@ class Contrato extends CActiveRecord {
                 $movimiento->validado = 1;
                 $movimiento->cuenta_corriente_id = $cta_id;
                 if($movimiento->save()){
+                    $movimiento->actualizaSaldosPosteriores(-$movimiento->monto);
                     $idGuardados[] = $movimiento->id;
                 }
                 else{
@@ -732,6 +735,7 @@ class Contrato extends CActiveRecord {
                 $movimiento->validado = 1;
                 $movimiento->cuenta_corriente_id = $cta_id;
                 if($movimiento->save()){
+                    $movimiento->actualizaSaldosPosteriores(-$movimiento->monto);
                     $idGuardados[] = $movimiento->id;
                 }
                 else{
@@ -767,6 +771,7 @@ class Contrato extends CActiveRecord {
             $movimiento->detalle = Tools::DETALLE_PRIMER_CARGO;
             $movimiento->validado = 1;
             $movimiento->cuenta_corriente_id = $cta_id;
+            $movimiento->saldo_cuenta = $movimiento->cuentaCorriente->saldo_inicial - $movimiento->monto;
             $movimiento->save();
         }
     }
