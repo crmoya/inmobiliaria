@@ -1,3 +1,6 @@
+table.detail-view tr.odd{
+    background:#EFEFEF !important;
+}
 #page {
     padding-top: 60px;
 }

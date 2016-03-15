@@ -16,6 +16,13 @@
 class CuentaCorriente extends CActiveRecord
 {
     
+    public function getVigentes(){
+        $criteria = new CDbCriteria();
+        $criteria->join = "join contrato c on t.contrato_id = c.id";
+        $criteria->condition = "c.vigente = 1";
+        return $this->findAll($criteria);
+    }
+    
 	/**
 	 * @return string the associated database table name
 	 */
@@ -95,25 +102,18 @@ class CuentaCorriente extends CActiveRecord
                 array('cuenta_corriente_id'=>$this->id),
                 array('order'=>'fecha DESC,id DESC')
             );
-            $mov_anterior = null;
+            $mov = null;
             foreach($movimientos as $movimiento){
                 if($movimiento->saldo_cuenta < 0){
-                    if($mov_anterior != null){
-                        if($mov_anterior->saldo_cuenta >= 0){
-                            return $movimiento->fecha;
-                        }
-                    }
-                }
-                $mov_anterior = $movimiento;
-            }
-            if($mov_anterior!=null){
-                if($mov_anterior->saldo_cuenta < 0){
-                    return $mov_anterior->fecha;
+                    $mov = $movimiento;
                 }
                 else{
-                    return "";
+                    if($mov != null){
+                        return $mov->fecha;
+                    }
                 }
             }
+            return $mov != null?$mov->fecha:"";
         }
 
         public function saldoAFecha($fecha){

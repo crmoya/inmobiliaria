@@ -10358,3 +10358,488 @@ Stack trace:
 REQUEST_URI=/inmobiliaria/index.php/mueble/1
 HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/mueble/update/1
 ---
+2016/03/14 01:25:28 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'No es posible resolver la solicitud "gii"' in D:\pega\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('gii')
+#1 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#2 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#3 {main}
+REQUEST_URI=/inmobiliaria/index.php/gii
+---
+2016/03/14 01:26:20 [error] [exception.CHttpException.403] exception 'CHttpException' with message 'Usted no se encuentra autorizado a realizar esta acción.' in D:\pega\yii\framework\web\auth\CAccessControlFilter.php:182
+Stack trace:
+#0 D:\pega\yii\framework\web\auth\CAccessControlFilter.php(145): CAccessControlFilter->accessDenied(Object(CWebUser), 'Usted no se enc...')
+#1 D:\pega\yii\framework\web\filters\CFilter.php(38): CAccessControlFilter->preFilter(Object(CFilterChain))
+#2 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#3 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#4 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#5 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#6 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#7 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('admin')
+#8 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('centroCosto/adm...')
+#9 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#10 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#11 {main}
+REQUEST_URI=/inmobiliaria/index.php/centroCosto/admin
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php
+---
+2016/03/14 20:32:45 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'No es posible resolver la solicitud "gii"' in D:\pega\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('gii')
+#1 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#2 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#3 {main}
+REQUEST_URI=/inmobiliaria/index.php/gii
+---
+2016/03/14 20:36:04 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'No es posible resolver la solicitud "conceptoPredefinido/admin"' in D:\pega\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('conceptoPredefi...')
+#1 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#2 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#3 {main}
+REQUEST_URI=/inmobiliaria/index.php/conceptoPredefinido/admin
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php
+---
+2016/03/14 20:37:15 [error] [exception.CHttpException.403] exception 'CHttpException' with message 'Usted no se encuentra autorizado a realizar esta acción.' in D:\pega\yii\framework\web\auth\CAccessControlFilter.php:182
+Stack trace:
+#0 D:\pega\yii\framework\web\auth\CAccessControlFilter.php(145): CAccessControlFilter->accessDenied(Object(CWebUser), 'Usted no se enc...')
+#1 D:\pega\yii\framework\web\filters\CFilter.php(38): CAccessControlFilter->preFilter(Object(CFilterChain))
+#2 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#3 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#4 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#5 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#6 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#7 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('admin')
+#8 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('conceptoPredefi...')
+#9 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#10 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#11 {main}
+REQUEST_URI=/inmobiliaria/index.php/conceptoPredefinido/admin
+---
+2016/03/14 20:38:11 [error] [exception.CHttpException.403] exception 'CHttpException' with message 'Usted no se encuentra autorizado a realizar esta acción.' in D:\pega\yii\framework\web\auth\CAccessControlFilter.php:182
+Stack trace:
+#0 D:\pega\yii\framework\web\auth\CAccessControlFilter.php(145): CAccessControlFilter->accessDenied(Object(CWebUser), 'Usted no se enc...')
+#1 D:\pega\yii\framework\web\filters\CFilter.php(38): CAccessControlFilter->preFilter(Object(CFilterChain))
+#2 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#3 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#4 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#5 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#6 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#7 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('admin')
+#8 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('conceptoPredefi...')
+#9 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#10 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#11 {main}
+REQUEST_URI=/inmobiliaria/index.php/conceptoPredefinido/admin
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php
+---
+2016/03/14 21:13:04 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'No es posible resolver la solicitud "gii"' in D:\pega\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('gii')
+#1 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#2 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#3 {main}
+REQUEST_URI=/inmobiliaria/index.php/gii
+---
+2016/03/14 21:13:54 [error] [exception.CException] exception 'CException' with message 'La propiedad "Egreso"."egresocol" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:130
+Stack trace:
+#0 D:\pega\yii\framework\db\ar\CActiveRecord.php(145): CComponent->__get('egresocol')
+#1 D:\pega\yii\framework\web\helpers\CHtml.php(2728): CActiveRecord->__get('egresocol')
+#2 D:\pega\yii\framework\web\helpers\CHtml.php(2451): CHtml::resolveValue(Object(Egreso), 'egresocol')
+#3 D:\pega\yii\framework\web\helpers\CHtml.php(1533): CHtml::activeInputField('text', Object(Egreso), 'egresocol', Array)
+#4 D:\pega\yii\framework\web\widgets\CActiveForm.php(792): CHtml::activeTextField(Object(Egreso), 'egresocol', Array)
+#5 D:\pega\mvs\inmobiliaria\protected\views\egreso\_form.php(80): CActiveForm->textField(Object(Egreso), 'egresocol', Array)
+#6 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#7 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#8 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#9 D:\pega\mvs\inmobiliaria\protected\views\egreso\create.php(11): CController->renderPartial('_form', Array)
+#10 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#11 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#12 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#13 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('create', Array, true)
+#14 D:\pega\mvs\inmobiliaria\protected\controllers\EgresoController.php(79): CController->render('create', Array)
+#15 D:\pega\yii\framework\web\actions\CInlineAction.php(49): EgresoController->actionCreate()
+#16 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#17 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#18 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#19 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#20 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#21 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#22 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#23 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#24 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('create')
+#25 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('egreso/create')
+#26 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#27 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#28 {main}
+REQUEST_URI=/inmobiliaria/index.php/egreso/create
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/prestacion/create
+---
+2016/03/14 21:17:46 [error] [exception.CHttpException.403] exception 'CHttpException' with message 'Usted no se encuentra autorizado a realizar esta acción.' in D:\pega\yii\framework\web\auth\CAccessControlFilter.php:182
+Stack trace:
+#0 D:\pega\yii\framework\web\auth\CAccessControlFilter.php(145): CAccessControlFilter->accessDenied(Object(CWebUser), 'Usted no se enc...')
+#1 D:\pega\yii\framework\web\filters\CFilter.php(38): CAccessControlFilter->preFilter(Object(CFilterChain))
+#2 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#3 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#4 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#5 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#6 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#7 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('admin')
+#8 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('egreso/admin')
+#9 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#10 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#11 {main}
+REQUEST_URI=/inmobiliaria/index.php/egreso/admin
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/prestacion/listado
+---
+2016/03/14 21:18:25 [error] [exception.CException] exception 'CException' with message 'La propiedad "Egreso"."egresocol" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:130
+Stack trace:
+#0 D:\pega\yii\framework\db\ar\CActiveRecord.php(145): CComponent->__get('egresocol')
+#1 D:\pega\yii\framework\web\helpers\CHtml.php(2728): CActiveRecord->__get('egresocol')
+#2 D:\pega\yii\framework\web\helpers\CHtml.php(2451): CHtml::resolveValue(Object(Egreso), 'egresocol')
+#3 D:\pega\yii\framework\web\helpers\CHtml.php(1533): CHtml::activeInputField('text', Object(Egreso), 'egresocol', Array)
+#4 D:\pega\yii\framework\web\widgets\CActiveForm.php(792): CHtml::activeTextField(Object(Egreso), 'egresocol', Array)
+#5 D:\pega\mvs\inmobiliaria\protected\views\egreso\_search.php(51): CActiveForm->textField(Object(Egreso), 'egresocol', Array)
+#6 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#7 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#8 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#9 D:\pega\mvs\inmobiliaria\protected\views\egreso\admin.php(40): CController->renderPartial('_search', Array)
+#10 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#11 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#12 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#13 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('admin', Array, true)
+#14 D:\pega\mvs\inmobiliaria\protected\controllers\EgresoController.php(135): CController->render('admin', Array)
+#15 D:\pega\yii\framework\web\actions\CInlineAction.php(49): EgresoController->actionAdmin()
+#16 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#17 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#18 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#19 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#20 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#21 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#22 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#23 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#24 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('admin')
+#25 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('egreso/admin')
+#26 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#27 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#28 {main}
+REQUEST_URI=/inmobiliaria/index.php/egreso/admin
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/prestacion/listado
+---
+2016/03/14 21:28:01 [error] [exception.CException] exception 'CException' with message 'La propiedad "CDetailView"."itemsCssClass" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:173
+Stack trace:
+#0 D:\pega\yii\framework\web\CWidgetFactory.php(161): CComponent->__set('itemsCssClass', 'table table-str...')
+#1 D:\pega\yii\framework\web\CBaseController.php(146): CWidgetFactory->createWidget(Object(PrestacionController), 'zii.widgets.CDe...', Array)
+#2 D:\pega\yii\framework\web\CBaseController.php(180): CBaseController->createWidget('zii.widgets.CDe...', Array)
+#3 D:\pega\mvs\inmobiliaria\protected\views\prestacion\view.php(30): CBaseController->widget('zii.widgets.CDe...', Array)
+#4 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#5 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#6 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#7 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('view', Array, true)
+#8 D:\pega\mvs\inmobiliaria\protected\controllers\PrestacionController.php(183): CController->render('view', Array)
+#9 [internal function]: PrestacionController->actionView('19')
+#10 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(PrestacionController), Array)
+#11 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(PrestacionController), Object(ReflectionMethod), Array)
+#12 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#13 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#14 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#15 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#16 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#17 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#18 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#19 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#20 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('view')
+#21 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('prestacion/view')
+#22 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#23 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#24 {main}
+REQUEST_URI=/inmobiliaria/index.php/prestacion/19
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/prestacion/admin
+---
+2016/03/14 21:28:06 [error] [exception.CException] exception 'CException' with message 'La propiedad "CDetailView"."summaryCssClass" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:173
+Stack trace:
+#0 D:\pega\yii\framework\web\CWidgetFactory.php(161): CComponent->__set('summaryCssClass', 'dataTables_info')
+#1 D:\pega\yii\framework\web\CBaseController.php(146): CWidgetFactory->createWidget(Object(PrestacionController), 'zii.widgets.CDe...', Array)
+#2 D:\pega\yii\framework\web\CBaseController.php(180): CBaseController->createWidget('zii.widgets.CDe...', Array)
+#3 D:\pega\mvs\inmobiliaria\protected\views\prestacion\view.php(30): CBaseController->widget('zii.widgets.CDe...', Array)
+#4 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#5 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#6 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#7 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('view', Array, true)
+#8 D:\pega\mvs\inmobiliaria\protected\controllers\PrestacionController.php(183): CController->render('view', Array)
+#9 [internal function]: PrestacionController->actionView('19')
+#10 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(PrestacionController), Array)
+#11 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(PrestacionController), Object(ReflectionMethod), Array)
+#12 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#13 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#14 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#15 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#16 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#17 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#18 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#19 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#20 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('view')
+#21 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('prestacion/view')
+#22 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#23 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#24 {main}
+REQUEST_URI=/inmobiliaria/index.php/prestacion/19
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/prestacion/admin
+---
+2016/03/14 21:28:11 [error] [exception.CException] exception 'CException' with message 'La propiedad "CDetailView"."summaryText" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:173
+Stack trace:
+#0 D:\pega\yii\framework\web\CWidgetFactory.php(161): CComponent->__set('summaryText', 'Mostrando {star...')
+#1 D:\pega\yii\framework\web\CBaseController.php(146): CWidgetFactory->createWidget(Object(PrestacionController), 'zii.widgets.CDe...', Array)
+#2 D:\pega\yii\framework\web\CBaseController.php(180): CBaseController->createWidget('zii.widgets.CDe...', Array)
+#3 D:\pega\mvs\inmobiliaria\protected\views\prestacion\view.php(30): CBaseController->widget('zii.widgets.CDe...', Array)
+#4 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#5 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#6 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#7 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('view', Array, true)
+#8 D:\pega\mvs\inmobiliaria\protected\controllers\PrestacionController.php(183): CController->render('view', Array)
+#9 [internal function]: PrestacionController->actionView('19')
+#10 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(PrestacionController), Array)
+#11 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(PrestacionController), Object(ReflectionMethod), Array)
+#12 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#13 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#14 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#15 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#16 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#17 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#18 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#19 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#20 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('view')
+#21 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('prestacion/view')
+#22 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#23 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#24 {main}
+REQUEST_URI=/inmobiliaria/index.php/prestacion/19
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/prestacion/admin
+---
+2016/03/14 21:28:14 [error] [exception.CException] exception 'CException' with message 'La propiedad "CDetailView"."template" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:173
+Stack trace:
+#0 D:\pega\yii\framework\web\CWidgetFactory.php(161): CComponent->__set('template', '{items}<div cla...')
+#1 D:\pega\yii\framework\web\CBaseController.php(146): CWidgetFactory->createWidget(Object(PrestacionController), 'zii.widgets.CDe...', Array)
+#2 D:\pega\yii\framework\web\CBaseController.php(180): CBaseController->createWidget('zii.widgets.CDe...', Array)
+#3 D:\pega\mvs\inmobiliaria\protected\views\prestacion\view.php(30): CBaseController->widget('zii.widgets.CDe...', Array)
+#4 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#5 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#6 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#7 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('view', Array, true)
+#8 D:\pega\mvs\inmobiliaria\protected\controllers\PrestacionController.php(183): CController->render('view', Array)
+#9 [internal function]: PrestacionController->actionView('19')
+#10 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(PrestacionController), Array)
+#11 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(PrestacionController), Object(ReflectionMethod), Array)
+#12 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#13 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#14 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#15 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#16 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#17 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#18 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#19 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#20 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('view')
+#21 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('prestacion/view')
+#22 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#23 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#24 {main}
+REQUEST_URI=/inmobiliaria/index.php/prestacion/19
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/prestacion/admin
+---
+2016/03/14 21:28:35 [error] [exception.CException] exception 'CException' with message 'La propiedad "CDetailView"."itemsCssClass" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:173
+Stack trace:
+#0 D:\pega\yii\framework\web\CWidgetFactory.php(161): CComponent->__set('itemsCssClass', 'table table-str...')
+#1 D:\pega\yii\framework\web\CBaseController.php(146): CWidgetFactory->createWidget(Object(PrestacionController), 'zii.widgets.CDe...', Array)
+#2 D:\pega\yii\framework\web\CBaseController.php(180): CBaseController->createWidget('zii.widgets.CDe...', Array)
+#3 D:\pega\mvs\inmobiliaria\protected\views\prestacion\view.php(30): CBaseController->widget('zii.widgets.CDe...', Array)
+#4 D:\pega\yii\framework\web\CBaseController.php(126): require('D:\\pega\\mvs\\inm...')
+#5 D:\pega\yii\framework\web\CBaseController.php(95): CBaseController->renderInternal('D:\\pega\\mvs\\inm...', Array, true)
+#6 D:\pega\yii\framework\web\CController.php(869): CBaseController->renderFile('D:\\pega\\mvs\\inm...', Array, true)
+#7 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('view', Array, true)
+#8 D:\pega\mvs\inmobiliaria\protected\controllers\PrestacionController.php(183): CController->render('view', Array)
+#9 [internal function]: PrestacionController->actionView('19')
+#10 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(PrestacionController), Array)
+#11 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(PrestacionController), Object(ReflectionMethod), Array)
+#12 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#13 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#14 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#15 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#16 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#17 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#18 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#19 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#20 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('view')
+#21 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('prestacion/view')
+#22 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#23 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#24 {main}
+REQUEST_URI=/inmobiliaria/index.php/prestacion/19
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/prestacion/admin
+---
+2016/03/14 22:24:26 [error] [exception.CException] exception 'CException' with message 'La propiedad "PrestacionGeneraMovimiento"."tipo" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:130
+Stack trace:
+#0 D:\pega\yii\framework\db\ar\CActiveRecord.php(145): CComponent->__get('tipo')
+#1 D:\pega\mvs\inmobiliaria\protected\controllers\PrestacionController.php(338): CActiveRecord->__get('tipo')
+#2 [internal function]: PrestacionController->actionUpdate('23')
+#3 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(PrestacionController), Array)
+#4 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(PrestacionController), Object(ReflectionMethod), Array)
+#5 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#6 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#7 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#8 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#9 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#10 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#11 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#12 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('update')
+#14 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('prestacion/upda...')
+#15 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#16 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#17 {main}
+REQUEST_URI=/inmobiliaria/index.php/prestacion/update/23
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/prestacion/update/23
+---
+2016/03/14 22:33:52 [error] [system.db.CDbCommand] CDbCommand::execute() falló: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`inmobiliaria`.`prestacion_genera_movimiento`, CONSTRAINT `fk_movimiento_prestacion_movimiento1` FOREIGN KEY (`movimiento_id`) REFERENCES `movimiento` (`id`) ON DELETE NO ACTION ON UPDATE NO A). La sentencia SQL ejecutada fue: DELETE FROM `movimiento` WHERE `movimiento`.`id`=220.
+in D:\pega\mvs\inmobiliaria\protected\controllers\PrestacionController.php (451)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/14 22:33:52 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand falló al ejecutar la sentencia SQL: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`inmobiliaria`.`prestacion_genera_movimiento`, CONSTRAINT `fk_movimiento_prestacion_movimiento1` FOREIGN KEY (`movimiento_id`) REFERENCES `movimiento` (`id`) ON DELETE NO ACTION ON UPDATE NO A). The SQL statement executed was: DELETE FROM `movimiento` WHERE `movimiento`.`id`=220' in D:\pega\yii\framework\db\CDbCommand.php:358
+Stack trace:
+#0 D:\pega\yii\framework\db\ar\CActiveRecord.php(1807): CDbCommand->execute()
+#1 D:\pega\yii\framework\db\ar\CActiveRecord.php(1227): CActiveRecord->deleteByPk('220')
+#2 D:\pega\mvs\inmobiliaria\protected\controllers\PrestacionController.php(451): CActiveRecord->delete()
+#3 [internal function]: PrestacionController->actionDelete('24')
+#4 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs(Object(PrestacionController), Array)
+#5 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CAction->runWithParamsInternal(Object(PrestacionController), Object(ReflectionMethod), Array)
+#6 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#7 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#8 D:\pega\yii\framework\web\CController.php(1116): CFilterChain->run()
+#9 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterPostOnly(Object(CFilterChain))
+#10 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#11 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#12 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#13 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#14 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#15 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#16 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#17 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('delete')
+#18 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('prestacion/dele...')
+#19 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#20 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#21 {main}
+REQUEST_URI=/inmobiliaria/index.php/prestacion/delete/24?ajax=prestacion-grid
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/prestacion/admin
+---
+2016/03/14 22:43:14 [error] [php] Undefined variable: cuenta (D:\pega\mvs\inmobiliaria\protected\models\TempMorosos.php:36)
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#1 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CuentaCorrienteController->runAction()
+#2 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#3 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#4 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CuentaCorrienteController->filterAccessControl()
+#5 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#6 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#7 D:\pega\yii\framework\web\CController.php(265): CuentaCorrienteController->runActionWithFilters()
+#8 D:\pega\yii\framework\web\CWebApplication.php(282): CuentaCorrienteController->run()
+#9 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#10 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#11 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/cuentaCorriente/adminMorosos
+in D:\pega\mvs\inmobiliaria\protected\models\TempMorosos.php (36)
+in D:\pega\mvs\inmobiliaria\protected\controllers\CuentaCorrienteController.php (341)
+in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/14 22:56:22 [error] [exception.CException] exception 'CException' with message 'La propiedad "Movimiento"."saldo" no se encuentra definida.' in D:\pega\yii\framework\base\CComponent.php:130
+Stack trace:
+#0 D:\pega\yii\framework\db\ar\CActiveRecord.php(145): CComponent->__get('saldo')
+#1 D:\pega\mvs\inmobiliaria\protected\models\CuentaCorriente.php(107): CActiveRecord->__get('saldo')
+#2 D:\pega\mvs\inmobiliaria\protected\models\TempMorosos.php(42): CuentaCorriente->fechaUltimaMora()
+#3 D:\pega\mvs\inmobiliaria\protected\controllers\CuentaCorrienteController.php(341): TempMorosos->refrescar()
+#4 D:\pega\yii\framework\web\actions\CInlineAction.php(49): CuentaCorrienteController->actionAdminMorosos()
+#5 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#6 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#7 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#8 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#9 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#10 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#11 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#12 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('adminMorosos')
+#14 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('cuentaCorriente...')
+#15 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#16 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#17 {main}
+REQUEST_URI=/inmobiliaria/index.php/cuentaCorriente/adminMorosos
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/movimiento/viewDetail/33
+---
+2016/03/15 00:27:51 [error] [php] Undefined variable: conceptos (D:\pega\mvs\inmobiliaria\protected\views\egreso\_form.php:58)
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(869): EgresoController->renderFile()
+#1 D:\pega\mvs\inmobiliaria\protected\views\egreso\create.php(11): EgresoController->renderPartial()
+#2 D:\pega\yii\framework\web\CBaseController.php(126): require()
+#3 D:\pega\yii\framework\web\CBaseController.php(95): EgresoController->renderInternal()
+#4 D:\pega\yii\framework\web\CController.php(869): EgresoController->renderFile()
+#5 D:\pega\yii\framework\web\CController.php(782): EgresoController->renderPartial()
+#6 D:\pega\mvs\inmobiliaria\protected\controllers\EgresoController.php(77): EgresoController->render()
+#7 D:\pega\yii\framework\web\actions\CInlineAction.php(49): EgresoController->actionCreate()
+#8 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#9 D:\pega\yii\framework\web\filters\CFilterChain.php(133): EgresoController->runAction()
+#10 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#11 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#12 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): EgresoController->filterAccessControl()
+#13 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#14 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#15 D:\pega\yii\framework\web\CController.php(265): EgresoController->runActionWithFilters()
+#16 D:\pega\yii\framework\web\CWebApplication.php(282): EgresoController->run()
+#17 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#18 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#19 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/egreso/create
+in D:\pega\mvs\inmobiliaria\protected\views\egreso\_form.php (58)
+in D:\pega\mvs\inmobiliaria\protected\views\egreso\create.php (11)
+in D:\pega\mvs\inmobiliaria\protected\controllers\EgresoController.php (77)
+2016/03/15 00:39:30 [error] [php] Trying to get property of non-object (D:\pega\mvs\inmobiliaria\protected\models\Egreso.php:110)
+Stack trace:
+#0 D:\pega\yii\framework\web\CBaseController.php(95): EgresoController->renderInternal()
+#1 D:\pega\yii\framework\web\CController.php(869): EgresoController->renderFile()
+#2 D:\pega\yii\framework\web\CController.php(782): EgresoController->renderPartial()
+#3 D:\pega\mvs\inmobiliaria\protected\controllers\EgresoController.php(143): EgresoController->render()
+#4 D:\pega\yii\framework\web\actions\CInlineAction.php(49): EgresoController->actionAdmin()
+#5 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#6 D:\pega\yii\framework\web\filters\CFilterChain.php(133): EgresoController->runAction()
+#7 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#8 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#9 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): EgresoController->filterAccessControl()
+#10 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#11 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#12 D:\pega\yii\framework\web\CController.php(265): EgresoController->runActionWithFilters()
+#13 D:\pega\yii\framework\web\CWebApplication.php(282): EgresoController->run()
+#14 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#15 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#16 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/egreso/admin
+in D:\pega\mvs\inmobiliaria\protected\models\Egreso.php (110)
+in D:\pega\mvs\inmobiliaria\protected\views\egreso\admin.php (16)
+in D:\pega\mvs\inmobiliaria\protected\controllers\EgresoController.php (143)
+2016/03/15 00:42:29 [error] [php] Undefined variable: conceptos (D:\pega\mvs\inmobiliaria\protected\views\egreso\update.php:19)
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(869): EgresoController->renderFile()
+#1 D:\pega\yii\framework\web\CController.php(782): EgresoController->renderPartial()
+#2 D:\pega\mvs\inmobiliaria\protected\controllers\EgresoController.php(104): EgresoController->render()
+#3 unknown(0): EgresoController->actionUpdate()
+#4 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs()
+#5 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CInlineAction->runWithParamsInternal()
+#6 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#7 D:\pega\yii\framework\web\filters\CFilterChain.php(133): EgresoController->runAction()
+#8 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#9 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#10 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): EgresoController->filterAccessControl()
+#11 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#12 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#13 D:\pega\yii\framework\web\CController.php(265): EgresoController->runActionWithFilters()
+#14 D:\pega\yii\framework\web\CWebApplication.php(282): EgresoController->run()
+#15 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#16 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#17 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/egreso/update/1
+in D:\pega\mvs\inmobiliaria\protected\views\egreso\update.php (19)
+in D:\pega\mvs\inmobiliaria\protected\controllers\EgresoController.php (104)
+in D:\pega\mvs\inmobiliaria\index.php (13)

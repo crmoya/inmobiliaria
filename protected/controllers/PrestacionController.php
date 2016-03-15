@@ -189,12 +189,14 @@ class PrestacionController extends Controller
 	 */
 	public function actionCreate()
 	{
+            
             $deptos=new Departamento('search');
             $deptos->unsetAttributes();  
             if(isset($_GET['Departamento']))
                 $deptos->attributes=$_GET['Departamento'];
             
             $model=new Prestacion;
+            $model->fecha = date('d/m/Y');
             // Uncomment the following line if AJAX validation is needed
             // $this->performAjaxValidation($model);
 
@@ -229,7 +231,12 @@ class PrestacionController extends Controller
                                             $cargo = new Movimiento();
                                             $depto = Departamento::model()->findByPk($departamento);
                                             if($depto->contrato != null){
-                                                $cargo->cuenta_corriente_id = $depto->contrato->cuentaCorriente->id;
+                                                if($depto->contrato->vigente){
+                                                    $cargo->cuenta_corriente_id = $depto->contrato->cuentaCorriente->id;
+                                                }
+                                                else{
+                                                    continue;
+                                                }
                                             }
                                             else{
                                                 continue;
@@ -239,7 +246,14 @@ class PrestacionController extends Controller
                                             $cargo->monto = $monto;
                                             $cargo->detalle = "PRESTACIÓN REALIZADA: ".$model->descripcion;
                                             $cargo->validado = 1;
-                                            $cargo->save();                                
+                                            $cargo->saldo_cuenta = $cargo->ultimoSaldo();
+                                            $cargo->save();     
+                                            $cargo->actualizaSaldosPosteriores(-$monto);
+                                            
+                                            $prestacionMovimiento = new PrestacionGeneraMovimiento;
+                                            $prestacionMovimiento->prestacion_id = $model->id;
+                                            $prestacionMovimiento->movimiento_id = $cargo->id;
+                                            $prestacionMovimiento->save();
                                         }
                                     }
                                 }
@@ -248,14 +262,19 @@ class PrestacionController extends Controller
                         else{ //general_prop == "1"
                             if($model->genera_cargos == "1"){                                    
                                 //se crean los cargos para el depto
-                                $departamentos = $propiedad->departamentos;
+                                $departamentos = Departamento::model()->getVigentesDePropiedad($propiedad->id);
                                 $cant_deptos = count($departamentos);
                                 if($cant_deptos != 0){
                                     $monto = (int)$model->monto/$cant_deptos;
                                     foreach($departamentos as $depto){
                                         $cargo = new Movimiento();
                                         if($depto->contrato != null){
-                                            $cargo->cuenta_corriente_id = $depto->contrato->cuentaCorriente->id;
+                                            if($depto->contrato->vigente){
+                                                $cargo->cuenta_corriente_id = $depto->contrato->cuentaCorriente->id;
+                                            }
+                                            else{
+                                                continue;
+                                            }
                                         }
                                         else{
                                             continue;
@@ -266,7 +285,14 @@ class PrestacionController extends Controller
                                         $cargo->monto = $monto;
                                         $cargo->detalle = "PRESTACIÓN REALIZADA: ".$model->descripcion;
                                         $cargo->validado = 1;
-                                        $cargo->save();                                
+                                        $cargo->saldo_cuenta = $cargo->ultimoSaldo();
+                                        $cargo->save();    
+                                        $cargo->actualizaSaldosPosteriores(-$monto);
+                                        
+                                        $prestacionMovimiento = new PrestacionGeneraMovimiento;
+                                        $prestacionMovimiento->prestacion_id = $model->id;
+                                        $prestacionMovimiento->movimiento_id = $cargo->id;
+                                        $prestacionMovimiento->save();
                                     }
                                 }                                    
                             }
@@ -296,6 +322,7 @@ class PrestacionController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
+                $model->fecha = Tools::backFecha($model->fecha);
                 $deptos=new Departamento('search');
                 $deptos->unsetAttributes();  
                 if(isset($_GET['Departamento']))
@@ -309,15 +336,95 @@ class PrestacionController extends Controller
 			$model->attributes=$_POST['Prestacion'];
                         $model->fecha = Tools::fixFecha($model->fecha);
 			if($model->save()){
+                            $movimientosPrestacion = PrestacionGeneraMovimiento::model()->findAllByAttributes(array('prestacion_id'=>$model->id));
+                            foreach($movimientosPrestacion as $mov){
+                                $movimiento = $mov->movimiento;
+                                if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_CARGO){
+                                    $movimiento->actualizaSaldosPosteriores($movimiento->monto);
+                                }
+                                $mov->delete();
+                                $movimiento->delete();
+                            }
                             PrestacionADepartamento::model()->deleteAllByAttributes(array('prestacion_id'=>$model->id));
-                            if(isset($_POST['chbDepartamentoId'])){
+                            if(isset($_POST['chbDepartamentoId']) && !$model->general_prop){
+                                $cant_deptos = count($_POST['chbDepartamentoId']);
+                                if($cant_deptos!=0){
+                                    $monto = (int)$model->monto/$cant_deptos;
+                                }
                                 foreach($_POST['chbDepartamentoId'] as $i=>$departamento){
                                     $prest_depto = new PrestacionADepartamento();
                                     $prest_depto->departamento_id = $departamento;
                                     $prest_depto->prestacion_id = $model->id;
                                     if($prest_depto->validate()){
                                             $prest_depto->save();
-                                    }				
+                                    }                                    
+                                    if($model->genera_cargos == "1"){   
+                                        $cargo = new Movimiento();
+                                        $contrato = Contrato::model()->findByAttributes(array('departamento_id'=>$departamento,'vigente'=>1));
+                                        if($contrato != null){
+                                            if($contrato->vigente){
+                                                $cargo->cuenta_corriente_id = $contrato->cuentaCorriente->id;
+                                            }
+                                            else{
+                                                continue;
+                                            }
+                                        }
+                                        else{
+                                            continue;
+                                        }
+                                        $cargo->fecha = $model->fecha;
+                                        $cargo->tipo = Tools::MOVIMIENTO_TIPO_CARGO;
+
+                                        $cargo->monto = $monto;
+                                        $cargo->detalle = "PRESTACIÓN REALIZADA: ".$model->descripcion;
+                                        $cargo->validado = 1;
+                                        $cargo->saldo_cuenta = $cargo->ultimoSaldo();
+                                        $cargo->save();    
+                                        $cargo->actualizaSaldosPosteriores(-$monto);
+
+                                        $prestacionMovimiento = new PrestacionGeneraMovimiento;
+                                        $prestacionMovimiento->prestacion_id = $model->id;
+                                        $prestacionMovimiento->movimiento_id = $cargo->id;
+                                        $prestacionMovimiento->save();
+                                    }
+                                }
+                            }
+                            if($model->general_prop){
+                                if($model->genera_cargos == "1"){                                    
+                                    //se crean los cargos para los deptos
+                                    $departamentos = Departamento::model()->getVigentesDePropiedad($model->propiedad_id);
+                                    $cant_deptos = count($departamentos);
+                                    if($cant_deptos != 0){
+                                        $monto = (int)$model->monto/$cant_deptos;
+                                        foreach($departamentos as $depto){
+                                            $cargo = new Movimiento();
+                                            if($depto->contrato != null){
+                                                if($depto->contrato->vigente){
+                                                    $cargo->cuenta_corriente_id = $depto->contrato->cuentaCorriente->id;
+                                                }
+                                                else{
+                                                    continue;
+                                                }
+                                            }
+                                            else{
+                                                continue;
+                                            }
+                                            $cargo->fecha = $model->fecha;
+                                            $cargo->tipo = Tools::MOVIMIENTO_TIPO_CARGO;
+
+                                            $cargo->monto = $monto;
+                                            $cargo->detalle = "PRESTACIÓN REALIZADA: ".$model->descripcion;
+                                            $cargo->validado = 1;
+                                            $cargo->saldo_cuenta = $cargo->ultimoSaldo();
+                                            $cargo->save();    
+                                            $cargo->actualizaSaldosPosteriores(-$monto);
+
+                                            $prestacionMovimiento = new PrestacionGeneraMovimiento;
+                                            $prestacionMovimiento->prestacion_id = $model->id;
+                                            $prestacionMovimiento->movimiento_id = $cargo->id;
+                                            $prestacionMovimiento->save();
+                                        }
+                                    }                                    
                                 }
                             }
                             $this->redirect(array('view','id'=>$model->id));
@@ -337,11 +444,21 @@ class PrestacionController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+            $prestacion = $this->loadModel($id);
+            $movs = PrestacionGeneraMovimiento::model()->findAllByAttributes(array('prestacion_id'=>$prestacion->id));
+            foreach($movs as $mov){
+                $movimiento = $mov->movimiento;
+                if($movimiento->tipo == Tools::MOVIMIENTO_TIPO_CARGO){
+                    $movimiento->actualizaSaldosPosteriores($movimiento->monto);
+                }
+                $mov->delete();
+                $movimiento->delete();
+            }
+            $prestacion->delete();
 
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+            // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+            if(!isset($_GET['ajax']))
+                    $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 
 	/**

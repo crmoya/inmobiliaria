@@ -38,6 +38,13 @@ class Departamento extends CActiveRecord
 		return 'departamento';
 	}
 
+        public function getVigentesDePropiedad($propiedad_id){
+            $criteria = new CDbCriteria();
+            $criteria->join = "join contrato c on c.departamento_id = t.id";
+            $criteria->condition = "c.vigente = 1 and t.propiedad_id = :prop_id";
+            $criteria->params = array(':prop_id'=>$propiedad_id);
+            return $this->findAll($criteria);
+        }
 	/**
 	 * @return array validation rules for model attributes.
 	 */

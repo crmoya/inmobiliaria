@@ -16,9 +16,13 @@ Yii::app()->clientScript->registerScript('refresh', "
         }).done(function(msg){
             $('#saldo').html('$'+msg);
             if(msg >= 0){
+                $('.saldo').removeClass('green');
+                $('.saldo').removeClass('red');
                 $('.saldo').addClass('green');
             }
             else{
+                $('.saldo').removeClass('green');
+                $('.saldo').removeClass('red');
                 $('.saldo').addClass('red');
             }
         });

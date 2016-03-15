@@ -1,18 +1,18 @@
 <?php
-/* @var $this PrestacionController */
-/* @var $model Prestacion */
-
+/* @var $this EgresoController */
+/* @var $model Egreso */
 
 $this->breadcrumbs=array(
-	'Prestaciones'
+	'Listado de Egresos',
 );
+
 $this->menu=array(
-	array('label'=>'Nueva Prestación', 'url'=>array('create')),
+	array('label'=>'Nuevo Egreso', 'url'=>array('create')),
 );
 ?>
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'prestacion-grid',
+	'id'=>'egreso-grid',
 	'dataProvider'=>$model->search(),
         'afterAjaxUpdate' => 'reinstallDatePicker',
 	'filter'=>$model,
@@ -41,16 +41,15 @@ $this->menu=array(
                     true), 
                 ),
 		'monto',
-		'documento',
-		'descripcion',
-                array('name'=>'tipo_prestacion_nombre', 'value'=>'$data->tipoPrestacion->nombre'),
-		array('name'=>'ejecutor_nombre', 'value'=>'$data->ejecutor->nombre'),
+		'concepto',
+		'cta_contable',
+		'nro_cheque',
+		array('name'=>'centro_costo_id','value'=>'$data->centroCosto->nombre'),
 		array(
 			'class'=>'CButtonColumn',
 		),
 	),
 )); 
-
 
 Yii::app()->clientScript->registerScript('re-install-date-picker', "
 function reinstallDatePicker(id, data) {

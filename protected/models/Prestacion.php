@@ -86,7 +86,7 @@ class Prestacion extends CActiveRecord
 			'fecha' => 'Fecha',
 			'monto' => 'Monto',
 			'documento' => 'Documento',
-			'descripcion' => 'Descripcion',
+			'descripcion' => 'Descripción',
 			'tipo_prestacion_id' => 'Tipo Prestación',
 			'ejecutor_id' => 'Maestro',
 			'genera_cargos' => 'Genera Cargos',

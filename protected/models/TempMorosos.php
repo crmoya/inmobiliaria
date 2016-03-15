@@ -31,7 +31,8 @@ class TempMorosos extends CActiveRecord
 
         public function refrescar(){
             $this->deleteAll();
-            $cuentas = CuentaCorriente::model()->findAll();
+            $cuentas = CuentaCorriente::model()->getVigentes();
+
             foreach($cuentas as $cuenta){
                 $saldo = $cuenta->saldoAFecha(date("Y-m-d"));
                 if($saldo<0){

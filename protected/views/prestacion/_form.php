@@ -3,11 +3,6 @@
 /* @var $model Prestacion */
 /* @var $form CActiveForm */
 
-
-$this->breadcrumbs=array(
-    'Nueva Prestación',
-);
-
 ?>
 
 <?php $this->widget('bootstrap.widgets.TbAlert', array(
@@ -95,7 +90,6 @@ $(document).ready(function(e){
                         'id' => 'datepicker_for_fecha',
                         'size' => '10',
                         'maxlength' =>'10',
-                        'value' => date("d/m/Y"),
                         'readonly'=> 'readonly',
                     ),
                     'defaultOptions' => array(  // (#3)
