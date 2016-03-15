@@ -10843,3 +10843,72 @@ REQUEST_URI=/inmobiliaria/index.php/egreso/update/1
 in D:\pega\mvs\inmobiliaria\protected\views\egreso\update.php (19)
 in D:\pega\mvs\inmobiliaria\protected\controllers\EgresoController.php (104)
 in D:\pega\mvs\inmobiliaria\index.php (13)
+2016/03/15 19:36:53 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'El sistema no ha podido encontrar la acción "listado" solicitada.' in D:\pega\yii\framework\web\CController.php:483
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(270): CController->missingAction('listado')
+#1 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('listado')
+#2 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('egreso/listado')
+#3 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#4 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/inmobiliaria/index.php/egreso/listado
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/egreso/admin
+---
+2016/03/15 19:37:58 [error] [exception.CException] exception 'CException' with message 'EgresoController no ha podido encontrar la vista "listado" solicitada.' in D:\pega\yii\framework\web\CController.php:878
+Stack trace:
+#0 D:\pega\yii\framework\web\CController.php(782): CController->renderPartial('listado', Array, true)
+#1 D:\pega\mvs\inmobiliaria\protected\controllers\EgresoController.php(157): CController->render('listado', Array)
+#2 D:\pega\yii\framework\web\actions\CInlineAction.php(49): EgresoController->actionListado()
+#3 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#4 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CController->runAction(Object(CInlineAction))
+#5 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#6 D:\pega\yii\framework\web\CController.php(1145): CFilter->filter(Object(CFilterChain))
+#7 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CController->filterAccessControl(Object(CFilterChain))
+#8 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter(Object(CFilterChain))
+#9 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#10 D:\pega\yii\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#11 D:\pega\yii\framework\web\CWebApplication.php(282): CController->run('listado')
+#12 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('egreso/listado')
+#13 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#14 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#15 {main}
+REQUEST_URI=/inmobiliaria/index.php/egreso/listado
+HTTP_REFERER=http://localhost:81/inmobiliaria/index.php/egreso/admin
+---
+2016/03/15 19:50:47 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'No es posible resolver la solicitud "gii"' in D:\pega\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('gii')
+#1 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#2 D:\pega\mvs\inmobiliaria\index.php(13): CApplication->run()
+#3 {main}
+REQUEST_URI=/inmobiliaria/index.php/gii
+---
+2016/03/15 20:10:57 [error] [php] Missing argument 2 for CHtml::listData(), called in D:\pega\mvs\inmobiliaria\protected\views\centroCosto\_form.php on line 32 and defined (D:\pega\yii\framework\web\helpers\CHtml.php:2270)
+Stack trace:
+#0 D:\pega\yii\framework\web\CBaseController.php(95): CentroCostoController->renderInternal()
+#1 D:\pega\yii\framework\web\CController.php(869): CentroCostoController->renderFile()
+#2 D:\pega\mvs\inmobiliaria\protected\views\centroCosto\update.php(18): CentroCostoController->renderPartial()
+#3 D:\pega\yii\framework\web\CBaseController.php(126): require()
+#4 D:\pega\yii\framework\web\CBaseController.php(95): CentroCostoController->renderInternal()
+#5 D:\pega\yii\framework\web\CController.php(869): CentroCostoController->renderFile()
+#6 D:\pega\yii\framework\web\CController.php(782): CentroCostoController->renderPartial()
+#7 D:\pega\mvs\inmobiliaria\protected\controllers\CentroCostoController.php(95): CentroCostoController->render()
+#8 unknown(0): CentroCostoController->actionUpdate()
+#9 D:\pega\yii\framework\web\actions\CAction.php(109): ReflectionMethod->invokeArgs()
+#10 D:\pega\yii\framework\web\actions\CInlineAction.php(47): CInlineAction->runWithParamsInternal()
+#11 D:\pega\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#12 D:\pega\yii\framework\web\filters\CFilterChain.php(133): CentroCostoController->runAction()
+#13 D:\pega\yii\framework\web\filters\CFilter.php(40): CFilterChain->run()
+#14 D:\pega\yii\framework\web\CController.php(1145): CAccessControlFilter->filter()
+#15 D:\pega\yii\framework\web\filters\CInlineFilter.php(58): CentroCostoController->filterAccessControl()
+#16 D:\pega\yii\framework\web\filters\CFilterChain.php(130): CInlineFilter->filter()
+#17 D:\pega\yii\framework\web\CController.php(291): CFilterChain->run()
+#18 D:\pega\yii\framework\web\CController.php(265): CentroCostoController->runActionWithFilters()
+#19 D:\pega\yii\framework\web\CWebApplication.php(282): CentroCostoController->run()
+#20 D:\pega\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#21 D:\pega\yii\framework\base\CApplication.php(184): CWebApplication->processRequest()
+#22 D:\pega\mvs\inmobiliaria\index.php(13): CWebApplication->run()
+REQUEST_URI=/inmobiliaria/index.php/centroCosto/update/1
+in D:\pega\mvs\inmobiliaria\protected\views\centroCosto\_form.php (32)
+in D:\pega\mvs\inmobiliaria\protected\views\centroCosto\update.php (18)
+in D:\pega\mvs\inmobiliaria\protected\controllers\CentroCostoController.php (95)

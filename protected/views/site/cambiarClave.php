@@ -16,31 +16,31 @@
 		'validateOnSubmit'=>true,
 	),
 )); ?>
-
-	<p class="note">Campos con <span class="required">*</span> son requeridos.</p>
-
-	<div class="row">
+    <div class="span10">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'clave'); ?>
 		<?php echo $form->passwordField($model,'clave'); ?>
 		<?php echo $form->error($model,'clave'); ?>
 	</div>
-
-	<div class="row">
+        <div class="clearfix"></div>
+	<div class="span2">
 		<?php echo $form->labelEx($model,'nueva'); ?>
 		<?php echo $form->passwordField($model,'nueva'); ?>
 		<?php echo $form->error($model,'nueva'); ?>
 	</div>
-	
-	<div class="row">
+	<div class="clearfix"></div>
+	<div class="span2">
 		<?php echo $form->labelEx($model,'repita'); ?>
 		<?php echo $form->passwordField($model,'repita'); ?>
 		<?php echo $form->error($model,'repita'); ?>
 	</div>
+        <div class="clearfix"></div>
 
-	<div class="row buttons">
-		<?php echo CHtml::submitButton('Cambiar Clave'); ?>
+	<div class="row buttons span2">
+		<?php echo CHtml::submitButton('Cambiar Clave',array('class'=>'btn')); ?>
 	</div>
-
+        <br/><br/>
+    </div>
 <?php $this->endWidget(); 
 ?>
 

@@ -18,6 +18,15 @@ $this->menu=array(
 	'columns'=>array(
 		'id',
 		'nombre',
+                array(
+                    'name'=>'carga_a',
+                    'value'=>'Tools::backCargaA($data->carga_a)',
+                    'filter'=>CHtml::listData(array(
+                        array('id'=>'1','nombre'=>'PROPIEDAD'),
+                        array('id'=>'2','nombre'=>'DEPARTAMENTO'),
+                        array('id'=>'3','nombre'=>'INMOBILIARIA'),
+                    ),'id','nombre'),
+                ),
 		array(
 			'class'=>'CButtonColumn',
 		),

@@ -1,21 +1,25 @@
 <?php
 
 /**
- * This is the model class for table "centro_costo".
+ * This is the model class for table "egreso_departamento".
  *
- * The followings are the available columns in table 'centro_costo':
+ * The followings are the available columns in table 'egreso_departamento':
  * @property integer $id
- * @property string $nombre
- * @property integer $carga_a
+ * @property integer $departamento_id
+ * @property integer $egreso_id
+ *
+ * The followings are the available model relations:
+ * @property Departamento $departamento
+ * @property Egreso $egreso
  */
-class CentroCosto extends CActiveRecord
+class EgresoDepartamento extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'centro_costo';
+		return 'egreso_departamento';
 	}
 
 	/**
@@ -26,12 +30,11 @@ class CentroCosto extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nombre', 'required'),
-                        array('carga_a', 'numerical', 'integerOnly'=>true),
-			array('nombre', 'length', 'max'=>100),
+			array('departamento_id, egreso_id', 'required'),
+			array('departamento_id, egreso_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nombre,carga_a', 'safe', 'on'=>'search'),
+			array('id, departamento_id, egreso_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -43,6 +46,8 @@ class CentroCosto extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'departamento' => array(self::BELONGS_TO, 'Departamento', 'departamento_id'),
+			'egreso' => array(self::BELONGS_TO, 'Egreso', 'egreso_id'),
 		);
 	}
 
@@ -53,8 +58,8 @@ class CentroCosto extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'nombre' => 'Nombre',
-                        'carga_a' => 'Aplica a',
+			'departamento_id' => 'Departamento',
+			'egreso_id' => 'Egreso',
 		);
 	}
 
@@ -77,8 +82,8 @@ class CentroCosto extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('nombre',$this->nombre,true);
-                $criteria->compare('carga_a',$this->carga_a,true);
+		$criteria->compare('departamento_id',$this->departamento_id);
+		$criteria->compare('egreso_id',$this->egreso_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -89,7 +94,7 @@ class CentroCosto extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return CentroCosto the static model class
+	 * @return EgresoDepartamento the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

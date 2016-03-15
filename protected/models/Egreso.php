@@ -20,6 +20,8 @@
  */
 class Egreso extends CActiveRecord
 {
+    public $propiedad_id;
+    public $departamento_id;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -37,7 +39,7 @@ class Egreso extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('fecha, monto, concepto, respaldo, centro_costo_id', 'required'),
-			array('monto, respaldo, centro_costo_id', 'numerical', 'integerOnly'=>true),
+			array('monto, respaldo,propiedad_id,departamento_id, centro_costo_id', 'numerical', 'integerOnly'=>true),
 			array('concepto', 'length', 'max'=>200),
 			array('cta_contable, nro_cheque, proveedor, nro_documento', 'length', 'max'=>100),
 			// The following rule is used by search().
@@ -79,6 +81,8 @@ class Egreso extends CActiveRecord
 			'centro_costo_id' => 'Centro de Costo',
 			'proveedor' => 'Proveedor',
 			'nro_documento' => 'N° Documento',
+                        'propiedad_id' => 'Propiedad',
+                        'departamento_id' => 'Departamento',
 		);
 	}
 

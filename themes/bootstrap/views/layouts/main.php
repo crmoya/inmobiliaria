@@ -7,8 +7,8 @@
 
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/styles.css" />
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
-        <script src="<?php echo Yii::app()->baseUrl."/js/swal/sweetalert.min.js"?>"></script>
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->baseUrl; ?>/js/swal/sweetalert.css" />
+        <script src="<?php echo Yii::app()->theme->baseUrl."/js/swal/sweetalert.min.js"?>"></script>
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/js/swal/sweetalert.css" />
         <?php Yii::app()->bootstrap->register(); ?>
     </head>
 

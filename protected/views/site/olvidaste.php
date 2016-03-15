@@ -8,7 +8,7 @@
 
 <?php endif; ?>
 
-<div class="form">
+<div class="span10">
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'login-form',
 	'enableClientValidation'=>true,
@@ -17,15 +17,16 @@
 	),
 )); ?>
 
-        <div class="row">
+        <div class="span2">
 		<?php echo $form->labelEx($model,'user'); ?>
 		<?php echo $form->textField($model,'user'); ?>
 		<?php echo $form->error($model,'user'); ?>
 	</div>
-        
-	<div class="row buttons">
-		<?php echo CHtml::submitButton('Enviar Clave'); ?>
+        <div class="clearfix"></div>
+	<div class="row buttons span2">
+		<?php echo CHtml::submitButton('Enviar Clave',array('class'=>'btn')); ?>
 	</div>
+        <br/><br/>
 
 <?php $this->endWidget(); 
 ?>

@@ -17,6 +17,25 @@ class Tools{
     const DETALLE_PRIMER_CARGO = "CARGO PRIMER MES";
     
     
+    public static function backCargaA($valor){
+        $dev = "";
+        switch ($valor) {
+            case 1:
+                $dev = "Propiedad";
+                break;
+            case 2:
+                $dev = "Departamento";
+                break;
+            case 3:
+                $dev = "Inmobiliaria";
+                break;
+
+            default:
+                break;
+        }
+        return $dev;
+    }
+        
     public static function arregloMeses($mesInicio,$agnoInicio,$mesFin,$agnoFin){
         $meses = array();
         $mesTope = 12;

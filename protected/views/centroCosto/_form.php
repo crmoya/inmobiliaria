@@ -19,7 +19,18 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'nombre'); ?>
-		<?php echo $form->textField($model,'nombre',array('size'=>60,'maxlength'=>100)); ?>
+		<?php echo $form->textField($model,'nombre',array('size'=>100,'maxlength'=>100,'style'=>'width:300px !important;')); ?>
+		<?php echo $form->error($model,'nombre'); ?>
+	</div>
+    
+        <div class="row">
+		<?php echo $form->labelEx($model,'carga_a'); ?>
+		<?php echo $form->dropDownList($model,'carga_a',CHtml::listData(array(
+                            array('id'=>'1','nombre'=>'Propiedad'),
+                            array('id'=>'2','nombre'=>'Departamento'),
+                            array('id'=>'3','nombre'=>'Inmobiliaria'),
+                        ),'id','nombre')
+                    ); ?>
 		<?php echo $form->error($model,'nombre'); ?>
 	</div>
 

@@ -21,5 +21,8 @@ $this->menu=array(
 	'attributes'=>array(
 		'id',
 		'nombre',
+                array('name'=>'carga_a','value'=>Tools::backCargaA($model->carga_a)),
 	),
-)); ?>
+)); 
+
+?>

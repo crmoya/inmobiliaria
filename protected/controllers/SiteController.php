@@ -171,7 +171,7 @@ class SiteController extends Controller
                         . "Su nueva clave es ".$rand
                         . "\nPor favor cámbiela cuanto antes desde Mi Cuenta / Cambiar mi Clave.")){
                         
-                        $usuario->clave = sha1($rand);
+                        $usuario->clave = CPasswordHelper::hashPassword($rand);
                         $usuario->save();
                         Yii::app()->user->setFlash('profileMessage','Su nueva clave ha sido enviada a su correo.');
                         $this->refresh();

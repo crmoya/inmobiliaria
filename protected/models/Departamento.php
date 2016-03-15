@@ -235,7 +235,7 @@ class Departamento extends CActiveRecord
         {
             $departamentos = Departamento::model()->findAll(array(
                 'join'=>'LEFT JOIN contrato c ON t.id = c.departamento_id',
-                'condition'=>"c.id IS NOT NULL and propiedad_id = '$propiedad_id'",
+                'condition'=>"c.id IS NOT NULL and propiedad_id = '$propiedad_id' and c.vigente = 1",
                 'order'=>'propiedad_id'));
 	    return $departamentos;
         }

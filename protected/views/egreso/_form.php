@@ -85,18 +85,6 @@
 		<?php echo $form->error($model,'nro_cheque'); ?>
 	</div>
 
-        <div class="span2">
-		<?php echo $form->labelEx($model,'centro_costo_id'); ?>
-		<?php echo $form->dropDownList(
-                    $model,
-                    'centro_costo_id',
-                    CHtml::listData(CentroCosto::model()->findAll(), 'id', 'nombre'),
-                    array('prompt'=>'Seleccione Centro de Costo',)
-                ); 
-		?>
-		<?php echo $form->error($model,'centro_costo_id'); ?>
-	</div>
-<div class="clearfix"></div>
 	<div class="span2">
 		<?php echo $form->labelEx($model,'proveedor'); ?>
 		<?php echo $form->textField($model,'proveedor',array('size'=>60,'maxlength'=>100)); ?>
@@ -108,8 +96,53 @@
 		<?php echo $form->textField($model,'nro_documento',array('size'=>60,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'nro_documento'); ?>
 	</div>
+<div class="clearfix"></div>
+        <div class="span3">
+		<?php echo $form->labelEx($model,'centro_costo_id'); ?>
+		<?php echo $form->dropDownList(
+                    $model,
+                    'centro_costo_id',
+                    CHtml::listData(CentroCosto::model()->findAll(), 'id', 'nombre'),
+                    array('prompt'=>'Seleccione Centro de Costo',)
+                ); 
+		?>
+		<?php echo $form->error($model,'centro_costo_id'); ?>
+	</div>
+
+        <div class="span3" id="div_propiedad">
+		<?php echo $form->labelEx($model,'propiedad_id'); ?>
+		<?php echo $form->dropDownList(
+                    $model,
+                    'propiedad_id',
+                    CHtml::listData(Propiedad::model()->getDeUsuario(Yii::app()->user->id), 'id', 'nombre'),
+                    array(  
+                        'prompt'=>'Seleccione Propiedad',
+                        'id'=>'propiedad_id',
+                        'ajax' => array(
+                            'type'=>'POST', 
+                            'url'=>CController::createUrl('//propiedad/getDepartamentos'), 
+                            'update'=>'#departamento_id', 
+                        ),
+                    )
+                ); 
+		?>
+		<?php echo $form->error($model,'propiedad_id'); ?>
+	</div>
+
+        <div class="span3" id="div_departamento">
+            <?php echo $form->labelEx($model, 'departamento_id'); ?>
+            <?php echo $form->dropDownList($model,'departamento_id',array(),
+                array(
+                    'prompt'=>'Seleccione un departamento',
+                    'id'=>'departamento_id',
+                )
+            ); ?>
+            <?php echo $form->error($model, 'departamento_id'); ?>
+	</div>
+
     <div class="clearfix"></div>
-	<div class="row buttons span3">
+
+        <div class="row buttons span3">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar',array('class'=>'btn')); ?>
 	</div>
     <br>
@@ -117,3 +150,9 @@
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
+<script>
+$(document).ready(function(e){
+    $('#div_propiedad').hide();
+    $('#div_departamento').hide();
+});
+</script>
