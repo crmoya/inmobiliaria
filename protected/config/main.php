@@ -95,10 +95,10 @@ return array(
             'connectionID' => 'db',
         ),
         'db' => array(
-            'connectionString' => 'mysql:host=localhost;dbname=inmobiliaria',
+            'connectionString' => 'mysql:host=localhost;dbname=inmobil1_bd',
             'emulatePrepare' => true,
-            'username' => 'root',
-            'password' => '',
+            'username' => 'inmobil1_user',
+            'password' => '5TP{zRSEoR*J',
             'charset' => 'utf8',
         ),
         'errorHandler' => array(
