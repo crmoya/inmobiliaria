@@ -9,12 +9,11 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'Listar Egreso', 'url'=>array('index')),
+	array('label'=>'Listar Egreso', 'url'=>array('admin')),
 	array('label'=>'Crear Egreso', 'url'=>array('create')),
 	array('label'=>'Ver Egreso', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Administrar Egresos', 'url'=>array('admin')),
 );
 ?>
 <div class="span12">
-<?php $this->renderPartial('_form', array('model'=>$model,'conceptos'=>$conceptos)); ?>
+<?php $this->renderPartial('_form', array('model'=>$model,'conceptos'=>$conceptos,'departamentos'=>$departamentos)); ?>
 </div>

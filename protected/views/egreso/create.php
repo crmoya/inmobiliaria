@@ -8,5 +8,5 @@ $this->breadcrumbs=array(
 ?>
 <div class="span12">
 
-<?php $this->renderPartial('_form', array('model'=>$model,'conceptos'=>$conceptos)); ?>
+<?php $this->renderPartial('_form', array('model'=>$model,'conceptos'=>$conceptos,'departamentos'=>$departamentos)); ?>
 </div>

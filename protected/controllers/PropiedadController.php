@@ -92,14 +92,7 @@ class PropiedadController extends Controller {
             }
         }
         
-        if(isset($_POST['Egreso']['propiedad_id'])){
-            $propiedad_id = $_POST['Egreso']['propiedad_id'];
-            $departamentos = Departamento::model()->findAllByAttributes(array('propiedad_id'=>$propiedad_id));
-            echo "<option value='-1'>Seleccione Departamento</option>";
-            foreach($departamentos as $departamento){
-                echo "<option value=".$departamento->id.">".$departamento->numero."</option>";
-            }
-        }
+        
     }
     
     public function actionGetDepartamentosAll(){
@@ -107,6 +100,16 @@ class PropiedadController extends Controller {
             $propiedad_id = $_POST['Mueble']['propiedad_id'];
             $departamentos = Departamento::model()->findAllByAttributes(array('propiedad_id'=>$propiedad_id));
             echo "<option value=''>Seleccione un Departamento</option>";
+            foreach($departamentos as $departamento){
+                echo "<option value=".$departamento->id.">".$departamento->numero."</option>";
+            }
+        }
+        
+        if(isset($_POST['Egreso']['propiedad_id'])){
+            $propiedad_id = $_POST['Egreso']['propiedad_id'];
+            $departamentos = Departamento::model()->findAllByAttributes(array('propiedad_id'=>$propiedad_id));
+            echo "<option value=''>Seleccione Departamento</option>";
+            echo "<option value='-1'>Todos de esta Propiedad</option>";
             foreach($departamentos as $departamento){
                 echo "<option value=".$departamento->id.">".$departamento->numero."</option>";
             }

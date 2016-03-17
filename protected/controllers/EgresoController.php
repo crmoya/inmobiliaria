@@ -163,9 +163,12 @@ class EgresoController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
+            $departamentos = Departamento::model()->searchEgreso($id);
+            
+            $this->render('view',array(
+                    'model'=>$this->loadModel($id),
+                'departamentos'=>$departamentos,
+            ));
 	}
 
 	/**
@@ -174,19 +177,64 @@ class EgresoController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Egreso;
+            	$model=new Egreso;
                 $model->fecha = date('d/m/Y');
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['Egreso']))
 		{
-			$model->attributes=$_POST['Egreso'];
-                        $model->fecha = Tools::backFecha($model->fecha);
-			if($model->save()){
-                            $this->redirect(array('admin'));
+                    $model->attributes=$_POST['Egreso'];
+                    $model->fecha = Tools::fixFecha($model->fecha);
+                    $propiedad = null;
+                    if($model->centroCosto != null){
+                        $ok = $model->validate();
+                        if($model->centroCosto->carga_a == '1'){
+                            $propiedad = Propiedad::model()->findByPk($model->propiedad_id);
+                            if($propiedad == null){
+                                $model->addError("propiedad_id", "Propiedad no puede ser nulo.");
+                                $ok = false;
+                            }
                         }
-				
+                        
+                        if($ok){
+                            if($model->save()){
+                                if($model->centroCosto->carga_a == '1'){
+                                   $egPro = new EgresoPropiedad;
+                                   $egPro->egreso_id = $model->id;
+                                   $egPro->propiedad_id = $model->propiedad_id;
+                                   $egPro->save();
+                                }
+                                if($model->centroCosto->carga_a == '2'){
+                                    if(isset($_POST['chbDepartamentoId'])){
+                                        $cant_deptos = count($_POST['chbDepartamentoId']);
+                                        if($cant_deptos > 0){
+                                            foreach($_POST['chbDepartamentoId'] as $i=>$departamento){
+                                                $egDpto = new EgresoDepartamento();
+                                                $egDpto->departamento_id = $departamento;
+                                                $egDpto->egreso_id = $model->id;
+                                                if($egDpto->validate()){
+                                                    $egDpto->save();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                $this->redirect(array('admin'));
+                            }
+                            else{
+                                Yii::app()->user->setFlash('error',CHtml::errorSummary($model));
+                            }
+                        }
+                        else{
+                            Yii::app()->user->setFlash('error',CHtml::errorSummary($model));
+                        }
+                        
+                    }
+                    else{
+                        Yii::app()->user->setFlash('error','ERROR: Centro de costo no puede ser nulo.');
+                    }
+                    $model->fecha = Tools::backFecha($model->fecha);
 		}
 
                 $conceptos = ConceptoPredefinido::model()->findAll();
@@ -194,9 +242,16 @@ class EgresoController extends Controller
                 foreach($conceptos as $concepto){
                     $cptos[] = $concepto->nombre;
                 }
+                
+                $deptos=new Departamento('search');
+                $deptos->unsetAttributes();  
+                if(isset($_GET['Departamento']))
+                    $deptos->attributes=$_GET['Departamento'];
+                
 		$this->render('create',array(
 			'model'=>$model,
                         'conceptos'=>$cptos,
+                        'departamentos'=>$deptos,
 		));
 	}
 
@@ -215,19 +270,73 @@ class EgresoController extends Controller
 
 		if(isset($_POST['Egreso']))
 		{
-			$model->attributes=$_POST['Egreso'];
-                        $model->fecha = Tools::fixFecha($model->fecha);
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+                    $model->attributes=$_POST['Egreso'];
+                    $model->fecha = Tools::fixFecha($model->fecha);
+                    $propiedad = null;
+                    if($model->centroCosto != null){
+                        $ok = $model->validate();
+                        if($model->centroCosto->carga_a == '1'){
+                            $propiedad = Propiedad::model()->findByPk($model->propiedad_id);
+                            if($propiedad == null){
+                                $model->addError("propiedad_id", "Propiedad no puede ser nulo.");
+                                $ok = false;
+                            }
+                        }
+                        
+                        if($ok){
+                            if($model->save()){
+                                EgresoPropiedad::model()->deleteAllByAttributes(array('egreso_id'=>$model->id));
+                                if($model->centroCosto->carga_a == '1'){
+                                   $egPro = new EgresoPropiedad;
+                                   $egPro->egreso_id = $model->id;
+                                   $egPro->propiedad_id = $model->propiedad_id;
+                                   $egPro->save();
+                                }
+                                if($model->centroCosto->carga_a == '2'){
+                                    if(isset($_POST['chbDepartamentoId'])){
+                                        $cant_deptos = count($_POST['chbDepartamentoId']);
+                                        if($cant_deptos > 0){
+                                            EgresoDepartamento::model()->deleteAllByAttributes(array('egreso_id'=>$model->id));
+                                            foreach($_POST['chbDepartamentoId'] as $i=>$departamento){
+                                                $egDpto = new EgresoDepartamento();
+                                                $egDpto->departamento_id = $departamento;
+                                                $egDpto->egreso_id = $model->id;
+                                                if($egDpto->validate()){
+                                                    $egDpto->save();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                $this->redirect(array('admin'));
+                            }
+                            else{
+                                Yii::app()->user->setFlash('error',CHtml::errorSummary($model));
+                            }
+                        }
+                        else{
+                            Yii::app()->user->setFlash('error',CHtml::errorSummary($model));
+                        }
+                        
+                    }
+                    else{
+                        Yii::app()->user->setFlash('error','ERROR: Centro de costo no puede ser nulo.');
+                    }
+                    $model->fecha = Tools::backFecha($model->fecha);
 		}
                 $conceptos = ConceptoPredefinido::model()->findAll();
                 $cptos = array();
                 foreach($conceptos as $concepto){
                     $cptos[] = $concepto->nombre;
                 }
+                $deptos=new Departamento('search');
+                $deptos->unsetAttributes();  
+                if(isset($_GET['Departamento']))
+                    $deptos->attributes=$_GET['Departamento'];
 		$this->render('update',array(
 			'model'=>$model,
                         'conceptos'=>$cptos,
+                        'departamentos'=>$deptos,
 		));
 	}
 

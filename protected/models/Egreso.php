@@ -30,6 +30,7 @@ class Egreso extends CActiveRecord
 		return 'egreso';
 	}
 
+        
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -38,7 +39,7 @@ class Egreso extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('fecha, monto, concepto, respaldo, centro_costo_id', 'required'),
+			array('fecha, monto, concepto, centro_costo_id', 'required'),
 			array('monto, respaldo,propiedad_id,departamento_id, centro_costo_id', 'numerical', 'integerOnly'=>true),
 			array('concepto', 'length', 'max'=>200),
 			array('cta_contable, nro_cheque, proveedor, nro_documento', 'length', 'max'=>100),
@@ -61,7 +62,7 @@ class Egreso extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'centroCosto' => array(self::BELONGS_TO, 'CentroCosto', 'centro_costo_id'),
+                    'centroCosto' => array(self::BELONGS_TO, 'CentroCosto', 'centro_costo_id'),
 		);
 	}
 

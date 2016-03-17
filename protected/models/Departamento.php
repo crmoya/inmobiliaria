@@ -74,6 +74,7 @@ class Departamento extends CActiveRecord
 			'contrato' => array(self::HAS_ONE, 'Contrato', 'departamento_id'),
 			'propiedad' => array(self::BELONGS_TO, 'Propiedad', 'propiedad_id'),
                         'prestacionADepartamento' => array(self::HAS_MANY, 'PrestacionADepartamento', 'departamento_id'),
+                        'egresoDepartamento' => array(self::HAS_MANY, 'EgresoDepartamento', 'departamento_id'),
 		);
 	}
 
@@ -176,6 +177,28 @@ class Departamento extends CActiveRecord
                         ),
 		));
 	}
+        
+        public function searchEgreso($id)
+	{
+            $criteria=new CDbCriteria;
+            $criteria->with=array('propiedad','egresoDepartamento');	
+            $criteria->compare('egresoDepartamento.egreso_id',$id);
+
+            return new CActiveDataProvider($this, array(
+                    'criteria'=>$criteria,
+                    'pagination'=>false,
+                    'sort'=>array(
+                        'attributes'=>array(
+                            'propiedad_nombre'=>array(
+                                'asc'=>'propiedad.nombre',
+                                'desc'=>'propiedad.nombre DESC',
+                            ),
+                            '*',
+                        ),
+                    ),
+            ));
+	}
+        
         
         public function searchPrestacion($id)
 	{
