@@ -38,7 +38,7 @@ class ClienteController extends Controller
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('cartaAviso','view','admin','create','update','delete','exportarXLS','delete'),
-				'roles'=>array('superusuario'),
+				'roles'=>array('superusuario','propietario'),
 			),
                         array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('admin'),
