@@ -64,7 +64,7 @@ class ContratoController extends Controller {
         $contrato->reajusta = $contrato->reajusta==1?0:1;
         $contrato->propiedad_id = $contrato->departamento->propiedad_id;
         $contrato->save();
-        $this->redirect(CController::createUrl('//contrato/admin'));
+        $this->redirect(CController::createUrl('//contrato/adminAReajustar'));
     }
     
     public function actionFiniquitar($id){

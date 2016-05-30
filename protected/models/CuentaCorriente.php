@@ -86,11 +86,12 @@ class CuentaCorriente extends CActiveRecord
         
         
         public function idMovUltimoSaldo0(){
-            $movimientos = Movimiento::model()->findAll(array(
-                'condition'=>':cuenta = cuenta_corriente_id and saldo_cuenta = 0',
-                'params'=>array(':cuenta'=>$this->id),
-                'order'=>'fecha DESC,id DESC',
-            ));
+            $movimientos = Movimiento::model()->findAll(
+                array(
+                    'condition'=>':cuenta = cuenta_corriente_id and saldo_cuenta = 0 and validado = 1',
+                    'params'=>array(':cuenta'=>$this->id),
+                    'order'=>'fecha DESC,id DESC',
+                ));
             if(count($movimientos)>0){
                 return $movimientos[0]->id;
             }
@@ -98,10 +99,12 @@ class CuentaCorriente extends CActiveRecord
         }
         
         public function fechaUltimaMora(){
-            $movimientos = Movimiento::model()->findAllByAttributes(
-                array('cuenta_corriente_id'=>$this->id),
-                array('order'=>'fecha DESC,id DESC')
-            );
+            $movimientos = Movimiento::model()->findAll(
+                array(
+                    'condition'=>':cuenta = cuenta_corriente_id and validado = 1',
+                    'params'=>array(':cuenta'=>$this->id),
+                    'order'=>'fecha DESC,id DESC',
+                ));
             $mov = null;
             foreach($movimientos as $movimiento){
                 if($movimiento->saldo_cuenta < 0){
@@ -143,7 +146,7 @@ class CuentaCorriente extends CActiveRecord
             $fHasta = $proxAgno."-".str_pad($proxMes,2,"0",STR_PAD_LEFT)."-01";
             $movimientos = Movimiento::model()->findAll(
                 array(
-                    'condition'=>'fecha >= :fDesde and fecha < :fHasta and cuenta_corriente_id = :cta',
+                    'condition'=>'fecha >= :fDesde and fecha < :fHasta and cuenta_corriente_id = :cta and validado = 1',
                     'params'=>array(':fDesde'=>$fDesde,':fHasta'=>$fHasta,':cta'=>$this->id),
                 ));
             $abonos = 0;
@@ -171,7 +174,7 @@ class CuentaCorriente extends CActiveRecord
             $fHasta = $proxAgno."-".str_pad($proxMes,2,"0",STR_PAD_LEFT)."-01";
             $movimientos = Movimiento::model()->findAll(
                 array(
-                    'condition'=>'fecha >= :fDesde and fecha < :fHasta and cuenta_corriente_id = :cta',
+                    'condition'=>'fecha >= :fDesde and fecha < :fHasta and cuenta_corriente_id = :cta and validado = 1',
                     'params'=>array(':fDesde'=>$fDesde,':fHasta'=>$fHasta,':cta'=>$this->id),
                 ));
             return $movimientos;

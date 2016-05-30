@@ -185,7 +185,8 @@ $(document).ready(function(e){
             $(this).children().each(function(e){
                 if(i<3){
                     if(i == 1){
-                        total+=parseInt($(this).html());
+                        var valor = $(this).html().replace(/\./g, '');
+                        total+=parseInt(valor);
                     }
                     tr+= '<td class="tdLight">'+$(this).html()+'</td>';
                     i++;
@@ -197,7 +198,7 @@ $(document).ready(function(e){
             tr += '</tr>';
             $('#pagos').append(tr); 
         });
-        $('#pagos').append('<tr><td><b>Total</b></td><td colspan="2">'+total+'</td></tr></tbody>');
+        $('#pagos').append('<tr><td><b>Total</b></td><td colspan="2" class="tdLight">'+format(total)+'</td></tr></tbody>');
         $.ajax({
             type: "POST",
             url: '<?php echo CController::createUrl('//cuentaCorriente/send');?>',
@@ -216,7 +217,8 @@ $(document).ready(function(e){
             $(this).children().each(function(e){
                 if(i<3){
                     if(i == 1){
-                        total+=parseInt($(this).html());
+                        var valor = $(this).html().replace(/\./g, '');
+                        total+=parseInt(valor);
                     }
                     tr+= '<td class="tdLight">'+$(this).html()+'</td>';
                     i++;
@@ -228,7 +230,7 @@ $(document).ready(function(e){
             tr += '</tr>';
             $('#pagos').append(tr); 
         });
-        $('#pagos').append('<tr><td><b>Total</b></td><td colspan="2">'+total+'</td></tr></tbody>');
+        $('#pagos').append('<tr><td><b>Total</b></td><td colspan="2">'+format(total)+'</td></tr></tbody>');
         window.print();
     });
     $('#agregar').click(function(e){
@@ -248,7 +250,7 @@ $(document).ready(function(e){
             }).done(function( msg ) {
                 var id = msg;
                 if(id > 0){
-                    var abono = "<tr id='mov"+id+"'><td>"+detalle+"</td><td>"+format(monto)+"</td><td>"+formatPago(formaPago)+"</td><td><img class='delete' src='<?php echo Yii::app()->baseUrl.'/images/eliminar.png';?>' mov='"+id+"'/></td></tr>";
+                    var abono = "<tr id='mov"+id+"'><td>"+detalle+"</td><td class='tdLight'>"+format(monto)+"</td><td>"+formatPago(formaPago)+"</td><td><img class='delete' src='<?php echo Yii::app()->baseUrl.'/images/eliminar.png';?>' mov='"+id+"'/></td></tr>";
                     $('#abonos').append(abono);
                 }
                 else{
@@ -318,6 +320,7 @@ $(document).ready(function(e){
         }
         .tdLight{
             border:1px solid silver;
+            text-align: right;
         }
     }
 </style>

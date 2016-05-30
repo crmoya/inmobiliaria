@@ -62,6 +62,20 @@ $(document).ready(function(e){
                 array('name'=>'actual','value'=>'number_format($data->simulacionReajuste["actual"]->monto_renta,0,",",".")','filter'=>false),
                 array('name'=>'futuro','value'=>'number_format($data->simulacionReajuste["nuevo"]->monto_renta,0,",",".")','filter'=>false),
                 array(
+			'class'=>'CustomCButtonColumn',
+                        'visible'=>Yii::app()->user->rol == 'propietario',
+                        'template'=>'{reajusta}',
+                        'header'=>'¿Debe Reajustar?',
+                        'buttons'=>array(
+                            'reajusta'=>array(
+                               'label'=>'Hacer que este contrato reajuste/no reajuste',
+                               'imageUrl'=>Yii::app()->baseUrl.'/images/pesoVerde.png',
+                               'url'=>'Yii::app()->createUrl("//contrato/reajusta", array("id"=>$data->id))',
+                            ),
+                            
+                        ),
+		),
+                array(
 			'class'=>'CButtonColumn',
                         'visible'=>Yii::app()->user->rol == 'propietario',
                         'template'=>'{montos}',

@@ -63,6 +63,7 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
+    <div class="span12">
 	<?php echo $form->errorSummary($model); ?>
         <?php
         $nombre = "";
@@ -80,61 +81,64 @@
         }
         ?>
         
-        <div class="row">
+        <div class="span2">
             <?php echo $form->labelEx($model,'rut'); ?>
             <?php echo $form->textField($model,'rut',array('size'=>11,'maxlength'=>11,$readonly=>$readonly)); ?>
             <?php echo $form->error($model,'rut'); ?><div class="error_rutcliente"></div>
 	</div>
         
-        <div class="row">
+        <div class="span2">
              <?php echo $form->labelEx($model,'nombre'); ?>
              <?php echo $form->textField($model,'nombre',array('size'=>60,'maxlength'=>100,'value'=>$nombre)); ?>
              <?php echo $form->error($model,'nombre'); ?>
 	</div>
         
-        <div class="row">
+        <div class="span2">
             <?php echo $form->labelEx($model,'apellido'); ?>
             <?php echo $form->textField($model,'apellido',array('size'=>60,'maxlength'=>100,'value'=>$apellido)); ?>
             <?php echo $form->error($model,'apellido'); ?>
 	</div>
 
-	<div class="row">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'direccion_alternativa'); ?>
 		<?php echo $form->textField($model,'direccion_alternativa',array('size'=>60,'maxlength'=>200)); ?>
 		<?php echo $form->error($model,'direccion_alternativa'); ?>
 	</div>
 
-	<div class="row">
+        <div class="clearfix"></div>
+	<div class="span2">
 		<?php echo $form->labelEx($model,'telefono'); ?>
 		<?php echo $form->textField($model,'telefono',array('size'=>20,'maxlength'=>20)); ?>
 		<?php echo $form->error($model,'telefono'); ?>
 	</div>
 
-	<div class="row">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'email'); ?>
 		<?php echo $form->textField($model,'email',array('size'=>60,'maxlength'=>100,'value'=>$email)); ?>
 		<?php echo $form->error($model,'email'); ?><div class="error_email"></div>
 	</div>
 
-	<div class="row">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'ocupacion'); ?>
 		<?php echo $form->textField($model,'ocupacion',array('size'=>60,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'ocupacion'); ?>
 	</div>
 
-	<div class="row">
+	<div class="span2">
 		<?php echo $form->labelEx($model,'renta'); ?>
 		<?php echo $form->textField($model,'renta'); ?>
 		<?php echo $form->error($model,'renta'); ?>
 	</div>
     
+        <div class="clearfix"></div>
         <?php
         if($model->isNewRecord):?>
-        <div class="row">
+        <div class="span7">
             <?php echo $form->labelEx($model,'clave'); ?>
             <p class="note">Su clave serán los dígitos de su rut sin dígito verificador. Por favor cámbiela cuanto antes.</p>
             <?php echo $form->error($model,'clave'); ?>
 	</div>
+        <div class="clearfix"></div>
         <?php
         endif;
         ?>
@@ -163,49 +167,54 @@
    
    
    ?>
+        <br/>
     <fieldset>
         <legend>Opcionalmente puede agregar un Fiador a este cliente</legend>
-        <div class="row">
+        <div class="span2">
             <?php echo $form->labelEx($model,'fiador_rut'); ?>
             <?php echo $form->textField($model,'fiador_rut',array('value'=>$fiador_rut)); ?>
             <?php echo $form->error($model,'fiador_rut'); ?><div class="error_rutfiador"></div>
 	</div>
         
-        <div class="row">
+        <div class="span2">
             <?php echo $form->labelEx($model,'fiador_nombre'); ?>
             <?php echo $form->textField($model,'fiador_nombre',array('value'=>$fiador_nombre)); ?>
             <?php echo $form->error($model,'fiador_nombre'); ?>
 	</div>
         
-        <div class="row">
+        <div class="span2">
             <?php echo $form->labelEx($model,'fiador_apellido'); ?>
             <?php echo $form->textField($model,'fiador_apellido',array('value'=>$fiador_apellido)); ?>
             <?php echo $form->error($model,'fiador_apellido'); ?>
 	</div>
         
-        <div class="row">
+        <div class="span2">
             <?php echo $form->labelEx($model,'fiador_email'); ?>
             <?php echo $form->textField($model,'fiador_email',array('value'=>$fiador_email)); ?>
             <?php echo $form->error($model,'fiador_email'); ?>
 	</div>
         
-        <div class="row">
+        <div class="clearfix"></div>
+        <div class="span2">
             <?php echo $form->labelEx($model,'fiador_telefono'); ?>
             <?php echo $form->textField($model,'fiador_telefono',array('value'=>$fiador_telefono)); ?>
             <?php echo $form->error($model,'fiador_telefono'); ?>
 	</div>
         
-        <div class="row">
+        <div class="span2">
             <?php echo $form->labelEx($model,'fiador_direccion'); ?>
             <?php echo $form->textField($model,'fiador_direccion',array('value'=>$fiador_direccion)); ?>
             <?php echo $form->error($model,'fiador_direccion'); ?>
 	</div>
     </fieldset>
-
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar',array('class'=>$btn)); ?>
+        <br/>
+        <div class="clearfix"></div>
+	<div class="span2 buttons">
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar',array('class'=>'btn btn-default')); ?>
 	</div>
+        <br/><br/>
 
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
+</div>

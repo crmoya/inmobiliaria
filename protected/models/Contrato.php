@@ -299,7 +299,7 @@ class Contrato extends CActiveRecord {
         $criteria->compare('d.numero', $this->depto_nombre, true);
         $criteria->compare('c.rut', $this->cliente_rut, true);
         $criteria->compare('t.vigente', 1);
-        $criteria->compare('t.reajusta', 1);
+        //$criteria->compare('t.reajusta', 1);
         
         
         if(Yii::app()->user->rol == 'cliente'){
@@ -314,9 +314,7 @@ class Contrato extends CActiveRecord {
         
         $criteriaReajustan = new CDbCriteria();
         $reajustan = $this->reajustanProximoMes();
-        foreach($reajustan as $reajusta){
-            $criteriaReajustan->compare('t.id', $reajusta,false,'OR');
-        }
+        $criteriaReajustan->addInCondition('t.id', $reajustan);
         $criteria->mergeWith($criteriaReajustan,'AND');
         
         
@@ -479,7 +477,6 @@ class Contrato extends CActiveRecord {
         $reajustan = array();
         //se listan solo los contratos que tienen marcado que deben reajustar y están vigentes
         $contratos = Contrato::model()->findAllByAttributes(array('reajusta'=>1,'vigente'=>1));
-        
         foreach($contratos as $contrato){
             $reajusta_meses = $contrato->reajusta_meses;
             $fecha_inicioArr = explode('-',$contrato->fecha_inicio);
@@ -489,11 +486,9 @@ class Contrato extends CActiveRecord {
             $esteAgno = date('Y');
             
             $agnos_transcurridos = $esteAgno - $agnoInicio;
-            $meses_transcurridos = $esteMes - $mesInicio;
-            if($meses_transcurridos<0){
-                $meses_transcurridos+=12;
-            }
-            $meses_transcurridos = $agnos_transcurridos*12 + $meses_transcurridos;
+            $meses_transcurridos = $agnos_transcurridos*12 + $esteMes - $mesInicio;
+            
+            var_dump($contrato->id.": ".$meses_transcurridos);
             
             switch ($reajusta_meses) {
                 case 12:

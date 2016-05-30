@@ -110,7 +110,7 @@ class CuentaCorrienteController extends Controller {
                 
                 $sheet->getStyleByColumnAndRow(0,$i)->getFont()->setBold(true);
                 $j = 2;
-                if($model->abonosYCargos == "1"){
+                if(!$model->abonosYCargos){
                     $j = 1;
                 }
                 foreach($meses as $mesArr){
@@ -310,7 +310,7 @@ class CuentaCorrienteController extends Controller {
             $objPHPExcel->setActiveSheetIndex(0);
 
             header('Content-Type: application/vnd.ms-excel');
-            header('Content-Disposition: attachment;filename="Movimientos Propietario.xls"');
+            header('Content-Disposition: attachment;filename="Movimientos Cliente.xls"');
             header('Cache-Control: max-age=0');
             // If you're serving to IE 9, then the following may be needed
             header('Cache-Control: max-age=1');

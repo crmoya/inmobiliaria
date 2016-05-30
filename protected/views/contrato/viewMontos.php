@@ -46,7 +46,7 @@ $this->widget('zii.widgets.CDetailView', array(
         ),
         array(
             'label' => 'Rige desde',
-            'value' => $actual->agno."-".str_pad($actual->mes, 2,"0",STR_PAD_LEFT)."-".str_pad($actual->dia, 2,"0",STR_PAD_LEFT)
+            'value' => str_pad($actual->dia, 2,"0",STR_PAD_LEFT)."/".str_pad($actual->mes, 2,"0",STR_PAD_LEFT)."/".$actual->agno,
         ),
     ),
 ));
@@ -56,6 +56,7 @@ $this->widget('zii.widgets.CDetailView', array(
 <h4>Montos futuros</h4>
 
 <?php
+$agno = date('m')==12?$nuevo->agno+1:$nuevo->agno;
 $this->widget('zii.widgets.CDetailView', array(
     'data' => $model,
     'attributes' => array(
@@ -77,7 +78,7 @@ $this->widget('zii.widgets.CDetailView', array(
         ),
         array(
             'label' => 'Rige desde',
-            'value' => date('m')==12?$nuevo->agno+1:$nuevo->agno."-".str_pad(date('m')%12+1, 2,"0",STR_PAD_LEFT)."-".str_pad($nuevo->dia, 2,"0",STR_PAD_LEFT)
+            'value' => str_pad($nuevo->dia, 2,"0",STR_PAD_LEFT)."/".str_pad(date('m')%12+1, 2,"0",STR_PAD_LEFT)."/".$agno,
         ),
     ),
 ));

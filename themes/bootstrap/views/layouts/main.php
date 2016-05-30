@@ -7,9 +7,9 @@
 
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/styles.css" />
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
+        <?php Yii::app()->bootstrap->register(); ?>
         <script src="<?php echo Yii::app()->theme->baseUrl."/js/swal/sweetalert.min.js"?>"></script>
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/js/swal/sweetalert.css" />
-        <?php Yii::app()->bootstrap->register(); ?>
     </head>
 
     <body>
@@ -71,6 +71,7 @@
                                 ),
                                 array('label' => 'Contratos', 'url' => array('index'),
                                     'items' => array(
+                                        array('label' => 'Ingresar nuevo Cliente', 'url' => array('/cliente/create')),
                                         array('label' => 'Crear nuevo Contrato', 'url' => array('/contrato/create')),
                                         array('label' => 'Ver Contratos vigentes', 'url' => array('contrato/admin')),
                                         array('label' => 'Ver Contratos finiquitados', 'url' => array('/contrato/adminFiniquitados')),
